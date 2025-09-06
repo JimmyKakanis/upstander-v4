@@ -1,3 +1,4 @@
+**Memo for Next Session:** The application is successfully deployed and the core functionality is in place. Students can submit anonymous reports, and administrators can log in to view and manage them. The next steps will be to add a private notes feature for admins, implement Firestore security rules, and refactor the application to support multiple schools.
 
 Prompt Plan for AI-Assisted Coding
 This document provides a step-by-step plan of prompts to use with an AI coding assistant (like Gemini in Cursor) to build the Anonymous Bullying Reporting App.
