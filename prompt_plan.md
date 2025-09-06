@@ -1,4 +1,3 @@
-**Memo for Next Session:** You are ready to deploy the application. Before proceeding, open your terminal in the project root directory (`C:\Projects\upstander - v4`) and run the following commands to push your code to GitHub. After that, we will connect the repository to Vercel for deployment.
 
 Prompt Plan for AI-Assisted Coding
 This document provides a step-by-step plan of prompts to use with an AI coding assistant (like Gemini in Cursor) to build the Anonymous Bullying Reporting App.
@@ -26,23 +25,23 @@ Phase 2: Building the Reporting Form (Student-facing)
 "After a successful form submission, display a confirmation message to the student. Also, generate a unique, non-identifiable reference code for the report (e.g., 'FR2025-A8B2') and show it to the student. Explain that they can use this code if they need to talk to a staff member about the report later without revealing their identity."
 
 Phase 3: Building the Admin Dashboard (Staff-facing)
-[ ] Set Up Authentication:
+[x] Set Up Authentication:
 
 "Using Firebase Authentication, create a login page for school staff with email and password sign-in functionality."
 
-[ ] Create the Protected Dashboard:
+[x] Create the Protected Dashboard:
 
 "Create a protected admin dashboard page. This page should only be accessible to logged-in users. If a non-authenticated user tries to access it, they must be redirected to the login page."
 
-[ ] Display Reports:
+[x] Display Reports:
 
 "On the admin dashboard, write a function to fetch and display all documents from the 'reports' collection in Firestore where 'schoolId' matches 'MySchoolMVP'. Display the reports in a table with columns for 'Date', 'Type of Bullying', and 'Status'."
 
-[ ] Add Filtering and Sorting:
+[x] Add Filtering and Sorting:
 
 "On the admin dashboard, add dropdown filters to sort the reports by 'Status' (New, Under Investigation, Resolved) and to sort by 'Date' (Newest First, Oldest First)."
 
-[ ] Implement Report Management:
+[x] Implement Report Management:
 
 "When an administrator clicks on a report in the table, display its full details in a modal or a separate view. Add buttons within this view that allow the admin to update the report's status to 'Under Investigation' or 'Resolved'. Write the Firestore function that updates the 'status' field for the specific document in the database."
 
@@ -60,7 +59,7 @@ Phase 4: Security & Scalability Prep
 "Refactor the code that uses the hardcoded 'MySchoolMVP' schoolId. Create a system where each logged-in admin's account in Firebase Authentication is associated with a specific schoolId. The dashboard should then only fetch reports matching that admin's schoolId. This will prepare the app for onboarding multiple schools."
 
 Phase 5: Deployment
-[ ] Push to GitHub:
+[x] Push to GitHub:
 
 "Run the following commands in your local terminal to push the project to your GitHub repository:"
 ```bash
@@ -69,6 +68,6 @@ git commit -m "Initial commit of Upstander app"
 git push -u origin main
 ```
 
-[ ] Deploy to Vercel:
+[x] Deploy to Vercel:
 
 "Once the code is on GitHub, the next step is to connect the repository to a new Vercel project to deploy it live."
