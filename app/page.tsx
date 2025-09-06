@@ -1,4 +1,4 @@
-import ReportForm from "@/components/ReportForm";
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -10,9 +10,9 @@ export default function Home() {
           To submit a report, please use the unique URL provided by your school.
         </p>
         <div className="mt-8">
-            <a href="/report/MySchoolMVP" className="text-indigo-600 hover:text-indigo-800">
+            <Link href="/report/MySchoolMVP" className="text-indigo-600 hover:text-indigo-800">
                 Example Link to MySchoolMVP Report Form
-            </a>
+            </Link>
         </div>
       </div>
     </main>
