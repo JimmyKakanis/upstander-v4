@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to get the admin's schoolId from their profile
+    function getAdminSchoolId() {
+      return get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.schoolId;
+    }
+
+    match /reports/{reportId} {
+      // Allow anyone to create a report. 
+      // The `schoolId` must be present in the request data.
+      allow create: if request.resource.data.schoolId is string;
+
+      // Allow authenticated admins to read or update a report
+      // if the report's schoolId matches their own schoolId.
+      allow read, update: if request.auth != null && getAdminSchoolId() == resource.data.schoolId;
+    }
+
+    // Optional: Secure the admins collection
+    match /admins/{adminId} {
+      // Allow admins to read their own profile, but not write to it.
+      // (Updates to admin roles/schools should be done with a trusted server environment)
+      allow read: if request.auth != null && request.auth.uid == adminId;
+      allow create, update, delete: if false; 
+    }
+  }
+}
+
