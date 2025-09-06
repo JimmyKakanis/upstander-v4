@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
 
 const generateReferenceCode = (docId: string) => {
@@ -52,19 +52,23 @@ export default function ReportPage() {
     setError(null);
 
     try {
-      const docRef = await addDoc(collection(db, "reports"), {
+      // Generate a new document reference with a unique ID
+      const newReportRef = doc(collection(db, "reports"));
+      
+      // Generate the reference code using the new document's ID
+      const refCode = generateReferenceCode(newReportRef.id);
+
+      // Create the report data, including the new reference code
+      const reportData = {
         ...formData,
         status: "new",
         createdAt: serverTimestamp(),
         schoolId: schoolId,
-        referenceCode: 'generating...' // Placeholder
-      });
-      
-      const refCode = generateReferenceCode(docRef.id);
-
-      await updateDoc(doc(db, "reports", docRef.id), {
         referenceCode: refCode
-      });
+      };
+
+      // Write the document to Firestore in a single operation
+      await setDoc(newReportRef, reportData);
 
       setReferenceCode(refCode);
       setSubmitted(true);

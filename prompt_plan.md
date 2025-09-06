@@ -72,3 +72,16 @@ git push -u origin main
 [x] Deploy to Vercel:
 
 "Once the code is on GitHub, the next step is to connect the repository to a new Vercel project to deploy it live."
+
+Phase 6: Bug Fixes and UX Improvements
+[ ] Fix Admin Login Redirect:
+
+"When an admin successfully logs in, they should be automatically redirected to the /admin/dashboard page. Currently, the page does not redirect."
+
+[ ] Darken Font Color:
+
+"The default font color across the application is too light, making it difficult to read. Update the global CSS to use a darker color for body text."
+
+[ ] Fix Report Submission Error:
+
+"When a student submits a bullying report, it fails with the error 'Failed to submit report. Please try again.' This is likely due to a conflict between the application logic and the new, stricter Firestore security rules. Refactor the submission logic to work with the security rules."
