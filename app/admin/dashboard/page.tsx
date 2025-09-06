@@ -44,28 +44,33 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        // User is signed in, now fetch their profile from Firestore
-        const adminRef = doc(db, "admins", firebaseUser.uid);
-        const adminSnap = await getDoc(adminRef);
+      try {
+        if (firebaseUser) {
+          const adminRef = doc(db, "admins", firebaseUser.uid);
+          const adminSnap = await getDoc(adminRef);
 
-        if (adminSnap.exists()) {
-          const adminData = adminSnap.data();
-          setUser({
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            schoolId: adminData.schoolId
-          });
+          if (adminSnap.exists()) {
+            const adminData = adminSnap.data();
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email!,
+              schoolId: adminData.schoolId,
+            });
+          } else {
+            console.error("Admin profile not found in Firestore.");
+            await auth.signOut();
+            router.push('/login');
+          }
         } else {
-          // Handle case where user is authenticated but has no admin profile
-          console.error("Admin profile not found in Firestore.");
-          auth.signOut(); // Sign out the user
+          router.push('/login');
         }
-      } else {
-        // User is signed out
+      } catch (error) {
+        console.error("Error during authentication state change:", error);
+        await auth.signOut();
         router.push('/login');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
