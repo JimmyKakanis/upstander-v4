@@ -51,11 +51,11 @@ Phase 3: Building the Admin Dashboard (Staff-facing)
 "In the report details view for admins, add a private 'Notes' section. This should be a text area where an admin can add and save timestamped notes about their investigation. These notes should be saved to the same Firestore document for that report and should only be visible on the admin dashboard."
 
 Phase 4: Security & Scalability Prep
-[ ] Define Security Rules:
+[x] Define Security Rules:
 
 "Write the Firestore security rules for this application. The rules must ensure that: 1) anyone can write (create) a new report to the 'reports' collection, 2) only authenticated users (admins) can read reports from their assigned school, and 3) only authenticated users can update the 'status' and 'notes' fields of a report."
 
-[ ] Prepare for Multiple Schools:
+[x] Prepare for Multiple Schools:
 
 "Refactor the code that uses the hardcoded 'MySchoolMVP' schoolId. Create a system where each logged-in admin's account in Firebase Authentication is associated with a specific schoolId. The dashboard should then only fetch reports matching that admin's schoolId. This will prepare the app for onboarding multiple schools."
 

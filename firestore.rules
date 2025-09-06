@@ -15,7 +15,18 @@ service cloud.firestore {
 
       // Allow authenticated admins to read or update a report
       // if the report's schoolId matches their own schoolId.
-      allow read, update: if request.auth != null && getAdminSchoolId() == resource.data.schoolId;
+      // Only the 'status' and 'notes' fields should be mutable.
+      allow read: if request.auth != null && getAdminSchoolId() == resource.data.schoolId;
+      allow update: if request.auth != null 
+                    && getAdminSchoolId() == resource.data.schoolId
+                    && request.resource.data.typeOfBullying == resource.data.typeOfBullying
+                    && request.resource.data.description == resource.data.description
+                    && request.resource.data.date == resource.data.date
+                    && request.resource.data.time == resource.data.time
+                    && request.resource.data.location == resource.data.location
+                    && request.resource.data.createdAt == resource.data.createdAt
+                    && request.resource.data.schoolId == resource.data.schoolId
+                    && request.resource.data.referenceCode == resource.data.referenceCode;
     }
 
     // Optional: Secure the admins collection
