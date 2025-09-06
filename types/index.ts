@@ -21,4 +21,9 @@ export interface Report {
     note: string;
     createdAt: Timestamp;
   }>;
+  conversation?: Array<{
+    sender: 'student' | 'admin';
+    message: string;
+    createdAt: Timestamp;
+  }>;
 }

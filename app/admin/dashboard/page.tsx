@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authReady, setAuthReady] = useState(false); // New state to track auth readiness
   const [reports, setReports] = useState<Report[]>([]);
   const [statusFilter, setStatusFilter] = useState<Status>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
@@ -59,22 +60,20 @@ export default function DashboardPage() {
           } else {
             console.error("Admin profile not found in Firestore.");
             await auth.signOut();
-            router.push('/login');
           }
-        } else {
-          router.push('/login');
         }
+        // If no user, they will be redirected by the component logic below
       } catch (error) {
         console.error("Error during authentication state change:", error);
         await auth.signOut();
-        router.push('/login');
       } finally {
+        setAuthReady(true); // Auth check is complete
         setLoading(false);
       }
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -87,7 +86,7 @@ export default function DashboardPage() {
   };
 
 
-  if (loading) {
+  if (!authReady || loading) {
     return (
         <div className="min-h-screen flex items-center justify-center">
             <p>Loading...</p>
@@ -96,8 +95,8 @@ export default function DashboardPage() {
   }
 
   if (!user) {
-    // This is a fallback, as the redirect should have already happened.
-    return null;
+    router.push('/login');
+    return null; // Render nothing while redirecting
   }
 
   return (
