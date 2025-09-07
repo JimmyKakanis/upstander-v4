@@ -24,6 +24,7 @@ export default function DashboardPage() {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         // If a Firebase user is detected, fetch their admin profile from Firestore
+        console.log("Authenticated user UID:", firebaseUser.uid);
         const adminRef = doc(db, "admins", firebaseUser.uid);
         const adminSnap = await getDoc(adminRef);
 
