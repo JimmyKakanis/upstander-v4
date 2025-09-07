@@ -1,6 +1,6 @@
 "use client";
 
-import { Report } from '@/types';
+import { Report, ConversationMessage } from '@/types';
 import { doc, updateDoc, Timestamp, arrayUnion } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useState } from 'react';
@@ -53,7 +53,7 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
     e.preventDefault();
     if (newMessage.trim() === '' || !report.id) return;
 
-    const message = {
+    const message: ConversationMessage = {
         sender: 'admin',
         message: newMessage,
         createdAt: Timestamp.now()

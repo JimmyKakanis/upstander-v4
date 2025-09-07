@@ -6,6 +6,12 @@ export interface AdminUser {
   schoolId: string;
 }
 
+export interface ConversationMessage {
+  sender: 'student' | 'admin';
+  message: string;
+  createdAt: Timestamp;
+}
+
 export interface Report {
   id: string;
   typeOfBullying: 'Verbal' | 'Physical' | 'Cyber' | 'Social Exclusion';
@@ -21,9 +27,5 @@ export interface Report {
     note: string;
     createdAt: Timestamp;
   }>;
-  conversation?: Array<{
-    sender: 'student' | 'admin';
-    message: string;
-    createdAt: Timestamp;
-  }>;
+  conversation?: ConversationMessage[];
 }
