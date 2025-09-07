@@ -35,8 +35,8 @@ service cloud.firestore {
 
     // Optional: Secure the admins collection
     match /admins/{adminId} {
-      // Allow any authenticated user to read admin profiles for this test.
-      allow read: if request.auth != null;
+      // Allow admins to read their own profile if the UID matches.
+      allow read: if request.auth != null && request.auth.uid == adminId;
       
       // Do not allow anyone to create, update, or delete admin documents from the client.
       // This should be handled by a secure backend environment.
