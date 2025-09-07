@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { collection, query, where, getDocs, orderBy, doc, getDoc } from 'firebase/firestore';
 import { Report, AdminUser } from '@/types';
@@ -14,17 +14,47 @@ type SortOrder = 'desc' | 'asc';
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<AdminUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [authReady, setAuthReady] = useState(false); // New state to track auth readiness
+  const [loading, setLoading] = useState(true); // Simplified loading state
   const [reports, setReports] = useState<Report[]>([]);
   const [statusFilter, setStatusFilter] = useState<Status>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
-  const fetchReports = useCallback(async () => {
-    if (!user) return; // Don't fetch if user profile isn't loaded
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // If a Firebase user is detected, fetch their admin profile from Firestore
+        const adminRef = doc(db, "admins", firebaseUser.uid);
+        const adminSnap = await getDoc(adminRef);
+
+        if (adminSnap.exists()) {
+          // If the profile exists, we have a valid admin user
+          const adminData = adminSnap.data();
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email!,
+            schoolId: adminData.schoolId,
+          });
+        } else {
+          // If no profile, they are not a valid admin. Sign them out.
+          console.error("Admin profile not found in Firestore.");
+          await auth.signOut();
+          setUser(null);
+        }
+      } else {
+        // If no Firebase user, there is no one logged in
+        setUser(null);
+      }
+      // All checks are complete, so we can stop loading
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const fetchReports = useCallback(async (schoolId: string) => {
     try {
-        let reportsQuery = query(collection(db, "reports"), where("schoolId", "==", user.schoolId));
+        let reportsQuery = query(collection(db, "reports"), where("schoolId", "==", schoolId));
 
         if (statusFilter !== 'all') {
             reportsQuery = query(reportsQuery, where("status", "==", statusFilter));
@@ -41,43 +71,11 @@ export default function DashboardPage() {
     } catch (error) {
         console.error("Error fetching reports: ", error);
     }
-  }, [user, statusFilter, sortOrder]);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      try {
-        if (firebaseUser) {
-          const adminRef = doc(db, "admins", firebaseUser.uid);
-          const adminSnap = await getDoc(adminRef);
-
-          if (adminSnap.exists()) {
-            const adminData = adminSnap.data();
-            setUser({
-              uid: firebaseUser.uid,
-              email: firebaseUser.email!,
-              schoolId: adminData.schoolId,
-            });
-          } else {
-            console.error("Admin profile not found in Firestore.");
-            await auth.signOut();
-          }
-        }
-        // If no user, they will be redirected by the component logic below
-      } catch (error) {
-        console.error("Error during authentication state change:", error);
-        await auth.signOut();
-      } finally {
-        setAuthReady(true); // Auth check is complete
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+  }, [statusFilter, sortOrder]);
 
   useEffect(() => {
     if (user) {
-        fetchReports();
+        fetchReports(user.schoolId);
     }
   }, [user, fetchReports]);
 
@@ -86,7 +84,7 @@ export default function DashboardPage() {
   };
 
 
-  if (!authReady || loading) {
+  if (loading) {
     return (
         <div className="min-h-screen flex items-center justify-center">
             <p>Loading...</p>
