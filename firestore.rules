@@ -35,9 +35,11 @@ service cloud.firestore {
 
     // Optional: Secure the admins collection
     match /admins/{adminId} {
-      // Allow admins to read their own profile, but not write to it.
-      // (Updates to admin roles/schools should be done with a trusted server environment)
+      // Allow admins to read their own profile if the UID matches.
       allow read: if request.auth != null && request.auth.uid == adminId;
+      
+      // Do not allow anyone to create, update, or delete admin documents from the client.
+      // This should be handled by a secure backend environment.
       allow create, update, delete: if false; 
     }
   }
