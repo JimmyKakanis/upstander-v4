@@ -53,6 +53,15 @@ For the live deployment on Vercel, you **must** set the environment variables in
 3.  Add each of the `NEXT_PUBLIC_` variables listed above with their corresponding values from your Firebase project.
 4.  After adding or updating variables, you must **redeploy** your project for the changes to take effect.
 
+### Firestore Security Rules
+
+**Crucial:** Changes made to the `firestore.rules` file in this repository are **not** automatically deployed when you push to GitHub or deploy on Vercel. You must manually deploy the security rules from the Firebase Console.
+
+1.  Go to your Firebase project.
+2.  Navigate to **Cloud Firestore** > **Rules**.
+3.  Copy the contents of the `firestore.rules` file from this repository.
+4.  Paste the contents into the editor in the Firebase Console and click **Publish**.
+
 
 ## Deploy on Vercel
 
