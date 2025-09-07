@@ -15,9 +15,44 @@ First, run the development server:
 
 ```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+### Environment Variables
+
+This project connects to a Firebase backend and requires environment variables to function correctly.
+
+#### Local Development
+
+For local development, create a file named `.env.local` in the root of the project. Copy the contents of `.env.example` (you may need to create this file if it doesn't exist) and fill in your Firebase project credentials. This file is ignored by Git and should not be committed to the repository.
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY="YOUR_API_KEY"
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="YOUR_AUTH_DOMAIN"
+NEXT_PUBLIC_FIREBASE_PROJECT_ID="YOUR_PROJECT_ID"
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="YOUR_STORAGE_BUCKET"
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="YOUR_MESSAGING_SENDER_ID"
+NEXT_PUBLIC_FIREBASE_APP_ID="YOUR_APP_ID"
+```
+
+#### Vercel Deployment
+
+For the live deployment on Vercel, you **must** set the environment variables in the Vercel project settings:
+
+1.  Go to your project dashboard on Vercel.
+2.  Navigate to **Settings** > **Environment Variables**.
+3.  Add each of the `NEXT_PUBLIC_` variables listed above with their corresponding values from your Firebase project.
+4.  After adding or updating variables, you must **redeploy** your project for the changes to take effect.
+
 
 ## Deploy on Vercel
 
