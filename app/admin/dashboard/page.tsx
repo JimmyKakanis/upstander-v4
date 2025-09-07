@@ -23,31 +23,38 @@ export default function DashboardPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // If a Firebase user is detected, fetch their admin profile from Firestore
-        console.log("Authenticated user UID:", firebaseUser.uid);
-        const adminRef = doc(db, "admins", firebaseUser.uid);
-        const adminSnap = await getDoc(adminRef);
+        try {
+          // If a Firebase user is detected, fetch their admin profile from Firestore
+          const adminRef = doc(db, "admins", firebaseUser.uid);
+          const adminSnap = await getDoc(adminRef);
 
-        if (adminSnap.exists()) {
-          // If the profile exists, we have a valid admin user
-          const adminData = adminSnap.data();
-          setUser({
-            uid: firebaseUser.uid,
-            email: firebaseUser.email!,
-            schoolId: adminData.schoolId,
-          });
-        } else {
-          // If no profile, they are not a valid admin. Sign them out.
-          console.error("Admin profile not found in Firestore.");
+          if (adminSnap.exists()) {
+            // If the profile exists, we have a valid admin user
+            const adminData = adminSnap.data();
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email!,
+              schoolId: adminData.schoolId,
+            });
+          } else {
+            // If no profile, they are not a valid admin. Sign them out.
+            console.error("Admin profile not found in Firestore for UID:", firebaseUser.uid);
+            await auth.signOut();
+            setUser(null);
+          }
+        } catch (error) {
+          console.error("Error fetching admin profile:", error);
           await auth.signOut();
           setUser(null);
+        } finally {
+          // All checks are complete, so we can stop loading
+          setLoading(false);
         }
       } else {
         // If no Firebase user, there is no one logged in
         setUser(null);
+        setLoading(false);
       }
-      // All checks are complete, so we can stop loading
-      setLoading(false);
     });
 
     return () => unsubscribe();
