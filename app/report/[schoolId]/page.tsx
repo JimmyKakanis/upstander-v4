@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, serverTimestamp, runTransaction } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
 
 const generateReferenceCode = (docId: string) => {
@@ -67,16 +67,17 @@ export default function ReportPage() {
         referenceCode: refCode
       };
 
-      // Create the follow-up access document
-      const followUpRef = doc(db, "followUpAccess", refCode);
-      const followUpData = {
-        reportId: newReportRef.id,
-        createdAt: serverTimestamp()
-      };
+      // Use a transaction to ensure both documents are created atomically
+      await runTransaction(db, async (transaction) => {
+        const followUpRef = doc(db, "followUpAccess", refCode);
+        const followUpData = {
+          reportId: newReportRef.id,
+          createdAt: serverTimestamp()
+        };
 
-      // Write both documents
-      await setDoc(newReportRef, reportData);
-      await setDoc(followUpRef, followUpData);
+        transaction.set(newReportRef, reportData);
+        transaction.set(followUpRef, followUpData);
+      });
 
       setReferenceCode(refCode);
       setSubmitted(true);
