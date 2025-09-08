@@ -67,8 +67,16 @@ export default function ReportPage() {
         referenceCode: refCode
       };
 
-      // Write the document to Firestore in a single operation
+      // Create the follow-up access document
+      const followUpRef = doc(db, "followUpAccess", refCode);
+      const followUpData = {
+        reportId: newReportRef.id,
+        createdAt: serverTimestamp()
+      };
+
+      // Write both documents
       await setDoc(newReportRef, reportData);
+      await setDoc(followUpRef, followUpData);
 
       setReferenceCode(refCode);
       setSubmitted(true);

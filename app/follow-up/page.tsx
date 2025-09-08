@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function FollowUpPage() {
   const router = useRouter();
@@ -23,15 +23,17 @@ export default function FollowUpPage() {
     }
 
     try {
-      const reportsRef = collection(db, 'reports');
-      const q = query(reportsRef, where('referenceCode', '==', referenceCode.trim()));
-      const querySnapshot = await getDocs(q);
+      const followUpRef = doc(db, 'followUpAccess', referenceCode.trim());
+      const followUpSnap = await getDoc(followUpRef);
 
-      if (querySnapshot.empty) {
+      if (!followUpSnap.exists()) {
         setError('No report found with that reference code. Please check the code and try again.');
       } else {
-        // Assuming reference codes are unique, so we take the first result.
-        const reportId = querySnapshot.docs[0].id;
+        const reportId = followUpSnap.data().reportId;
+        
+        // Optional: You could even do a quick check here to ensure the report itself exists
+        // before redirecting, but the [reportId] page already handles non-existent reports.
+
         router.push(`/follow-up/${reportId}`);
       }
     } catch (err) {

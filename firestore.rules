@@ -18,9 +18,16 @@ service cloud.firestore {
       // The `schoolId` must be present in the request data.
       allow create: if request.resource.data.schoolId is string;
 
-      // Allow authenticated admins to read or update a report
-      // if the report's schoolId matches their own schoolId.
-      allow read: if request.auth != null && isAdmin() && getAdminSchoolId() == resource.data.schoolId;
+      // Allow authenticated admins to read a report if it matches their schoolId.
+      // Allow an unauthenticated user to read a report if a valid followUpAccess document exists.
+      allow get: if (request.auth != null && isAdmin() && getAdminSchoolId() == resource.data.schoolId) ||
+                   (exists(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)) &&
+                    get(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)).data.reportId == reportId);
+
+      // Allow admin to list reports for their school.
+      allow list: if request.auth != null && isAdmin() && getAdminSchoolId() == request.query.schoolId;
+
+      // Allow admins to update a report
       allow update: if request.auth != null
                     && isAdmin() && getAdminSchoolId() == resource.data.schoolId
                     && request.resource.data.typeOfBullying == resource.data.typeOfBullying
@@ -31,6 +38,17 @@ service cloud.firestore {
                     && request.resource.data.createdAt == resource.data.createdAt
                     && request.resource.data.schoolId == resource.data.schoolId
                     && request.resource.data.referenceCode == resource.data.referenceCode;
+    }
+
+    // Collection to securely link a public referenceCode to a private reportId
+    match /followUpAccess/{referenceCode} {
+      // Allow anyone to get a document if they know the exact referenceCode.
+      // This is used by students to initiate the follow-up process.
+      allow get: if true;
+
+      // Do not allow clients to list, create, update, or delete these documents.
+      // Creation should be handled during report submission.
+      allow list, create, update, delete: if false;
     }
 
     // Optional: Secure the admins collection
