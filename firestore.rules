@@ -11,10 +11,6 @@ service cloud.firestore {
       return adminDoc.data.schoolId;
     }
 
-    function isAdmin() {
-      return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
-    }
-
     match /reports/{reportId} {
       // Allow anyone to create a report.
       // The `schoolId` must be present in the request data.
@@ -22,18 +18,16 @@ service cloud.firestore {
 
       // Allow authenticated admins to read a report if it matches their schoolId.
       // Allow an unauthenticated user to read a report if a valid followUpAccess document exists.
-      allow get: if (request.auth != null && isAdmin() && getAdminSchoolId() == resource.data.schoolId) ||
+      allow get: if (request.auth != null && getAdminSchoolId() == resource.data.schoolId) ||
                    (exists(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)) &&
                     get(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)).data.reportId == reportId);
 
-      // WARNING: INSECURE RULE FOR DEBUGGING
-      // This rule allows any authenticated admin to list all reports, regardless of school.
-      // This should be replaced with a secure rule before production.
-      allow list: if request.auth != null && isAdmin();
+      // Allow admin to list reports for their school.
+      allow list: if request.auth != null && getAdminSchoolId() == request.query.schoolId;
 
       // Allow admins to update a report
       allow update: if request.auth != null
-                    && isAdmin() && getAdminSchoolId() == resource.data.schoolId
+                    && getAdminSchoolId() == resource.data.schoolId
                     && request.resource.data.typeOfBullying == resource.data.typeOfBullying
                     && request.resource.data.description == resource.data.description
                     && request.resource.data.date == resource.data.date
