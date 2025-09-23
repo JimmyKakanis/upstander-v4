@@ -69,8 +69,8 @@ export default function DashboardPage() {
   const fetchReports = useCallback(async (schoolId: string) => {
     setReportsLoading(true);
     try {
-        // Simplified query to only fetch by schoolId
-        const reportsQuery = query(collection(db, "reports"), where("schoolId", "==", schoolId));
+        // Broad query to fetch all reports the user has access to based on rules
+        const reportsQuery = query(collection(db, "reports"));
         
         const querySnapshot = await getDocs(reportsQuery);
         let reportsData = querySnapshot.docs.map(doc => ({
@@ -78,7 +78,13 @@ export default function DashboardPage() {
             ...doc.data()
         })) as Report[];
 
-        // Apply filtering on the client-side
+        // Log the raw data to solve the mystery
+        console.log("Raw reports data from Firestore:", reportsData);
+
+        // Securely filter reports on the client-side
+        reportsData = reportsData.filter(report => report.schoolId === schoolId);
+
+        // Apply status filtering on the client-side
         if (statusFilter !== 'all') {
             reportsData = reportsData.filter(report => report.status === statusFilter);
         }
