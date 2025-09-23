@@ -23,8 +23,30 @@
 
 **Current Status:** The admin login functionality is now fully operational. The application is stable and the core features from Phase 1 are working as expected.
 
-## Phase 3: Next Steps
+## Phase 3: Feature Implementation & Bug Fixing (In Progress)
 
-- [ ] Feature: Follow-up system for anonymous users using their reference code.
+**Date:** 2025-09-08
+
+**Summary:** This phase focused on implementing the student follow-up feature and debugging a persistent issue with the admin dashboard not displaying reports.
+
+**Completed Work:**
+
+- **Student Follow-up Feature:**
+  - Implemented a secure system allowing students to check their report status using a unique reference code.
+  - Created a new `followUpAccess` collection in Firestore to securely link public reference codes to private report IDs.
+  - Refactored the report submission process to use a Firestore transaction, ensuring the report and the follow-up document are created together atomically.
+  - Updated Firestore security rules to allow this secure, anonymous access.
+
+**Unresolved Issues:**
+
+- **Admin Dashboard Not Loading Reports:**
+  - **Symptom:** Admins can log in successfully, but the dashboard does not display any reports for their assigned school, even when reports exist in the database.
+  - **Debugging Steps Taken:**
+    1.  Verified the dashboard application code is correctly fetching the admin's `schoolId` and using it in the Firestore query.
+    2.  Confirmed with the user that the `schoolId` in the `admins` collection matches the `schoolId` in the `reports` collection exactly.
+    3.  Identified and corrected a critical bug in the `firestore.rules` `allow list` rule, changing it from the incorrect `request.query.schoolId` to the correct `resource.data.schoolId`.
+  - **Current Status:** Despite these fixes, the issue persists. The root cause is still unknown and will be the top priority for the next session.
+
+## Phase 4: Future Work
 - [ ] UI/UX: General improvements to the reporting form and admin dashboard.
 - [ ] Testing: Implementation of automated tests.

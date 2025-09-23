@@ -6,6 +6,8 @@ service cloud.firestore {
     // Helper function to check if a user is an admin and get their schoolId
     function getAdminSchoolId() {
       let adminDoc = get(/databases/$(database)/documents/admins/$(request.auth.uid));
+      // This function is no longer directly used for the list rule,
+      // but it's kept for potential future use or if other rules rely on it.
       return adminDoc.data.schoolId;
     }
 
@@ -24,8 +26,8 @@ service cloud.firestore {
                    (exists(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)) &&
                     get(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)).data.reportId == reportId);
 
-      // Allow admin to list reports for their school.
-      allow list: if request.auth != null && isAdmin() && getAdminSchoolId() == request.query.schoolId;
+      // Allow admin to list reports for their school if their auth token has the correct schoolId claim.
+      allow list: if request.auth != null && request.auth.token.schoolId == request.query.schoolId;
 
       // Allow admins to update a report
       allow update: if request.auth != null

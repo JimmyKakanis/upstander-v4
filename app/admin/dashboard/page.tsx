@@ -25,6 +25,11 @@ export default function DashboardPage() {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
+          // Force a token refresh to get the latest custom claims
+          await firebaseUser.getIdToken(true);
+          const idTokenResult = await firebaseUser.getIdTokenResult();
+          console.log("Custom claims from token:", idTokenResult.claims);
+
           // If a Firebase user is detected, fetch their admin profile from Firestore
           const adminRef = doc(db, "admins", firebaseUser.uid);
           const adminSnap = await getDoc(adminRef);
@@ -32,7 +37,6 @@ export default function DashboardPage() {
           if (adminSnap.exists()) {
             // If the profile exists, we have a valid admin user
             const adminData = adminSnap.data();
-            console.log("Admin profile found. School ID:", adminData.schoolId); // <-- DEBUG LOG
             setUser({
               uid: firebaseUser.uid,
               email: firebaseUser.email!,
@@ -65,7 +69,6 @@ export default function DashboardPage() {
   const fetchReports = useCallback(async (schoolId: string) => {
     setReportsLoading(true);
     try {
-        console.log("Fetching reports for schoolId:", schoolId); // <-- DEBUG LOG
         // Simplified query to only fetch by schoolId
         const reportsQuery = query(collection(db, "reports"), where("schoolId", "==", schoolId));
         
