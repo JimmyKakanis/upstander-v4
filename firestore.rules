@@ -25,7 +25,7 @@ service cloud.firestore {
                     get(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)).data.reportId == reportId);
 
       // Allow admin to list reports for their school.
-      allow list: if request.auth != null && isAdmin() && getAdminSchoolId() == resource.data.schoolId;
+      allow list: if request.auth != null && isAdmin() && getAdminSchoolId() == request.query.schoolId;
 
       // Allow admins to update a report
       allow update: if request.auth != null

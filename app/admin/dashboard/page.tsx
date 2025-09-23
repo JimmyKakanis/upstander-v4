@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true); // Simplified loading state
+  const [reportsLoading, setReportsLoading] = useState(false);
   const [reports, setReports] = useState<Report[]>([]);
   const [statusFilter, setStatusFilter] = useState<Status>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
@@ -61,23 +62,35 @@ export default function DashboardPage() {
   }, []);
 
   const fetchReports = useCallback(async (schoolId: string) => {
+    setReportsLoading(true);
     try {
-        let reportsQuery = query(collection(db, "reports"), where("schoolId", "==", schoolId));
-
-        if (statusFilter !== 'all') {
-            reportsQuery = query(reportsQuery, where("status", "==", statusFilter));
-        }
-
-        reportsQuery = query(reportsQuery, orderBy("createdAt", sortOrder));
+        // Simplified query to only fetch by schoolId
+        const reportsQuery = query(collection(db, "reports"), where("schoolId", "==", schoolId));
         
         const querySnapshot = await getDocs(reportsQuery);
-        const reportsData = querySnapshot.docs.map(doc => ({
+        let reportsData = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         })) as Report[];
+
+        // Apply filtering on the client-side
+        if (statusFilter !== 'all') {
+            reportsData = reportsData.filter(report => report.status === statusFilter);
+        }
+
+        // Apply sorting on the client-side
+        reportsData.sort((a, b) => {
+            const dateA = a.createdAt.toDate().getTime();
+            const dateB = b.createdAt.toDate().getTime();
+            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+        });
+
         setReports(reportsData);
     } catch (error) {
         console.error("Error fetching reports: ", error);
+        setReports([]); // Clear reports on error to prevent displaying stale data
+    } finally {
+        setReportsLoading(false);
     }
   }, [statusFilter, sortOrder]);
 
@@ -175,22 +188,32 @@ export default function DashboardPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
-                                {reports.map((report) => (
-                                <tr key={report.id} onClick={() => setSelectedReport(report)} className="cursor-pointer hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">{report.createdAt.toDate().toLocaleDateString()}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{report.typeOfBullying}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                            report.status === 'new' ? 'bg-yellow-100 text-yellow-800' :
-                                            report.status === 'Under Investigation' ? 'bg-blue-100 text-blue-800' :
-                                            'bg-green-100 text-green-800'
-                                        }`}>
-                                            {report.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{report.referenceCode}</td>
-                                </tr>
-                                ))}
+                                {reportsLoading ? (
+                                    <tr>
+                                        <td colSpan={4} className="text-center py-4">Loading reports...</td>
+                                    </tr>
+                                ) : reports.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={4} className="text-center py-4">No reports found.</td>
+                                    </tr>
+                                ) : (
+                                    reports.map((report) => (
+                                    <tr key={report.id} onClick={() => setSelectedReport(report)} className="cursor-pointer hover:bg-gray-50">
+                                        <td className="px-6 py-4 whitespace-nowrap">{report.createdAt.toDate().toLocaleDateString()}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{report.typeOfBullying}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                                report.status === 'new' ? 'bg-yellow-100 text-yellow-800' :
+                                                report.status === 'Under Investigation' ? 'bg-blue-100 text-blue-800' :
+                                                'bg-green-100 text-green-800'
+                                            }`}>
+                                                {report.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{report.referenceCode}</td>
+                                    </tr>
+                                    ))
+                                )}
                             </tbody>
                         </table>
                     </div>
