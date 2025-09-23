@@ -69,13 +69,17 @@ export default function DashboardPage() {
   const fetchReports = useCallback(async (schoolId: string) => {
     setReportsLoading(true);
     try {
-        const reportsQuery = query(collection(db, "reports"), where("schoolId", "==", schoolId));
+        // Broad query to fetch all reports the user has access to based on rules
+        const reportsQuery = query(collection(db, "reports"));
         
         const querySnapshot = await getDocs(reportsQuery);
         let reportsData = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         })) as Report[];
+
+        // Securely filter reports on the client-side, handling cases where schoolId might be missing
+        reportsData = reportsData.filter(report => report.schoolId && report.schoolId === schoolId);
 
         // Apply status filtering on the client-side
         if (statusFilter !== 'all') {

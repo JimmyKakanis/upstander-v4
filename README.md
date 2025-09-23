@@ -63,6 +63,12 @@ For the live deployment on Vercel, you **must** set the environment variables in
 4.  Paste the contents into the editor in the Firebase Console and click **Publish**.
 
 
+## Development Workflow & Testing
+
+**IMPORTANT:** All testing for this project is conducted on the live Vercel deployment, which is automatically updated when changes are pushed to the `main` branch on GitHub. The local development server (`npm run dev`) is not the primary environment for testing.
+
+This means that for any code changes to be tested, they must be committed and pushed to GitHub.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
