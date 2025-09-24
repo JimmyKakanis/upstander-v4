@@ -81,3 +81,28 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
 - [ ] UI/UX: General improvements to the reporting form and admin dashboard.
 - [ ] Testing: Implementation of automated tests.
 - [ ] Investigate and fix the report submission process to ensure `schoolId` is always included.
+
+## Phase 6: Diagnostics and Reverted UI Overhaul (2025-09-24)
+
+**Summary:** This session focused on diagnosing data issues, hardening the multi-school security model, and attempting a major UI overhaul which was ultimately reverted.
+
+**Work Completed:**
+
+1.  **Dashboard Diagnostics:**
+    *   Confirmed that the issue of admins not seeing reports was due to old report documents in Firestore missing the `schoolId` field.
+    *   To prove this, we implemented a temporary diagnostic feature: a "Show all reports" checkbox on the admin dashboard.
+    *   This feature visually highlighted reports with missing or mismatched `schoolId`s, confirming the data issue and allowing the admin to see all documents in the database.
+
+2.  **Multi-School Security Hardening:**
+    *   We tested the system by creating a second school and a second admin.
+    *   The test confirmed that the client-side filtering correctly separates reports between schools.
+    *   After the test, the "Show all reports" diagnostic feature was removed to restore strict data separation, ensuring admins can only see reports from their assigned school.
+
+3.  **UI/UX Overhaul Attempt & Reversion:**
+    *   We began a major visual overhaul of the application, starting with the landing page, based on a new design from `lovable.dev`.
+    *   This involved integrating a new design system using `shadcn-ui`, including a new `tailwind.config.ts`, a global CSS file with new design tokens, and a suite of new UI components.
+    *   The new dependencies and configuration introduced a series of critical build errors that were difficult to resolve, including a fatal Turbopack crash.
+    *   After several attempts to fix the build, the decision was made that the new design was not worth the integration complexity at this stage.
+    *   All changes related to the UI overhaul were reverted, returning the codebase to its previous stable state.
+
+**Current Status:** The application is stable and the admin dashboard is fully functional for multiple schools. The plan to overhaul the UI has been shelved for now in favor of stability.
