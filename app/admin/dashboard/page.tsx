@@ -20,7 +20,6 @@ export default function DashboardPage() {
   const [statusFilter, setStatusFilter] = useState<Status>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
-  const [showAllReports, setShowAllReports] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -79,10 +78,8 @@ export default function DashboardPage() {
             ...doc.data()
         })) as Report[];
 
-        // Securely filter reports on the client-side unless "show all" is checked
-        if (!showAllReports) {
-            reportsData = reportsData.filter(report => report.schoolId && report.schoolId === schoolId);
-        }
+        // Securely filter reports on the client-side, handling cases where schoolId might be missing
+        reportsData = reportsData.filter(report => report.schoolId && report.schoolId === schoolId);
 
         // Apply status filtering on the client-side
         if (statusFilter !== 'all') {
@@ -103,13 +100,13 @@ export default function DashboardPage() {
     } finally {
         setReportsLoading(false);
     }
-  }, [statusFilter, sortOrder, showAllReports]);
+  }, [statusFilter, sortOrder]);
 
   useEffect(() => {
     if (user) {
         fetchReports(user.schoolId);
     }
-  }, [user, fetchReports, showAllReports]);
+  }, [user, fetchReports]);
 
   const handleReportUpdate = (updatedReport: Report) => {
     setReports(reports.map(report => report.id === updatedReport.id ? updatedReport : report));
@@ -186,19 +183,6 @@ export default function DashboardPage() {
                                     <option value="asc">Oldest First</option>
                                 </select>
                             </div>
-                            <div className="flex items-center">
-                                <input
-                                    id="showAll"
-                                    name="showAll"
-                                    type="checkbox"
-                                    checked={showAllReports}
-                                    onChange={(e) => setShowAllReports(e.target.checked)}
-                                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                                />
-                                <label htmlFor="showAll" className="ml-2 block text-sm text-gray-900">
-                                    Show all reports
-                                </label>
-                            </div>
                         </div>
                     </div>
                     <div className="overflow-x-auto">
@@ -209,7 +193,6 @@ export default function DashboardPage() {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type of Bullying</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference Code</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School ID</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
@@ -219,18 +202,11 @@ export default function DashboardPage() {
                                     </tr>
                                 ) : reports.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="text-center py-4">No reports found.</td>
+                                        <td colSpan={4} className="text-center py-4">No reports found.</td>
                                     </tr>
                                 ) : (
                                     reports.map((report) => (
-                                    <tr 
-                                        key={report.id} 
-                                        onClick={() => setSelectedReport(report)} 
-                                        className={`cursor-pointer hover:bg-gray-50 ${
-                                            !report.schoolId ? 'bg-red-100' : 
-                                            report.schoolId !== user?.schoolId ? 'bg-yellow-100' : ''
-                                        }`}
-                                    >
+                                    <tr key={report.id} onClick={() => setSelectedReport(report)} className="cursor-pointer hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap">{report.createdAt.toDate().toLocaleDateString()}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{report.typeOfBullying}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -243,7 +219,6 @@ export default function DashboardPage() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">{report.referenceCode}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{report.schoolId || 'N/A'}</td>
                                     </tr>
                                     ))
                                 )}
