@@ -25,6 +25,13 @@ export default function DashboardPage() {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
+  const newReportsCount = reports.filter(report => report.status === 'new').length;
+  const investigatingCount = reports.filter(report => report.status === 'Under Investigation').length;
+
+  const handleStatusCardClick = (status: Status) => {
+    setStatusFilter(status);
+  };
+
   const reportCounts = reports.reduce((acc, report) => {
     const type = report.typeOfBullying || 'Unknown';
     acc[type] = (acc[type] || 0) + 1;
@@ -190,14 +197,22 @@ export default function DashboardPage() {
             <div className="px-4 py-6 sm:px-0">
                 <div className="bg-white shadow rounded-lg p-4 mb-6">
                     <h2 className="text-lg font-semibold mb-4">Dashboard Analytics</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-gray-50 p-4 rounded-lg text-center">
-                            <h3 className="text-sm font-medium text-gray-500">Total Reports</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="bg-gray-100 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-200" onClick={() => handleStatusCardClick('all')}>
+                            <h3 className="text-sm font-medium text-gray-600">Total Reports</h3>
                             <p className="mt-1 text-3xl font-semibold text-gray-900">{reports.length}</p>
                         </div>
-                        <div className="md:col-span-2 bg-gray-50 p-4 rounded-lg flex justify-center items-center" style={{ maxHeight: '250px' }}>
+                        <div className="bg-yellow-100 p-4 rounded-lg text-center cursor-pointer hover:bg-yellow-200" onClick={() => handleStatusCardClick('new')}>
+                            <h3 className="text-sm font-medium text-yellow-800">New Reports</h3>
+                            <p className="mt-1 text-3xl font-semibold text-yellow-900">{newReportsCount}</p>
+                        </div>
+                        <div className="bg-blue-100 p-4 rounded-lg text-center cursor-pointer hover:bg-blue-200" onClick={() => handleStatusCardClick('Under Investigation')}>
+                            <h3 className="text-sm font-medium text-blue-800">Under Investigation</h3>
+                            <p className="mt-1 text-3xl font-semibold text-blue-900">{investigatingCount}</p>
+                        </div>
+                        <div className="md:col-span-1 bg-gray-50 p-4 rounded-lg flex justify-center items-center" style={{ maxHeight: '150px' }}>
                             {reports.length > 0 ? (
-                                <Pie data={chartData} />
+                                <Pie data={chartData} options={{ maintainAspectRatio: false }} />
                             ) : (
                                 <p className="text-gray-500">No data available for chart.</p>
                             )}
