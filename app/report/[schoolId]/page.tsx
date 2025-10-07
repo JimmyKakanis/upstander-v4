@@ -44,7 +44,7 @@ export default function ReportPage() {
         <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-lg shadow-sm text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Invalid URL</h1>
           <p>
-            It looks like you've reached this page with an incorrect link. Please use the unique URL provided by your school to submit a report.
+            It looks like you&apos;ve reached this page with an incorrect link. Please use the unique URL provided by your school to submit a report.
           </p>
         </div>
       </main>
