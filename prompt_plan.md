@@ -106,3 +106,26 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
     *   All changes related to the UI overhaul were reverted, returning the codebase to its previous stable state.
 
 **Current Status:** The application is stable and the admin dashboard is fully functional for multiple schools. The plan to overhaul the UI has been shelved for now in favor of stability.
+
+## Phase 7: Security Hardening & Bug Squashing (2025-10-07)
+
+**Summary:** This phase addressed the root cause of the missing `schoolId` in old reports and removed the inefficient client-side filtering workaround. This involved hardening the report submission form, tightening Firestore security rules, and optimizing the dashboard query. A Vercel build failure due to a linting error was also resolved.
+
+**Work Completed:**
+
+1.  **Data Integrity:**
+    *   Hardened the report submission form (`app/report/[schoolId]/page.tsx`) to prevent submissions if the `schoolId` is missing from the URL.
+    *   This completes the work from Phase 5 to ensure all new reports contain a `schoolId`.
+
+2.  **Security & Efficiency:**
+    *   Removed the "pragmatic but inefficient" broad `allow list` rule from `firestore.rules`.
+    *   Replaced it with a secure `allow read` rule, ensuring admins can only access reports matching their `schoolId` on the server-side.
+    *   Refactored the admin dashboard (`app/admin/dashboard/page.tsx`) to use a direct, efficient Firestore query with server-side filtering and sorting.
+
+3.  **Bug Fixes:**
+    *   Fixed a Vercel build failure caused by an unescaped entity (`'`) in a user-facing error message.
+
+4.  **Development Environment:**
+    *   Resolved a persistent local Git configuration issue where the repository was incorrectly initialized in the user's home directory. The fix involved specifying the project path directly in git commands (e.g., `git -C "c:/Projects/upstander - v4" ...`). This is a critical note for future development sessions.
+
+**Current Status:** The application is stable, secure, and efficient. The admin dashboard correctly filters reports per school on the server, and the submission process is more robust.

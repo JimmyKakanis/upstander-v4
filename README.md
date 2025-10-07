@@ -69,6 +69,11 @@ For the live deployment on Vercel, you **must** set the environment variables in
 
 This means that for any code changes to be tested, they must be committed and pushed to GitHub.
 
+### Important Notes for Developers
+
+*   **Firestore Composite Indexes:** When adding or modifying queries in the application (e.g., in the admin dashboard) that involve multiple `where` clauses or a combination of `where` and `orderBy`, Firestore may require a composite index. If a query fails, check the browser's developer console for an error message from Firestore that includes a direct link to create the necessary index in the Firebase Console.
+*   **Local Git Configuration:** During development, an issue was identified where the local Git repository was incorrectly initialized in the system's user home directory instead of the project directory. If you encounter `git` command failures related to permissions or unexpected files, ensure your commands are being run specifically within the project folder. The most reliable solution is to use the `-C` flag to specify the path, for example: `git -C "c:/Projects/upstander - v4" push origin main`.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

@@ -24,7 +24,7 @@ Basic Analytics: A simple dashboard view showing key metrics like the total numb
 3. Security & Data Privacy
 End-to-End Encryption: All data will be encrypted in transit and at rest.
 
-Strict Access Control: Database rules will ensure only authenticated and authorized staff from a specific school can view that school's data.
+Strict Access Control: Database rules will ensure only authenticated and authorized staff from a specific school can view that school's data. All data filtering is enforced on the server-side by these rules and cannot be bypassed by the client.
 
 Anonymity by Design: The system will be built so that student reporters cannot be identified through the data they submit.
 
