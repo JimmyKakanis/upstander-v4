@@ -25,3 +25,4 @@ build/
 # Local configs
 .vscode/
 service-account-key.json
+/scripts/
