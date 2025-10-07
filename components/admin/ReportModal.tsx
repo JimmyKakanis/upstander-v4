@@ -101,7 +101,7 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
               {/* Private Notes Section */}
               <div>
                 <h3 className="text-lg font-bold mb-2">Private Notes</h3>
-                <div className="space-y-2 max-h-48 overflow-y-auto mb-4 bg-gray-50 p-2 rounded">
+                <div className="space-y-2 mb-4 bg-gray-50 p-2 rounded">
                     {report.notes?.slice().sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis()).map((note, index) => (
                         <div key={index} className="bg-white p-2 rounded shadow">
                             <p className="text-sm">{note.note}</p>
@@ -126,7 +126,7 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
               {/* Conversation Section */}
               <div>
                 <h3 className="text-lg font-bold mb-2">Student Conversation</h3>
-                <div className="space-y-4 max-h-48 overflow-y-auto mb-4 bg-gray-50 p-2 rounded">
+                <div className="space-y-4 mb-4 bg-gray-50 p-2 rounded">
                     {report.conversation?.map((msg, index) => (
                         <div key={index} className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>
                             <div className={`p-3 rounded-lg max-w-xs ${
