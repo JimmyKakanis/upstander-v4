@@ -3,28 +3,20 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper function to check if a user is an admin and get their schoolId
-    function getAdminSchoolId() {
-      let adminDoc = get(/databases/$(database)/documents/admins/$(request.auth.uid));
-      // This function is no longer directly used for the list rule,
-      // but it's kept for potential future use or if other rules rely on it.
-      return adminDoc.data.schoolId;
-    }
-
     match /reports/{reportId} {
       // Allow anyone to create a report.
       // The `schoolId` must be present in the request data.
       allow create: if request.resource.data.schoolId is string;
 
-      // Allow authenticated admins to read a report if it matches their schoolId.
+      // Allow authenticated admins to read reports that match their schoolId claim.
       // Allow an unauthenticated user to read a report if a valid followUpAccess document exists.
-      allow read: if (request.auth != null && getAdminSchoolId() == resource.data.schoolId) ||
+      allow read: if (request.auth != null && request.auth.token.schoolId == resource.data.schoolId) ||
                    (exists(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)) &&
                     get(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)).data.reportId == reportId);
 
-      // Allow admins to update a report
+      // Allow admins to update a report if their schoolId claim matches.
       allow update: if request.auth != null
-                    && getAdminSchoolId() == resource.data.schoolId
+                    && request.auth.token.schoolId == resource.data.schoolId
                     && request.resource.data.typeOfBullying == resource.data.typeOfBullying
                     && request.resource.data.description == resource.data.description
                     && request.resource.data.date == resource.data.date
