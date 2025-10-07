@@ -69,29 +69,22 @@ export default function DashboardPage() {
   const fetchReports = useCallback(async (schoolId: string) => {
     setReportsLoading(true);
     try {
-        // Broad query to fetch all reports the user has access to based on rules
-        const reportsQuery = query(collection(db, "reports"));
+        let q = query(
+            collection(db, "reports"),
+            where("schoolId", "==", schoolId),
+        );
+
+        if (statusFilter !== 'all') {
+            q = query(q, where("status", "==", statusFilter));
+        }
+
+        q = query(q, orderBy("createdAt", sortOrder));
         
-        const querySnapshot = await getDocs(reportsQuery);
-        let reportsData = querySnapshot.docs.map(doc => ({
+        const querySnapshot = await getDocs(q);
+        const reportsData = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         })) as Report[];
-
-        // Securely filter reports on the client-side, handling cases where schoolId might be missing
-        reportsData = reportsData.filter(report => report.schoolId && report.schoolId === schoolId);
-
-        // Apply status filtering on the client-side
-        if (statusFilter !== 'all') {
-            reportsData = reportsData.filter(report => report.status === statusFilter);
-        }
-
-        // Apply sorting on the client-side
-        reportsData.sort((a, b) => {
-            const dateA = a.createdAt.toDate().getTime();
-            const dateB = b.createdAt.toDate().getTime();
-            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-        });
 
         setReports(reportsData);
     } catch (error) {

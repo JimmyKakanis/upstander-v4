@@ -18,14 +18,9 @@ service cloud.firestore {
 
       // Allow authenticated admins to read a report if it matches their schoolId.
       // Allow an unauthenticated user to read a report if a valid followUpAccess document exists.
-      allow get: if (request.auth != null && getAdminSchoolId() == resource.data.schoolId) ||
+      allow read: if (request.auth != null && getAdminSchoolId() == resource.data.schoolId) ||
                    (exists(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)) &&
                     get(/databases/$(database)/documents/followUpAccess/$(resource.data.referenceCode)).data.reportId == reportId);
-
-      // WARNING: PRAGMATIC BUT INEFFICIENT RULE
-      // This rule allows any authenticated admin to list all reports to bypass a
-      // persistent bug in the rules engine. Security is handled by client-side filtering.
-      allow list: if request.auth != null;
 
       // Allow admins to update a report
       allow update: if request.auth != null

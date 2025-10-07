@@ -38,6 +38,20 @@ export default function ReportPage() {
   const [referenceCode, setReferenceCode] = useState("");
 
 
+  if (!schoolId) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center p-8 sm:p-24 bg-gray-50">
+        <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-lg shadow-sm text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">Invalid URL</h1>
+          <p>
+            It looks like you've reached this page with an incorrect link. Please use the unique URL provided by your school to submit a report.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
