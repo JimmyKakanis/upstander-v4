@@ -129,3 +129,17 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
     *   Resolved a persistent local Git configuration issue where the repository was incorrectly initialized in the user's home directory. The fix involved specifying the project path directly in git commands (e.g., `git -C "c:/Projects/upstander - v4" ...`). This is a critical note for future development sessions.
 
 **Current Status:** The application is stable, secure, and efficient. The admin dashboard correctly filters reports per school on the server, and the submission process is more robust.
+
+## Phase 8: Dashboard UI/UX Improvements (2025-10-07)
+
+**Summary:** This phase focused on making the admin dashboard more intuitive and user-friendly by adding an "At a Glance" section.
+
+**Work Completed:**
+
+1.  **Dashboard Analytics:**
+    *   Added logic to calculate counts for "New" and "Under Investigation" reports.
+    *   Created a new grid layout for the analytics section.
+    *   Implemented three interactive cards: "Total Reports," "New Reports," and "Under Investigation."
+    *   Clicking on a card now filters the main report table to show the corresponding reports, improving the admin workflow.
+
+**Current Status:** The dashboard now provides immediate, actionable insights, guiding administrators to the most urgent tasks.

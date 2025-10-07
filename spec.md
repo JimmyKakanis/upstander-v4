@@ -21,6 +21,8 @@ Private Notes: A section within each report for staff to add timestamped, confid
 
 Basic Analytics: A simple dashboard view showing key metrics like the total number of reports and a breakdown of reports by category (e.g., a pie chart showing the percentage of verbal vs. physical vs. cyberbullying reports).
 
+Interactive "At a Glance" View: The dashboard prominently displays clickable cards for key metrics (e.g., "New Reports," "Under Investigation") that allow admins to instantly filter the report list to focus on urgent items.
+
 3. Security & Data Privacy
 End-to-End Encryption: All data will be encrypted in transit and at rest.
 
