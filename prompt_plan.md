@@ -142,4 +142,13 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
     *   Implemented three interactive cards: "Total Reports," "New Reports," and "Under Investigation."
     *   Clicking on a card now filters the main report table to show the corresponding reports, improving the admin workflow.
 
-**Current Status:** The dashboard now provides immediate, actionable insights, guiding administrators to the most urgent tasks.
+2.  **Modal UI/UX:**
+    *   Identified an issue where the report details modal was not visible when the report list was long.
+    *   Implemented a fix to make the modal a true screen-centered overlay with a unified scrollbar for all its content, preventing "nested scrollbars" and ensuring all details are easily accessible.
+
+**Current Status:** The dashboard now provides immediate, actionable insights. A fix for the report modal's visibility and scrolling has been implemented and is ready for verification.
+
+## Phase 9: Next Session Plan
+
+- **Verify Modal Fix:** The first step for the next session will be to thoroughly test the report modal to confirm that the scrolling behavior is intuitive and solves the visibility issue.
+- **Continue UI/UX Improvements:** Based on the user's feedback, we will identify and implement the next highest-priority UI/UX enhancement for either the admin dashboard or the student reporting form.
