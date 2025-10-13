@@ -10,23 +10,11 @@ This is a [Next.js](https://nextjs.org) project for Upstander, an anonymous bull
 - **Unique Reference Codes:** Each report is assigned a unique, non-identifiable code that students can use for follow-up conversations.
 - **Interactive Analytics:** The admin dashboard includes an "At a Glance" section with clickable cards to quickly filter reports by status (e.g., New, Under Investigation) and a pie chart breaking down reports by category.
 
-## Getting Started
+## Development & Deployment Workflow
 
-First, run the development server:
+**IMPORTANT:** The primary workflow for this project is to commit changes to the `main` branch on GitHub. This automatically triggers a new deployment on Vercel, where all testing and verification is conducted.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The application is live and continuously deployed. There is no local development environment (`localhost:3000`) used as part of the standard workflow.
 
 ### Environment Variables
 
@@ -64,12 +52,6 @@ For the live deployment on Vercel, you **must** set the environment variables in
 4.  Paste the contents into the editor in the Firebase Console and click **Publish**.
 
 
-## Development Workflow & Testing
-
-**IMPORTANT:** All testing for this project is conducted on the live Vercel deployment, which is automatically updated when changes are pushed to the `main` branch on GitHub. The local development server (`npm run dev`) is not the primary environment for testing.
-
-This means that for any code changes to be tested, they must be committed and pushed to GitHub.
-
 ### Important Notes for Developers
 
 *   **Firestore Composite Indexes:** When adding or modifying queries in the application (e.g., in the admin dashboard) that involve multiple `where` clauses or a combination of `where` and `orderBy`, Firestore may require a composite index. If a query fails, check the browser's developer console for an error message from Firestore that includes a direct link to create the necessary index in the Firebase Console.
@@ -77,6 +59,6 @@ This means that for any code changes to be tested, they must be committed and pu
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application is automatically deployed from the `main` branch using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
