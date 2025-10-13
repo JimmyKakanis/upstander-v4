@@ -40,14 +40,14 @@ export default function ReportPage() {
 
   if (!schoolId) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-slate-50">
-        <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
+      <div className="max-w-md mx-auto mt-8 sm:mt-16">
+        <div className="bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Invalid URL</h1>
           <p className="text-slate-600">
             It looks like you&apos;ve reached this page with an incorrect link. Please use the unique URL provided by your school to submit a report.
           </p>
         </div>
-      </main>
+      </div>
     );
   }
 
@@ -119,8 +119,8 @@ export default function ReportPage() {
 
   if (submitted) {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-slate-50">
-            <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
+        <div className="max-w-md mx-auto mt-8 sm:mt-16">
+            <div className="bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
                 <div>
                     <h2 className="text-2xl font-bold text-slate-800 mb-2">Report Submitted</h2>
                     <p className="text-slate-600 mb-6">Thank you for helping keep our school safe.</p>
@@ -141,13 +141,13 @@ export default function ReportPage() {
                     </button>
                 </div>
             </div>
-        </main>
+        </div>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-slate-50">
-      <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-xl shadow-sm">
+    <div className="max-w-md mx-auto mt-8 sm:mt-16">
+      <div className="bg-white p-8 border border-gray-200 rounded-xl shadow-sm">
         <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-slate-800">
             Anonymous Report
@@ -243,6 +243,6 @@ export default function ReportPage() {
             {error && <p className="text-sm text-red-600 text-center">{error}</p>}
         </form>
       </div>
-    </main>
+    </div>
   );
 }

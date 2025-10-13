@@ -1,38 +1,36 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-4 sm:p-8">
-      <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
-        
-        <div className="flex justify-center mb-6">
-            <Image src="/globe.svg" alt="Upstander" width={48} height={48} />
-        </div>
+    <div className="flex flex-col items-center justify-center text-center px-4 py-20 sm:py-32">
+      
+      <div 
+        className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50 via-white to-slate-50"
+        style={{ zIndex: -1, clipPath: 'polygon(0 0, 100% 0, 100% 70%, 0% 100%)' }}
+      ></div>
 
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">Welcome to Upstander</h1>
-        <p className="text-slate-600 mb-8">Anonymous Bullying Reporting for Your School Community.</p>
-        
-        <div className="space-y-4 bg-slate-50 p-6 rounded-lg border border-slate-200">
-            <p className="text-sm text-slate-700">
-              To submit a new report, please use the unique URL provided by your school.
-            </p>
-            <p>
-              <Link href="/report/MySchoolMVP" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                  Example Link to a School Report Form
-              </Link>
-            </p>
-        </div>
+      <h1 className="text-5xl sm:text-7xl font-bold text-slate-900 max-w-4xl">
+        A Safer Way to Speak Up
+      </h1>
+      <p className="mt-6 text-lg text-slate-600 max-w-2xl">
+        Upstander provides a secure and anonymous way for students to report bullying and other concerns, helping to create a safer school environment for everyone.
+      </p>
 
-        <div className="mt-8 border-t pt-8">
-            <p className="mb-4 text-sm text-slate-700">
-              Already submitted a report? Check its status or add to the conversation here:
-            </p>
-            <Link href="/follow-up" className="inline-block w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                Check Report Status
-            </Link>
-        </div>
+      <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md">
+        <Link 
+          href="/follow-up" 
+          className="w-full sm:w-auto inline-block py-3 px-8 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
+        >
+          Check a Report Status
+        </Link>
+        <Link 
+          href="/report/MySchoolMVP" 
+          className="w-full sm:w-auto inline-block py-3 px-8 border border-slate-300 rounded-lg shadow-sm text-base font-medium text-slate-700 bg-white hover:bg-slate-50 transition-all"
+        >
+          View Example Form
+        </Link>
       </div>
-    </main>
+
+    </div>
   );
 }

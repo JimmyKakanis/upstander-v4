@@ -45,8 +45,8 @@ export default function FollowUpPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-slate-50">
-      <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-xl shadow-sm">
+    <div className="max-w-md mx-auto mt-8 sm:mt-16">
+      <div className="bg-white p-8 border border-gray-200 rounded-xl shadow-sm">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-slate-800 mb-2">Check Report Status</h2>
           <p className="text-slate-600 mb-8">
@@ -80,6 +80,6 @@ export default function FollowUpPage() {
           </div>
         </form>
       </div>
-    </main>
+    </div>
   );
 }
