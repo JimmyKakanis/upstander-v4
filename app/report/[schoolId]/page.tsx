@@ -40,10 +40,10 @@ export default function ReportPage() {
 
   if (!schoolId) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-8 sm:p-24 bg-gray-50">
-        <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-lg shadow-sm text-center">
+      <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-slate-50">
+        <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Invalid URL</h1>
-          <p>
+          <p className="text-slate-600">
             It looks like you&apos;ve reached this page with an incorrect link. Please use the unique URL provided by your school to submit a report.
           </p>
         </div>
@@ -119,19 +119,23 @@ export default function ReportPage() {
 
   if (submitted) {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-start p-8 sm:p-24 bg-gray-50">
-            <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-lg shadow-sm">
-                <div className="text-center">
-                    <h2 className="text-xl font-bold mb-4">Report Submitted Successfully</h2>
-                    <p className="mb-4">Thank you for helping keep our school safe.</p>
-                    <p className="mb-2">Your anonymous reference code is:</p>
-                    <p className="text-lg font-mono bg-gray-100 p-2 inline-block rounded mb-6">{referenceCode}</p>
-                    <p className="text-sm text-gray-600 mb-6">
-                    You can use this code if you need to talk to a staff member about this report without revealing your identity.
+        <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-slate-50">
+            <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
+                <div>
+                    <h2 className="text-2xl font-bold text-slate-800 mb-2">Report Submitted</h2>
+                    <p className="text-slate-600 mb-6">Thank you for helping keep our school safe.</p>
+                    
+                    <div className="bg-slate-100 border border-slate-200 rounded-lg p-4 mb-6">
+                      <p className="text-sm text-slate-700 mb-2">Your anonymous reference code is:</p>
+                      <p className="text-xl font-mono bg-white py-2 px-3 inline-block rounded-md text-slate-800 border border-slate-300">{referenceCode}</p>
+                    </div>
+
+                    <p className="text-sm text-slate-600 mb-8">
+                      You can use this code to check the status of your report or to add more information later. Keep it safe.
                     </p>
                     <button
                     onClick={handleNewReport}
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                     >
                     Submit Another Report
                     </button>
@@ -142,14 +146,17 @@ export default function ReportPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start p-8 sm:p-24 bg-gray-50">
-      <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-lg shadow-sm">
-        <h1 className="text-2xl font-bold text-center mb-8">
-          Anonymous Bullying Report for {schoolId}
-        </h1>
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-slate-50">
+      <div className="w-full max-w-md bg-white p-8 border border-gray-200 rounded-xl shadow-sm">
+        <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-slate-800">
+            Anonymous Report
+            </h1>
+            <p className="text-slate-600 mt-2">for {schoolId}</p>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-                <label htmlFor="bullyingType" className="block text-sm font-medium text-gray-900">
+                <label htmlFor="bullyingType" className="block text-sm font-medium text-slate-700">
                 Type of Bullying
                 </label>
                 <select
@@ -157,7 +164,7 @@ export default function ReportPage() {
                 name="bullyingType"
                 value={formData.bullyingType}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 >
                 <option>Verbal</option>
                 <option>Physical</option>
@@ -167,7 +174,7 @@ export default function ReportPage() {
             </div>
 
             <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-900">
+                <label htmlFor="description" className="block text-sm font-medium text-slate-700">
                 Description of Incident
                 </label>
                 <textarea
@@ -177,12 +184,12 @@ export default function ReportPage() {
                 value={formData.description}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
             </div>
 
             <div>
-                <label htmlFor="date" className="block text-sm font-medium text-gray-900">
+                <label htmlFor="date" className="block text-sm font-medium text-slate-700">
                 Date (Optional)
                 </label>
                 <input
@@ -191,12 +198,12 @@ export default function ReportPage() {
                 name="date"
                 value={formData.date}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
             </div>
 
             <div>
-                <label htmlFor="time" className="block text-sm font-medium text-gray-900">
+                <label htmlFor="time" className="block text-sm font-medium text-slate-700">
                 Time (Optional)
                 </label>
                 <input
@@ -205,12 +212,12 @@ export default function ReportPage() {
                 name="time"
                 value={formData.time}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
             </div>
 
             <div>
-                <label htmlFor="location" className="block text-sm font-medium text-gray-900">
+                <label htmlFor="location" className="block text-sm font-medium text-slate-700">
                 Location (Optional)
                 </label>
                 <input
@@ -219,17 +226,17 @@ export default function ReportPage() {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
             </div>
             
-            <div>
+            <div className="pt-2">
                 <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 transition-colors"
                 >
-                {isLoading ? 'Submitting...' : 'Submit Report'}
+                {isLoading ? 'Submitting...' : 'Submit Report Anonymously'}
                 </button>
             </div>
 
