@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  /* The background and text colors are now handled by utility classes 
-     in the app/layout.tsx file to allow for more flexibility. */
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
