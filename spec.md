@@ -46,9 +46,13 @@ Programming Language: TypeScript
 
 Why: TypeScript is a superset of JavaScript that adds static typing. This helps catch errors early in development, leads to more reliable code, and is well-understood by AI coding assistants.
 
-Frontend Framework: Next.js (using React)
+Frontend Framework: Next.js (v14 Stable) with React (v18 Stable)
 
-Why: Next.js is a powerful framework for building modern, fast, and user-friendly web applications. It provides a great structure for building both the student-facing reporting form and the admin dashboard.
+Why: Next.js is a powerful framework for building modern, fast, and user-friendly web applications. After encountering build instability with experimental versions, the project has been standardized on the latest stable releases to ensure reliability.
+
+Styling: Tailwind CSS (v3 Stable) with PostCSS and Autoprefixer
+
+Why: Tailwind is a utility-first CSS framework that allows for rapid development of modern user interfaces directly within the markup. It is processed using PostCSS for maximum compatibility.
 
 Backend & Database: Firebase (Google Cloud)
 
