@@ -2,12 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
-  A clean, modern, and light theme for the application.
-*/
 body {
-  background-color: #ffffff; /* White background */
-  color: #111827; /* Dark gray text for readability (Tailwind's gray-900) */
+  /* The background and text colors are now handled by utility classes 
+     in the app/layout.tsx file to allow for more flexibility. */
 }
 
 @layer utilities {
