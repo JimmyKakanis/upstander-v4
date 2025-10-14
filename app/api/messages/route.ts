@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const message = {
       sender,
       text,
-      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      timestamp: new Date(),
     };
 
     if (sender === 'admin') {
