@@ -1,7 +1,7 @@
 "use client";
 
 import { Report, ConversationMessage } from '@/types';
-import { doc, Timestamp, arrayUnion, onSnapshot, collection, query, orderBy } from 'firebase/firestore';
+import { doc, Timestamp, arrayUnion, onSnapshot, collection, query, orderBy, updateDoc } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { useState, useEffect } from 'react';
 
