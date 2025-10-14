@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { doc, onSnapshot, updateDoc, arrayUnion, Timestamp } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Report } from '@/types';
+import { Report, ConversationMessage } from '@/types';
 
-export default function ReportDashboardPage() {
+export default function FollowUpConversationPage() {
     const params = useParams();
     const reportId = params.reportId as string;
     const [report, setReport] = useState<Report | null>(null);
+    const [messages, setMessages] = useState<ConversationMessage[]>([]);
     const [loading, setLoading] = useState(true);
+    const [messagesLoading, setMessagesLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [newMessage, setNewMessage] = useState('');
 
@@ -18,44 +20,66 @@ export default function ReportDashboardPage() {
         if (!reportId) return;
 
         const reportRef = doc(db, 'reports', reportId);
+        const conversationRef = doc(db, 'conversations', reportId);
 
-        const unsubscribe = onSnapshot(reportRef, (docSnap) => {
-            if (docSnap.exists()) {
-                setReport({ id: docSnap.id, ...docSnap.data() } as Report);
-                setError(null);
-            } else {
-                setError("Report not found.");
-                setReport(null);
+        const fetchReport = async () => {
+            try {
+                const reportSnap = await getDoc(reportRef);
+                if (reportSnap.exists()) {
+                    setReport({ id: reportSnap.id, ...reportSnap.data() } as Report);
+                } else {
+                    setError("Report not found.");
+                }
+            } catch (err) {
+                console.error("Error fetching report:", err);
+                setError("Failed to fetch report data.");
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
+        };
+
+        fetchReport();
+
+        const unsubscribeMessages = onSnapshot(conversationRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                const sortedMessages = (data.messages || []).sort((a: ConversationMessage, b: ConversationMessage) => {
+                    return a.timestamp.toMillis() - b.timestamp.toMillis();
+                });
+                setMessages(sortedMessages);
+            } else {
+                setMessages([]);
+            }
+            setMessagesLoading(false);
         }, (err) => {
-            console.error("Error fetching report:", err);
-            setError("Failed to fetch report data.");
-            setLoading(false);
+            console.error("Error fetching conversation:", err);
+            setMessagesLoading(false);
         });
 
-        return () => unsubscribe();
+        return () => {
+            unsubscribeMessages();
+        };
     }, [reportId]);
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newMessage.trim() === '' || !reportId) return;
 
-        const message = {
-            sender: 'student',
-            message: newMessage,
-            createdAt: Timestamp.now()
-        };
-
         try {
-            const reportRef = doc(db, 'reports', reportId);
-            await updateDoc(reportRef, {
-                conversation: arrayUnion(message)
-            });
+            await fetch('/api/messages', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  reportId: reportId,
+                  text: newMessage,
+                  sender: 'reporter',
+                }),
+              });
             setNewMessage('');
         } catch (err) {
             console.error("Error sending message:", err);
-            // Optionally, set an error state to inform the user
         }
     };
 
@@ -92,18 +116,22 @@ export default function ReportDashboardPage() {
             <div className="border-t pt-6">
                 <h3 className="text-xl font-bold mb-4">Follow-up Conversation</h3>
                 <div className="bg-gray-50 p-4 rounded-lg border h-80 overflow-y-auto flex flex-col space-y-4">
-                    {/* Conversation messages */}
-                    {report.conversation?.map((msg, index) => (
-                        <div key={index} className={`flex ${msg.sender === 'student' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`p-3 rounded-lg max-w-xs lg:max-w-md ${
-                                msg.sender === 'student' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-800'
-                            }`}>
-                                <p>{msg.message}</p>
-                                <p className="text-xs opacity-75 mt-1 text-right">{msg.createdAt.toDate().toLocaleTimeString()}</p>
+                    {messagesLoading ? (
+                        <p className="text-gray-500 text-center self-center">Loading conversation...</p>
+                    ) : messages.length > 0 ? (
+                        messages.map((msg, index) => (
+                            <div key={index} className={`flex ${msg.sender === 'reporter' ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`p-3 rounded-lg max-w-xs lg:max-w-md ${
+                                    msg.sender === 'reporter' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-800'
+                                }`}>
+                                    <p>{msg.text}</p>
+                                    {msg.timestamp && (
+                                        <p className="text-xs opacity-75 mt-1 text-right">{msg.timestamp.toDate().toLocaleTimeString()}</p>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                    {(!report.conversation || report.conversation.length === 0) && (
+                        ))
+                    ) : (
                         <p className="text-gray-500 text-center self-center">
                             This is where you can securely and anonymously communicate with a staff member. Send a message to start the conversation.
                         </p>

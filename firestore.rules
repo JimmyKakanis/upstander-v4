@@ -55,6 +55,17 @@ service cloud.firestore {
       // This should be handled by a secure backend environment.
       allow create, update, delete: if false; 
     }
+
+    match /conversations/{reportId} {
+      // Allow an admin to get the conversation if their schoolId matches the report's schoolId.
+      // Also allow read access for the student who has the direct link (reportId).
+      allow get: if (request.auth != null && request.auth.token.schoolId == get(/databases/$(database)/documents/reports/$(reportId)).data.schoolId) ||
+                   exists(/databases/$(database)/documents/reports/$(reportId));
+
+      // Do not allow clients to list, create, update, or delete conversation documents directly.
+      // All writes are handled by the secure API endpoint.
+      allow list, write: if false;
+    }
   }
 }
 

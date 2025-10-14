@@ -16,6 +16,7 @@ type BullyingType = "Verbal" | "Physical" | "Cyber" | "Social Exclusion";
 interface ReportFormState {
   bullyingType: BullyingType;
   description: string;
+  contactEmail?: string;
   date?: string;
   time?: string;
   location?: string;
@@ -28,6 +29,7 @@ export default function ReportPage() {
   const [formData, setFormData] = useState<ReportFormState>({
     bullyingType: "Verbal",
     description: "",
+    contactEmail: "",
     date: "",
     time: "",
     location: "",
@@ -99,6 +101,7 @@ export default function ReportPage() {
       setFormData({
         bullyingType: "Verbal",
         description: "",
+        contactEmail: "",
         date: "",
         time: "",
         location: "",
@@ -186,6 +189,23 @@ export default function ReportPage() {
                 required
                 className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
+            </div>
+
+            <div>
+                <label htmlFor="contactEmail" className="block text-sm font-medium text-slate-700">
+                Your Email (Optional, for updates)
+                </label>
+                <input
+                type="email"
+                id="contactEmail"
+                name="contactEmail"
+                value={formData.contactEmail}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                />
+                <p className="mt-2 text-xs text-slate-500">
+                    Providing an email is optional, but it allows us to contact you with questions if needed. Your email will remain confidential.
+                </p>
             </div>
 
             <div>

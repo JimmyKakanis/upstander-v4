@@ -1,9 +1,9 @@
 "use client";
 
 import { Report, ConversationMessage } from '@/types';
-import { doc, updateDoc, Timestamp, arrayUnion } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import { useState } from 'react';
+import { doc, Timestamp, arrayUnion, onSnapshot, collection, query, orderBy } from 'firebase/firestore';
+import { db, auth } from '@/lib/firebase';
+import { useState, useEffect } from 'react';
 
 interface ReportModalProps {
   report: Report;
@@ -14,6 +14,31 @@ interface ReportModalProps {
 export default function ReportModal({ report, onClose, onUpdate }: ReportModalProps) {
   const [newNote, setNewNote] = useState('');
   const [newMessage, setNewMessage] = useState('');
+  const [messages, setMessages] = useState<ConversationMessage[]>([]);
+  const [messagesLoading, setMessagesLoading] = useState(true);
+
+  useEffect(() => {
+    if (!report.id) return;
+
+    setMessagesLoading(true);
+    const conversationRef = doc(db, 'conversations', report.id);
+
+    const unsubscribe = onSnapshot(conversationRef, (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        // Ensure messages are sorted by timestamp
+        const sortedMessages = (data.messages || []).sort((a: ConversationMessage, b: ConversationMessage) => {
+          return a.timestamp.toMillis() - b.timestamp.toMillis();
+        });
+        setMessages(sortedMessages);
+      } else {
+        setMessages([]);
+      }
+      setMessagesLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [report.id]);
 
   const handleStatusChange = async (newStatus: 'Under Investigation' | 'Resolved') => {
     try {
@@ -53,22 +78,26 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
     e.preventDefault();
     if (newMessage.trim() === '' || !report.id) return;
 
-    const message: ConversationMessage = {
-        sender: 'admin',
-        message: newMessage,
-        createdAt: Timestamp.now()
-    };
+    const authToken = await auth.currentUser?.getIdToken();
+    if (!authToken) {
+      console.error("Not authenticated");
+      return;
+    }
 
     try {
-        const reportRef = doc(db, 'reports', report.id);
-        await updateDoc(reportRef, {
-            conversation: arrayUnion(message)
-        });
-        
-        const updatedConversation = [...(report.conversation || []), message];
-        const updatedReport = { ...report, conversation: updatedConversation };
-        onUpdate(updatedReport);
-        setNewMessage('');
+      await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          reportId: report.id,
+          text: newMessage,
+          sender: 'admin',
+        }),
+      });
+      setNewMessage('');
     } catch (error) {
         console.error("Error sending message:", error);
     }
@@ -161,19 +190,24 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
               {/* Conversation Section */}
               <div>
                 <h3 className="text-lg font-semibold text-slate-800 mb-3">Student Conversation</h3>
-                <div className="space-y-4 mb-4">
-                    {report.conversation?.map((msg, index) => (
+                <div className="space-y-4 mb-4 h-48 overflow-y-auto bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    {messagesLoading ? (
+                      <p className="text-sm text-slate-400 italic">Loading conversation...</p>
+                    ) : messages.length > 0 ? (
+                      messages.map((msg, index) => (
                         <div key={index} className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>
                             <div className={`p-3 rounded-lg max-w-xs text-sm ${
                                 msg.sender === 'admin' ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-800'
                             }`}>
-                                <p>{msg.message}</p>
-                                <p className="text-xs opacity-75 mt-1 text-right">{msg.createdAt.toDate().toLocaleTimeString()}</p>
+                                <p>{msg.text}</p>
+                                {msg.timestamp && (
+                                  <p className="text-xs opacity-75 mt-1 text-right">{msg.timestamp.toDate().toLocaleTimeString()}</p>
+                                )}
                             </div>
                         </div>
-                    ))}
-                     {(!report.conversation || report.conversation.length === 0) && (
-                        <p className="text-sm text-slate-400 italic">No messages yet.</p>
+                      ))
+                    ) : (
+                      <p className="text-sm text-slate-400 italic">No messages yet.</p>
                     )}
                 </div>
                 <form onSubmit={handleSendMessage} className="flex">
