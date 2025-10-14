@@ -8,6 +8,7 @@ This is a [Next.js](https://nextjs.org) project for Upstander, an anonymous bull
 - **Secure Admin Dashboard:** School staff can log in to view and manage reports for their specific school.
 - **Report Management:** Admins can view report details, update the status of an investigation, and add private notes.
 - **Unique Reference Codes:** Each report is assigned a unique, non-identifiable code that students can use for follow-up conversations.
+- **Anonymous Two-Way Communication:** A secure, real-time messaging feature that allows school staff to communicate with the student reporter without compromising the student's anonymity. Includes email notifications to alert students of new messages.
 - **Interactive Analytics:** The admin dashboard includes an "At a Glance" section with clickable cards to quickly filter reports by status (e.g., New, Under Investigation) and a pie chart breaking down reports by category.
 
 ## Development & Deployment Workflow

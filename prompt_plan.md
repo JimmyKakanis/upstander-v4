@@ -171,9 +171,36 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
 
 **Current Status:** The application is now **stable**, **fully functional**, and features a **complete visual redesign**. The build system has been hardened by reverting to stable, production-ready dependencies.
 
-## Phase 10: Next Session Plan
+## Phase 10: Anonymous Two-Way Communication (2025-10-14)
+
+**Summary:** This phase implemented one of the core post-MVP features: a secure, real-time, anonymous messaging system. This allows school staff to ask follow-up questions or provide updates to the student who submitted a report, without compromising the student's anonymity.
+
+**Work Completed:**
+
+1.  **Backend API:**
+    *   Created a new secure Next.js API endpoint (`/api/messages`) to handle all message submissions.
+    *   Established a new `conversations` collection in Firestore to store message history, separate from the main report data.
+    *   Integrated the Resend email service to send notifications to students when they receive a reply from an administrator (if the student provided an optional email address).
+
+2.  **Admin & Student UI:**
+    *   Integrated a real-time chat interface into the admin dashboard's report modal, allowing staff to send and receive messages.
+    *   Updated the student-facing follow-up page to become a fully functional chat interface for the reporter.
+
+3.  **Security & Data Model:**
+    *   Hardened Firestore security rules to protect the new `conversations` collection, ensuring only authorized admins or the anonymous reporter with the correct link can read messages. All write operations are securely handled by the backend API.
+    *   Added an optional `contactEmail` field to the reporting form.
+
+4.  **Deployment & Debugging:**
+    *   Successfully debugged a series of Vercel deployment failures, including:
+        *   Incorrectly placed production dependencies (`firebase-admin`, `resend`).
+        *   A missing `updateDoc` import in the report modal.
+        *   An invalid `FIREBASE_PRIVATE_KEY` format in the Vercel environment variables.
+        *   A Firestore limitation preventing the use of `serverTimestamp()` in array updates.
+
+**Current Status:** The anonymous two-way communication feature is fully implemented, tested, and deployed.
+
+## Phase 11: Next Session Plan
 
 - **Review & Prioritize:** Discuss the next set of features or improvements. Potential areas include:
-  - Implementing the anonymous two-way communication feature.
   - Adding a "Resources" section for students.
   - Beginning work on automated testing.
