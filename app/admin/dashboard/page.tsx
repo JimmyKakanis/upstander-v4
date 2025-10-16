@@ -33,7 +33,7 @@ export default function DashboardPage() {
   };
 
   const reportCounts = reports.reduce((acc, report) => {
-    const type = report.typeOfBullying || 'Unknown';
+    const type = report.bullyingType || 'Unknown';
     acc[type] = (acc[type] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
@@ -280,7 +280,7 @@ export default function DashboardPage() {
                                 reports.map((report) => (
                                 <tr key={report.id} onClick={() => setSelectedReport(report)} className="cursor-pointer hover:bg-slate-50">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{report.createdAt.toDate().toLocaleDateString()}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{report.typeOfBullying}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{report.bullyingType}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                             report.status === 'new' ? 'bg-yellow-100 text-yellow-800' :

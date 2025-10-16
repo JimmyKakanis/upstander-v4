@@ -14,9 +14,10 @@ export interface ConversationMessage {
 
 export interface Report {
   id: string;
-  typeOfBullying: 'Verbal' | 'Physical' | 'Cyber' | 'Social Exclusion';
-  description: string;
-  contactEmail?: string;
+  bullyingType: string;
+  involvedParties: string;
+  yearLevel: string;
+  whatHappened: string;
   date?: string;
   time?: string;
   location?: string;

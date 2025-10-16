@@ -121,7 +121,7 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
                 <div className="space-y-4">
                     <div>
                         <p className="text-sm font-medium text-slate-500">Type of Bullying</p>
-                        <p className="text-slate-800">{report.typeOfBullying}</p>
+                        <p className="text-slate-800">{report.bullyingType}</p>
                     </div>
                     <div>
                         <p className="text-sm font-medium text-slate-500">Date of Incident</p>
@@ -130,6 +130,10 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
                      <div>
                         <p className="text-sm font-medium text-slate-500">Location</p>
                         <p className="text-slate-800">{report.location || 'Not provided'}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-slate-500">Involved Parties</p>
+                        <p className="text-slate-800">{report.involvedParties || 'Not provided'}</p>
                     </div>
                 </div>
                 <div className="space-y-4">
@@ -147,13 +151,17 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
                         <p className="text-sm font-medium text-slate-500">Time of Incident</p>
                         <p className="text-slate-800">{report.time || 'Not provided'}</p>
                     </div>
+                    <div>
+                        <p className="text-sm font-medium text-slate-500">Year Level</p>
+                        <p className="text-slate-800">{report.yearLevel || 'Not provided'}</p>
+                    </div>
                 </div>
             </div>
             
             {/* Description */}
             <div className="mb-6">
-                <p className="text-sm font-medium text-slate-500 mb-1">Description</p>
-                <p className="bg-slate-50 p-4 rounded-lg text-slate-800 border border-slate-200">{report.description}</p>
+                <p className="text-sm font-medium text-slate-500 mb-1">What Happened</p>
+                <p className="bg-slate-50 p-4 rounded-lg text-slate-800 border border-slate-200">{report.whatHappened}</p>
             </div>
             
             {/* Container for Notes and Conversation */}
