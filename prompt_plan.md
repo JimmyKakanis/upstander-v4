@@ -227,7 +227,28 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
 
 **Current Status:** The reporting form is significantly more robust, and the admin dashboard correctly reflects all the new data. The application is stable and ready for the next phase of development.
 
-## Phase 13: Next Session Plan
+## Phase 13: Real-time UX & Bug Squashing (2025-10-16)
+
+**Summary:** This phase focused on fine-tuning the user experience of the admin dashboard and student follow-up pages, particularly around the real-time features. A critical Vercel deployment bug was also resolved.
+
+**Work Completed:**
+
+1.  **Real-time Staff Notes:**
+    *   Fixed a state management bug in the admin dashboard where new private notes would not appear in the report modal until it was closed and reopened. The notes now update instantly.
+
+2.  **Instant Chat Experience (Optimistic UI):**
+    *   Resolved an issue where messages in both the admin and student chat windows felt slow to appear.
+    *   Implemented an "optimistic UI" update, which makes messages appear instantly from the user's perspective, dramatically improving the perceived performance.
+
+3.  **Chat Auto-Scrolling:**
+    *   Added an auto-scrolling feature to both the admin and student chat windows. The view now automatically scrolls to the bottom whenever a new message is sent or received, ensuring the latest message is always visible.
+
+4.  **Deployment Bug Fix:**
+    *   Fixed a critical Vercel build error caused by a variable scope issue in the optimistic UI implementation.
+
+**Current Status:** The application's real-time features are now more robust and user-friendly. The codebase is stable and all known bugs from this session have been resolved.
+
+## Phase 14: Next Session Plan
 
 - **Review & Prioritize:** Discuss the next set of features or improvements. Potential areas include:
   - Adding a "Resources" section for students.
