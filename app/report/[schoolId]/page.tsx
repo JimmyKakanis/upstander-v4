@@ -11,29 +11,49 @@ const generateReferenceCode = (docId: string) => {
   return `FR${year}-${docPart}`;
 };
 
-type BullyingType = "Verbal" | "Physical" | "Cyber" | "Social Exclusion";
+const bullyingTypes = [
+  "Verbal", 
+  "Physical", 
+  "Cyber", 
+  "Social Exclusion", 
+  "Discrimination",
+  "Harassment",
+  "Theft or Damage to Property",
+  "Threats or Intimidation",
+  "Spreading Rumors",
+  "Other"
+] as const;
+
+type BullyingType = typeof bullyingTypes[number];
 
 interface ReportFormState {
+  involvedParties: string;
   bullyingType: BullyingType;
-  description: string;
+  yearLevel: string;
+  whatHappened: string;
   contactEmail?: string;
   date?: string;
   time?: string;
   location?: string;
 }
 
+const isTestingMode = true;
+
 export default function ReportPage() {
   const params = useParams();
   const schoolId = params.schoolId as string;
 
   const [formData, setFormData] = useState<ReportFormState>({
+    involvedParties: "",
     bullyingType: "Verbal",
-    description: "",
+    yearLevel: "",
+    whatHappened: "",
     contactEmail: "",
     date: "",
     time: "",
     location: "",
   });
+  const [statementOfTruth, setStatementOfTruth] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -99,8 +119,10 @@ export default function ReportPage() {
       setSubmitted(true);
       
       setFormData({
+        involvedParties: "",
         bullyingType: "Verbal",
-        description: "",
+        yearLevel: "",
+        whatHappened: "",
         contactEmail: "",
         date: "",
         time: "",
@@ -169,24 +191,97 @@ export default function ReportPage() {
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 >
-                <option>Verbal</option>
-                <option>Physical</option>
-                <option>Cyber</option>
-                <option>Social Exclusion</option>
+                {bullyingTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
                 </select>
             </div>
 
             <div>
-                <label htmlFor="description" className="block text-sm font-medium text-slate-700">
-                Description of Incident
+                <label htmlFor="involvedParties" className="block text-sm font-medium text-slate-700">
+                Who is involved / needs help
+                </label>
+                <input
+                type="text"
+                id="involvedParties"
+                name="involvedParties"
+                value={formData.involvedParties}
+                onChange={handleChange}
+                required={!isTestingMode}
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                />
+            </div>
+
+            <div>
+                <label htmlFor="yearLevel" className="block text-sm font-medium text-slate-700">
+                Year level / grade
+                </label>
+                <input
+                type="text"
+                id="yearLevel"
+                name="yearLevel"
+                value={formData.yearLevel}
+                onChange={handleChange}
+                required={!isTestingMode}
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                />
+            </div>
+
+            <div>
+                <label htmlFor="whatHappened" className="block text-sm font-medium text-slate-700">
+                What did you see?
                 </label>
                 <textarea
-                id="description"
-                name="description"
+                id="whatHappened"
+                name="whatHappened"
                 rows={4}
-                value={formData.description}
+                value={formData.whatHappened}
                 onChange={handleChange}
-                required
+                required={!isTestingMode}
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                />
+            </div>
+
+            <div>
+                <label htmlFor="location" className="block text-sm font-medium text-slate-700">
+                Where this happen
+                </label>
+                <input
+                type="text"
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                required={!isTestingMode}
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                />
+            </div>
+
+            <div>
+                <label htmlFor="date" className="block text-sm font-medium text-slate-700">
+                When did this happen (approx)
+                </label>
+                <input
+                type="date"
+                id="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                required={!isTestingMode}
+                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                />
+            </div>
+
+            <div>
+                <label htmlFor="time" className="block text-sm font-medium text-slate-700">
+                Time (Optional)
+                </label>
+                <input
+                type="time"
+                id="time"
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
                 className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
             </div>
@@ -207,53 +302,34 @@ export default function ReportPage() {
                     Providing an email is optional, but it allows us to contact you with questions if needed. Your email will remain confidential.
                 </p>
             </div>
-
-            <div>
-                <label htmlFor="date" className="block text-sm font-medium text-slate-700">
-                Date (Optional)
-                </label>
-                <input
-                type="date"
-                id="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                />
-            </div>
-
-            <div>
-                <label htmlFor="time" className="block text-sm font-medium text-slate-700">
-                Time (Optional)
-                </label>
-                <input
-                type="time"
-                id="time"
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                />
-            </div>
-
-            <div>
-                <label htmlFor="location" className="block text-sm font-medium text-slate-700">
-                Location (Optional)
-                </label>
-                <input
-                type="text"
-                id="location"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                />
-            </div>
             
+            <div className="pt-4">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <input
+                    id="truth-statement"
+                    name="truth-statement"
+                    type="checkbox"
+                    checked={statementOfTruth}
+                    onChange={(e) => setStatementOfTruth(e.target.checked)}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label htmlFor="truth-statement" className="font-medium text-gray-700">
+                    Statement of Truth
+                  </label>
+                  <p className="text-gray-500">
+                  I confirm that this report is a truthful account of what I witnessed or experienced. I understand that submitting a deliberately false or malicious report is a serious breach of school policy and undermines our community's safety.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="pt-2">
                 <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || (!isTestingMode && (!statementOfTruth || !formData.involvedParties || !formData.yearLevel || !formData.whatHappened || !formData.location || !formData.date))}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 transition-colors"
                 >
                 {isLoading ? 'Submitting...' : 'Submit Report Anonymously'}
