@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Upstander: Anonymous Bullying Reporting",
   description: "A safe and anonymous way to report bullying incidents.",
   icons: {
-    icon: '/logo.png',
+    icon: '/logo.svg',
   },
 };
 

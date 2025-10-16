@@ -8,7 +8,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center space-x-2">
-              <Image src="/logo.png" alt="Upstander Logo" width={140} height={36} />
+              <Image src="/logo.svg" alt="Upstander Logo" width={140} height={36} />
             </Link>
           </div>
           <div className="flex items-center">

@@ -38,7 +38,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
       <div className="max-w-md w-full bg-white p-8 border border-gray-200 rounded-lg shadow-sm">
         <div className="text-center mb-8">
-          <Image src="/logo.png" alt="Upstander Logo" width={200} height={51} className="mx-auto" />
+          <Image src="/logo.svg" alt="Upstander Logo" width={200} height={51} className="mx-auto" />
         </div>
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Staff Login</h2>
         <form onSubmit={handleLogin} className="space-y-6">
