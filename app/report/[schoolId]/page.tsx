@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, doc, serverTimestamp, runTransaction } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
@@ -53,10 +53,12 @@ export default function ReportPage() {
   });
   const [statementOfTruth, setStatementOfTruth] = useState(false);
   const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
+  const [hasSeenReminder, setHasSeenReminder] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [referenceCode, setReferenceCode] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 
   if (!schoolId) {
@@ -79,6 +81,18 @@ export default function ReportPage() {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleTextareaFocus = () => {
+    if (!hasSeenReminder) {
+      setIsReminderModalOpen(true);
+    }
+  };
+
+  const handleCloseReminder = () => {
+    setIsReminderModalOpen(false);
+    setHasSeenReminder(true);
+    textareaRef.current?.focus();
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -227,15 +241,16 @@ export default function ReportPage() {
 
             <div>
                 <label htmlFor="whatHappened" className="block text-sm font-medium text-slate-700">
-                What did you see??
+                What did you see?
                 </label>
                 <textarea
                 id="whatHappened"
                 name="whatHappened"
+                ref={textareaRef}
                 rows={4}
                 value={formData.whatHappened}
                 onChange={handleChange}
-                onFocus={() => setIsReminderModalOpen(true)}
+                onFocus={handleTextareaFocus}
                 required={!isTestingMode}
                 className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
@@ -329,7 +344,7 @@ export default function ReportPage() {
               Please remember that this report must be a truthful account of what you witnessed or experienced. Submitting a deliberately false or malicious report is a serious breach of school policy and may have legal consequences.
             </p>
             <button
-              onClick={() => setIsReminderModalOpen(false)}
+              onClick={handleCloseReminder}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               I Understand
