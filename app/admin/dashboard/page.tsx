@@ -154,6 +154,7 @@ export default function DashboardPage() {
 
   const handleReportUpdate = (updatedReport: Report) => {
     setReports(reports.map(report => report.id === updatedReport.id ? updatedReport : report));
+    setSelectedReport(updatedReport);
   };
 
 
