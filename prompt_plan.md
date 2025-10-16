@@ -205,6 +205,34 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
   - Adding a "Resources" section for students.
   - Beginning work on automated testing.
 
+## Phase 12: Reporting Form Hardening & UX (2025-10-16)
+
+**Summary:** This phase focused on enhancing the anonymous reporting form to discourage misuse and improve the user experience. This involved adding more detailed fields, a "Statement of Truth," and several UI/UX refinements. The admin dashboard was also updated to display the new information.
+
+**Work Completed:**
+
+1.  **Reporting Form Enhancements:**
+    *   Added several new fields to the form to encourage more detailed and thoughtful reports: "Who is involved?", "Year level," "What did you see?", "Where did it happen?", and "When did it happen?".
+    *   Implemented a mandatory "Statement of Truth" checkbox to create a psychological barrier against false reporting.
+    *   Added a modal that appears when a user begins to describe the incident, reminding them of the importance of truthfulness.
+    *   Removed the optional email field to simplify the form.
+    *   Improved the form's usability by fixing a bug where the truthfulness modal would repeatedly appear.
+
+2.  **Admin Dashboard Updates:**
+    *   Updated the report details modal in the admin dashboard to correctly display all the new fields from the enhanced form.
+    *   Corrected Firestore security rules to ensure that staff could add notes and update the status of reports, which was previously blocked.
+
+3.  **Branding and UI:**
+    *   Replaced the placeholder site logo with a new, professionally designed SVG logo in the header, on the login page, and as the site's favicon.
+
+**Current Status:** The reporting form is significantly more robust, and the admin dashboard correctly reflects all the new data. The application is stable and ready for the next phase of development.
+
+## Phase 13: Next Session Plan
+
+- **Review & Prioritize:** Discuss the next set of features or improvements. Potential areas include:
+  - Adding a "Resources" section for students.
+  - Beginning work on automated testing.
+
 ## Development Notes
 
 ### Git Configuration
