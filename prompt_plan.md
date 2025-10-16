@@ -204,3 +204,11 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
 - **Review & Prioritize:** Discuss the next set of features or improvements. Potential areas include:
   - Adding a "Resources" section for students.
   - Beginning work on automated testing.
+
+## Development Notes
+
+### Git Configuration
+
+Due to a local configuration issue, all `git` commands must be run with the `-C` flag specifying the project's root directory.
+
+Example: `git -C "c:/Projects/upstander - v4" status`

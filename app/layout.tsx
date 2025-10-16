@@ -7,6 +7,9 @@ import Header from "@/components/layout/Header";
 export const metadata: Metadata = {
   title: "Upstander: Anonymous Bullying Reporting",
   description: "A safe and anonymous way to report bullying incidents.",
+  icons: {
+    icon: '/logo.png',
+  },
 };
 
 export default function RootLayout({
