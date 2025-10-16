@@ -84,17 +84,17 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
       return;
     }
 
+    const messageText = newMessage;
+    const optimisticMessage: ConversationMessage = {
+      text: messageText,
+      sender: 'admin',
+      timestamp: Timestamp.now(),
+    };
+
+    setMessages(prevMessages => [...prevMessages, optimisticMessage]);
+    setNewMessage('');
+
     try {
-      // Optimistic UI Update
-      const optimisticMessage: ConversationMessage = {
-        text: newMessage,
-        sender: 'admin',
-        timestamp: Timestamp.now(), // Use client-side timestamp for immediate display
-      };
-      setMessages(prevMessages => [...prevMessages, optimisticMessage]);
-
-      setNewMessage('');
-
       await fetch('/api/messages', {
         method: 'POST',
         headers: {
@@ -103,15 +103,14 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
         },
         body: JSON.stringify({
           reportId: report.id,
-          text: newMessage,
+          text: messageText,
           sender: 'admin',
         }),
       });
     } catch (error) {
         console.error("Error sending message:", error);
-        // Revert the optimistic update on error
-        setMessages(prevMessages => prevMessages.filter(msg => msg !== optimisticMessage));
-        // Optionally, show an error message to the user
+        setMessages(prevMessages => prevMessages.filter(msg => msg.timestamp !== optimisticMessage.timestamp));
+        setNewMessage(messageText);
     }
   };
 
