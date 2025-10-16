@@ -20,11 +20,13 @@ service cloud.firestore {
       allow list: if request.auth != null;
 
       // Allow admins to update a report if their schoolId claim matches.
+      // Core report data must remain unchanged, but status and notes can be modified.
       allow update: if request.auth != null
-                    && resource.data.keys().hasAll(['schoolId'])
                     && request.auth.token.schoolId == resource.data.schoolId
-                    && request.resource.data.typeOfBullying == resource.data.typeOfBullying
-                    && request.resource.data.description == resource.data.description
+                    && request.resource.data.bullyingType == resource.data.bullyingType
+                    && request.resource.data.whatHappened == resource.data.whatHappened
+                    && request.resource.data.involvedParties == resource.data.involvedParties
+                    && request.resource.data.yearLevel == resource.data.yearLevel
                     && request.resource.data.date == resource.data.date
                     && request.resource.data.time == resource.data.time
                     && request.resource.data.location == resource.data.location
