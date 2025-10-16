@@ -31,7 +31,6 @@ interface ReportFormState {
   bullyingType: BullyingType;
   yearLevel: string;
   whatHappened: string;
-  contactEmail?: string;
   date?: string;
   time?: string;
   location?: string;
@@ -48,12 +47,12 @@ export default function ReportPage() {
     bullyingType: "Verbal",
     yearLevel: "",
     whatHappened: "",
-    contactEmail: "",
     date: "",
     time: "",
     location: "",
   });
   const [statementOfTruth, setStatementOfTruth] = useState(false);
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -123,7 +122,6 @@ export default function ReportPage() {
         bullyingType: "Verbal",
         yearLevel: "",
         whatHappened: "",
-        contactEmail: "",
         date: "",
         time: "",
         location: "",
@@ -182,7 +180,7 @@ export default function ReportPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
             <div>
                 <label htmlFor="bullyingType" className="block text-sm font-medium text-slate-700">
-                Type of Bullying
+                Type of Bullying?
                 </label>
                 <select
                 id="bullyingType"
@@ -199,7 +197,7 @@ export default function ReportPage() {
 
             <div>
                 <label htmlFor="involvedParties" className="block text-sm font-medium text-slate-700">
-                Who is involved / needs help
+                Who is involved / needs help?
                 </label>
                 <input
                 type="text"
@@ -214,7 +212,7 @@ export default function ReportPage() {
 
             <div>
                 <label htmlFor="yearLevel" className="block text-sm font-medium text-slate-700">
-                Year level / grade
+                Year level / grade?
                 </label>
                 <input
                 type="text"
@@ -229,7 +227,7 @@ export default function ReportPage() {
 
             <div>
                 <label htmlFor="whatHappened" className="block text-sm font-medium text-slate-700">
-                What did you see?
+                What did you see??
                 </label>
                 <textarea
                 id="whatHappened"
@@ -237,6 +235,7 @@ export default function ReportPage() {
                 rows={4}
                 value={formData.whatHappened}
                 onChange={handleChange}
+                onFocus={() => setIsReminderModalOpen(true)}
                 required={!isTestingMode}
                 className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
@@ -244,7 +243,7 @@ export default function ReportPage() {
 
             <div>
                 <label htmlFor="location" className="block text-sm font-medium text-slate-700">
-                Where this happen
+                Where did this happen?
                 </label>
                 <input
                 type="text"
@@ -259,7 +258,7 @@ export default function ReportPage() {
 
             <div>
                 <label htmlFor="date" className="block text-sm font-medium text-slate-700">
-                When did this happen (approx)
+                When did this happen (approximately)?
                 </label>
                 <input
                 type="date"
@@ -284,23 +283,6 @@ export default function ReportPage() {
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 />
-            </div>
-
-            <div>
-                <label htmlFor="contactEmail" className="block text-sm font-medium text-slate-700">
-                Your Email (Optional, for updates)
-                </label>
-                <input
-                type="email"
-                id="contactEmail"
-                name="contactEmail"
-                value={formData.contactEmail}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                />
-                <p className="mt-2 text-xs text-slate-500">
-                    Providing an email is optional, but it allows us to contact you with questions if needed. Your email will remain confidential.
-                </p>
             </div>
             
             <div className="pt-4">
@@ -339,6 +321,22 @@ export default function ReportPage() {
             {error && <p className="text-sm text-red-600 text-center">{error}</p>}
         </form>
       </div>
+      {isReminderModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <h3 className="text-xl font-bold text-slate-800 mb-4">A Reminder on Truthfulness</h3>
+            <p className="text-slate-600 mb-6">
+              Please remember that this report must be a truthful account of what you witnessed or experienced. Submitting a deliberately false or malicious report is a serious breach of school policy and may have legal consequences.
+            </p>
+            <button
+              onClick={() => setIsReminderModalOpen(false)}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              I Understand
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
