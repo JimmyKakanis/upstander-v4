@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
-import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Report, ConversationMessage } from '@/types';
 
@@ -15,6 +15,7 @@ export default function FollowUpConversationPage() {
     const [messagesLoading, setMessagesLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [newMessage, setNewMessage] = useState('');
+    const messagesContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!reportId) return;
@@ -61,9 +62,25 @@ export default function FollowUpConversationPage() {
         };
     }, [reportId]);
 
+    useEffect(() => {
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newMessage.trim() === '' || !reportId) return;
+
+        const messageText = newMessage;
+        const optimisticMessage: ConversationMessage = {
+            text: messageText,
+            sender: 'reporter',
+            timestamp: Timestamp.now(),
+        };
+
+        setMessages(prevMessages => [...prevMessages, optimisticMessage]);
+        setNewMessage('');
 
         try {
             await fetch('/api/messages', {
@@ -73,13 +90,14 @@ export default function FollowUpConversationPage() {
                 },
                 body: JSON.stringify({
                   reportId: reportId,
-                  text: newMessage,
+                  text: messageText,
                   sender: 'reporter',
                 }),
               });
-            setNewMessage('');
         } catch (err) {
             console.error("Error sending message:", err);
+            setMessages(prevMessages => prevMessages.filter(msg => msg.timestamp !== optimisticMessage.timestamp));
+            setNewMessage(messageText);
         }
     };
 
@@ -115,7 +133,7 @@ export default function FollowUpConversationPage() {
             
             <div className="border-t pt-6">
                 <h3 className="text-xl font-bold mb-4">Follow-up Conversation</h3>
-                <div className="bg-gray-50 p-4 rounded-lg border h-80 overflow-y-auto flex flex-col space-y-4">
+                <div ref={messagesContainerRef} className="bg-gray-50 p-4 rounded-lg border h-80 overflow-y-auto flex flex-col space-y-4">
                     {messagesLoading ? (
                         <p className="text-gray-500 text-center self-center">Loading conversation...</p>
                     ) : messages.length > 0 ? (

@@ -3,7 +3,7 @@
 import { Report, ConversationMessage } from '@/types';
 import { doc, Timestamp, arrayUnion, onSnapshot, collection, query, orderBy, updateDoc } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface ReportModalProps {
   report: Report;
@@ -16,6 +16,7 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [messagesLoading, setMessagesLoading] = useState(true);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!report.id) return;
@@ -39,6 +40,12 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
 
     return () => unsubscribe();
   }, [report.id]);
+
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleStatusChange = async (newStatus: 'Under Investigation' | 'Resolved') => {
     try {
@@ -209,7 +216,7 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
               {/* Conversation Section */}
               <div>
                 <h3 className="text-lg font-semibold text-slate-800 mb-3">Student Conversation</h3>
-                <div className="space-y-4 mb-4 h-48 overflow-y-auto bg-slate-50 p-3 rounded-lg border border-slate-200">
+                <div ref={messagesContainerRef} className="space-y-4 mb-4 h-48 overflow-y-auto bg-slate-50 p-3 rounded-lg border border-slate-200">
                     {messagesLoading ? (
                       <p className="text-sm text-slate-400 italic">Loading conversation...</p>
                     ) : messages.length > 0 ? (
