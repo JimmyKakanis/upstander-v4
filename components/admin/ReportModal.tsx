@@ -85,6 +85,16 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
     }
 
     try {
+      // Optimistic UI Update
+      const optimisticMessage: ConversationMessage = {
+        text: newMessage,
+        sender: 'admin',
+        timestamp: Timestamp.now(), // Use client-side timestamp for immediate display
+      };
+      setMessages(prevMessages => [...prevMessages, optimisticMessage]);
+
+      setNewMessage('');
+
       await fetch('/api/messages', {
         method: 'POST',
         headers: {
@@ -97,9 +107,11 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
           sender: 'admin',
         }),
       });
-      setNewMessage('');
     } catch (error) {
         console.error("Error sending message:", error);
+        // Revert the optimistic update on error
+        setMessages(prevMessages => prevMessages.filter(msg => msg !== optimisticMessage));
+        // Optionally, show an error message to the user
     }
   };
 
