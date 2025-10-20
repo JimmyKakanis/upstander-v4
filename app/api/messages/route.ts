@@ -65,6 +65,46 @@ export async function POST(req: NextRequest) {
           // Non-fatal, so we'll just log it.
         }
       }
+    } else if (sender === 'reporter') {
+      const reportDoc = await reportRef.get();
+      const reportData = reportDoc.data();
+
+      if (reportData?.schoolId) {
+        const schoolId = reportData.schoolId;
+        const usersSnapshot = await db.collection("users").where("schoolId", "==", schoolId).get();
+
+        if (!usersSnapshot.empty) {
+          usersSnapshot.forEach(async (userDoc) => {
+            const user = userDoc.data();
+            
+            if (user.role === "admin") {
+              const settingsRef = db.collection("users").doc(userDoc.id).collection("adminSettings").doc("notifications");
+              const settingsSnap = await settingsRef.get();
+              
+              let notify = true;
+              if (settingsSnap.exists) {
+                const settings = settingsSnap.data();
+                if (settings && settings.newMessages === false) {
+                  notify = false;
+                }
+              }
+
+              if (notify) {
+                try {
+                  await resend.emails.send({
+                    from: 'Upstander <noreply@upstander.app>',
+                    to: user.email,
+                    subject: 'New Anonymous Message Received',
+                    html: `<p>A new anonymous message has been received for report ${reportId}. You can view the message in your admin dashboard.</p>`,
+                  });
+                } catch (emailError) {
+                  console.error('Resend API error:', emailError);
+                }
+              }
+            }
+          });
+        }
+      }
     }
 
     await conversationRef.set(
