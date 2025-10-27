@@ -254,6 +254,30 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
   - Adding a "Resources" section for students.
   - Beginning work on automated testing.
 
+## Phase 15: Admin Notifications & Deployment Marathon (2025-10-20)
+
+**Summary:** This extensive phase implemented a critical new feature: email notifications for administrators. It also involved one of the most challenging and lengthy deployment troubleshooting sessions to date, requiring deep dives into local environment configuration, dependency management, and cloud service setup.
+
+**Work Completed:**
+
+1.  **Admin Email Notifications:**
+    *   **Settings UI:** Created a new, secure settings page (`/admin/settings`) allowing each administrator to individually enable or disable email notifications for new reports and new anonymous messages.
+    *   **New Report Notifications:** Implemented a new Firebase Cloud Function (`onReportCreated`) that triggers when a new report is submitted. The function identifies the relevant school admins and sends them an email, respecting their individual notification preferences.
+    *   **New Message Notifications:** Updated the existing `/api/messages` endpoint to send email notifications to school admins when a student sends a new anonymous message, also respecting their opt-out settings.
+
+2.  **Deployment & Environment Troubleshooting:**
+    *   **Firebase Functions:** Successfully set up a new `functions` directory, configured it with a modern TypeScript and ESLint toolchain, and deployed the `onReportCreated` function.
+    *   **Local Environment:** Debugged a cascade of local machine issues, including:
+        *   An `npm install` hang caused by dependency conflicts and an incorrect Node.js version.
+        *   Switched the package manager from `npm` to `yarn` to resolve the installation stall.
+        *   Diagnosed and provided a workaround for a persistent `nvm` (Node Version Manager) failure on the user's machine.
+    *   **ESLint Configuration:** Overhauled the functions' ESLint configuration from the traditional format to the modern "flat config" system to resolve deep incompatibilities with the project's root-level linter.
+    *   **Cloud Services:** Manually enabled the required **Cloud Build** and **Artifact Registry** APIs in the Google Cloud console, which were blocking the initial function deployment.
+    *   **Hidden Dependencies:** Resolved a final runtime crash on the server by identifying and adding a "hidden" dependency (`react-dom`) required by the `resend` email library.
+    *   **Vercel Build:** Fixed a Vercel deployment stall by creating a `.vercelignore` file to prevent the frontend build process from incorrectly trying to build the backend `functions` directory.
+
+**Current Status:** The admin notification feature is fully implemented, deployed, and functional. The codebase and deployment process for both the frontend (Vercel) and backend (Firebase Functions) are now stable. The Vercel build is currently in progress.
+
 ## Development Notes
 
 ### Git Configuration
