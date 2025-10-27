@@ -19,6 +19,8 @@ export const onReportCreated = functions.firestore
 
     const schoolId = report.schoolId;
 
+    console.log(`Querying for users with schoolId: "${schoolId}"`);
+
     try {
       const usersSnapshot = await db.collection("users").where("schoolId", "==", schoolId).get();
 
