@@ -1,0 +1,295 @@
+[debug] [2025-10-27T09:15:43.533Z] ----------------------------------------------------------------------
+[debug] [2025-10-27T09:15:43.536Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\james\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2025-10-27T09:15:43.536Z] CLI Version:   14.20.0
+[debug] [2025-10-27T09:15:43.536Z] Platform:      win32
+[debug] [2025-10-27T09:15:43.536Z] Node Version:  v22.18.0
+[debug] [2025-10-27T09:15:43.537Z] Time:          Mon Oct 27 2025 19:15:43 GMT+1000 (Australian Eastern Standard Time)
+[debug] [2025-10-27T09:15:43.537Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-10-27T09:15:43.539Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-10-27T09:15:43.767Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-27T09:15:43.768Z] > authorizing via signed-in user (james.kakanis@gmail.com)
+[debug] [2025-10-27T09:15:43.768Z] [iam] checking project upstander---v4 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-10-27T09:15:43.768Z] Checked if tokens are valid: false, expires at: 1760959131238
+[debug] [2025-10-27T09:15:43.768Z] Checked if tokens are valid: false, expires at: 1760959131238
+[debug] [2025-10-27T09:15:43.768Z] > refreshing access token with scopes: []
+[debug] [2025-10-27T09:15:43.770Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-10-27T09:15:43.770Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-27T09:15:44.160Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-10-27T09:15:44.161Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-10-27T09:15:44.166Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions [none]
+[debug] [2025-10-27T09:15:44.166Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions x-goog-quota-user=projects/upstander---v4
+[debug] [2025-10-27T09:15:44.166Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-10-27T09:15:44.282Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-10-27T09:15:44.282Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2025-10-27T09:15:44.651Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions 200
+[debug] [2025-10-27T09:15:44.651Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-10-27T09:15:44.652Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:44.652Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:44.652Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/upstander---v4/serviceAccounts/upstander---v4@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-10-27T09:15:44.652Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/upstander---v4/serviceAccounts/upstander---v4@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-10-27T09:15:46.298Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/upstander---v4/serviceAccounts/upstander---v4@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-10-27T09:15:46.298Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/upstander---v4/serviceAccounts/upstander---v4@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'upstander---v4'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] +  functions: Finished running predeploy script. 
+[debug] [2025-10-27T09:15:52.374Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:52.374Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:52.374Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4 [none]
+[debug] [2025-10-27T09:15:52.785Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4 200
+[debug] [2025-10-27T09:15:52.785Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4 {"projectNumber":"661221964382","projectId":"upstander---v4","lifecycleState":"ACTIVE","name":"upstander - v4","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-09-03T10:52:21.143374Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-10-27T09:15:52.787Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:52.787Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:52.788Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/upstander---v4/adminSdkConfig [none]
+[debug] [2025-10-27T09:15:53.636Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/upstander---v4/adminSdkConfig 200
+[debug] [2025-10-27T09:15:53.636Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/upstander---v4/adminSdkConfig {"projectId":"upstander---v4","storageBucket":"upstander---v4.firebasestorage.app"}
+[debug] [2025-10-27T09:15:53.637Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:53.637Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:53.637Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs [none]
+[debug] [2025-10-27T09:15:54.433Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs 200
+[debug] [2025-10-27T09:15:54.433Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs {"configs":[{"name":"projects/upstander---v4/configs/resend"}]}
+[debug] [2025-10-27T09:15:54.433Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:54.433Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:54.433Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs/resend/variables [none]
+[debug] [2025-10-27T09:15:54.836Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs/resend/variables 200
+[debug] [2025-10-27T09:15:54.836Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs/resend/variables {"variables":[{"name":"projects/upstander---v4/configs/resend/variables/api_key","updateTime":"2025-10-20T07:25:15.986008899Z"}]}
+[debug] [2025-10-27T09:15:54.836Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:54.836Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:15:54.837Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs/resend/variables/api_key [none]
+[debug] [2025-10-27T09:15:55.330Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs/resend/variables/api_key 200
+[debug] [2025-10-27T09:15:55.330Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/upstander---v4/configs/resend/variables/api_key {"name":"projects/upstander---v4/configs/resend/variables/api_key","updateTime":"2025-10-20T07:25:15.986008899Z","text":"re_AbqUq5Mj_CVwNrtcxztaA9b4dDfn1L3Hw"}
+[debug] [2025-10-27T09:15:55.332Z] Validating nodejs source
+[warn] !  functions: Runtime Node.js 18 was deprecated on 2025-04-30 and will be decommissioned on 2025-10-30, after which you will not be able to deploy without upgrading. Consider upgrading now to avoid disruption. See https://cloud.google.com/functions/docs/runtime-support for full details on the lifecycle policy 
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] !  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2025-10-27T09:15:56.558Z] > [functions] package.json contents: {
+  "name": "functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "engines": {
+    "node": "18"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "build": "tsc",
+    "serve": "npm run build && firebase emulators:start --only functions"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.1.0",
+    "firebase-functions": "^5.0.1",
+    "resend": "^3.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "eslint": "^9.4.0",
+    "globals": "^15.4.0",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.13.0"
+  }
+}
+[debug] [2025-10-27T09:15:56.559Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-10-27T09:15:56.560Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-10-27T09:15:56.567Z] Found firebase-functions binary at 'C:\Projects\upstander - v4\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8718
+
+[debug] [2025-10-27T09:15:57.295Z] Got response from /__/functions.yaml {"endpoints":{"onReportCreated":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","eventFilters":{"resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}"},"retry":false},"labels":{},"entryPoint":"onReportCreated"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2025-10-27T09:16:01.328Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-10-27T09:16:01.328Z] > authorizing via signed-in user (james.kakanis@gmail.com)
+[debug] [2025-10-27T09:16:01.328Z] [iam] checking project upstander---v4 for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2025-10-27T09:16:01.328Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:01.328Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:01.328Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions [none]
+[debug] [2025-10-27T09:16:01.328Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions x-goog-quota-user=projects/upstander---v4
+[debug] [2025-10-27T09:16:01.328Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-10-27T09:16:01.688Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions 200
+[debug] [2025-10-27T09:16:01.688Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-10-27T09:16:01.688Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:01.688Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:01.688Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/upstander---v4/instances pageSize=100&pageToken=
+[debug] [2025-10-27T09:16:03.097Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/upstander---v4/instances 200
+[debug] [2025-10-27T09:16:03.097Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/upstander---v4/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged C:\Projects\upstander - v4\functions (4.87 KB) for uploading 
+[debug] [2025-10-27T09:16:03.128Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:03.128Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:03.128Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/-/functions [none]
+[debug] [2025-10-27T09:16:04.321Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/-/functions 200
+[debug] [2025-10-27T09:16:04.321Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/-/functions {"functions":[{"name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com","failurePolicy":{}},"status":"ACTIVE","entryPoint":"onReportCreated","timeout":"60s","availableMemoryMb":256,"serviceAccountEmail":"upstander---v4@appspot.gserviceaccount.com","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"82553e504c437411caa1444d37013b64fb07bf17"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/f0842b4f-d42b-4c5c-8bdd-84fea2167b97.zip","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","maxInstances":3000,"ingressSettings":"ALLOW_ALL","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com","satisfiesPzi":true}]}
+[debug] [2025-10-27T09:16:04.321Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:04.321Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:04.321Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/upstander---v4/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-10-27T09:16:06.025Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/upstander---v4/locations/-/functions 200
+[debug] [2025-10-27T09:16:06.025Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/upstander---v4/locations/-/functions {}
+[debug] [2025-10-27T09:16:06.029Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:06.029Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:06.029Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4 [none]
+[debug] [2025-10-27T09:16:06.274Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4 200
+[debug] [2025-10-27T09:16:06.274Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/upstander---v4 {"projectNumber":"661221964382","projectId":"upstander---v4","lifecycleState":"ACTIVE","name":"upstander - v4","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-09-03T10:52:21.143374Z"}
+[debug] [2025-10-27T09:16:06.275Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:06.275Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:06.275Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/upstander---v4/billingInfo [none]
+[debug] [2025-10-27T09:16:07.111Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/upstander---v4/billingInfo 200
+[debug] [2025-10-27T09:16:07.111Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/upstander---v4/billingInfo {"name":"projects/upstander---v4/billingInfo","projectId":"upstander---v4","billingAccountName":"billingAccounts/018E72-22DACB-B50913","billingEnabled":true}
+[debug] [2025-10-27T09:16:07.112Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:07.112Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:07.112Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/us-central1/functions:generateUploadUrl [none]
+[debug] [2025-10-27T09:16:07.112Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/us-central1/functions:generateUploadUrl {}
+[debug] [2025-10-27T09:16:08.076Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/us-central1/functions:generateUploadUrl 200
+[debug] [2025-10-27T09:16:08.076Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/us-central1/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D"}
+[debug] [2025-10-27T09:16:08.077Z] >>> [apiv2][query] PUT https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip GoogleAccessId=service-661221964382%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D
+[debug] [2025-10-27T09:16:08.077Z] >>> [apiv2][body] PUT https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip [stream]
+[debug] [2025-10-27T09:16:08.766Z] <<< [apiv2][status] PUT https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip 200
+[debug] [2025-10-27T09:16:08.766Z] <<< [apiv2][body] PUT https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip [omitted]
+[info] +  functions: functions source uploaded successfully 
+[info] i  functions: updating Node.js 18 (1st Gen) function onReportCreated(us-central1)... 
+[debug] [2025-10-27T09:16:08.769Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:08.770Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:08.770Z] >>> [apiv2][query] PATCH https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/us-central1/functions/onReportCreated updateMask=name%2CsourceUploadUrl%2CentryPoint%2Cruntime%2CdockerRegistry%2Clabels%2CeventTrigger.eventType%2CeventTrigger.resource%2CeventTrigger.failurePolicy%2CminInstances%2CmaxInstances%2CingressSettings%2CenvironmentVariables%2CserviceAccountEmail%2CavailableMemoryMb%2Ctimeout%2CvpcConnector%2CvpcConnectorEgressSettings%2CsourceToken%2CbuildEnvironmentVariables
+[debug] [2025-10-27T09:16:08.770Z] >>> [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/us-central1/functions/onReportCreated {"name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","entryPoint":"onReportCreated","runtime":"nodejs18","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2025-10-27T09:16:09.584Z] <<< [apiv2][status] PATCH https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/us-central1/functions/onReportCreated 200
+[debug] [2025-10-27T09:16:09.584Z] <<< [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/upstander---v4/locations/us-central1/functions/onReportCreated {"name":"operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com"},"status":"ACTIVE","entryPoint":"onReportCreated","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com"},"versionId":"4","updateTime":"2025-10-27T09:16:09Z"}}
+[debug] [2025-10-27T09:16:09.585Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:09.585Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:09.585Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V [none]
+[debug] [2025-10-27T09:16:10.099Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V 200
+[debug] [2025-10-27T09:16:10.099Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V {"name":"operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com"},"status":"ACTIVE","entryPoint":"onReportCreated","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com"},"versionId":"4","updateTime":"2025-10-27T09:16:09Z"}}
+[debug] [2025-10-27T09:16:10.613Z] [update-default-us-central1-onReportCreated] Retrying task index 0
+[debug] [2025-10-27T09:16:10.613Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:10.613Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:10.613Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V [none]
+[debug] [2025-10-27T09:16:11.128Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V 200
+[debug] [2025-10-27T09:16:11.128Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V {"name":"operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com"},"status":"ACTIVE","entryPoint":"onReportCreated","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com"},"versionId":"4","updateTime":"2025-10-27T09:16:09Z","buildId":"40dd4f76-e56a-436e-9829-8a2e303bdfe0","buildName":"projects/661221964382/locations/us-central1/builds/40dd4f76-e56a-436e-9829-8a2e303bdfe0"}}
+[debug] [2025-10-27T09:16:12.136Z] [update-default-us-central1-onReportCreated] Retrying task index 0
+[debug] [2025-10-27T09:16:12.136Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:12.136Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:12.136Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V [none]
+[debug] [2025-10-27T09:16:12.612Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V 200
+[debug] [2025-10-27T09:16:12.612Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V {"name":"operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com"},"status":"ACTIVE","entryPoint":"onReportCreated","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com"},"versionId":"4","updateTime":"2025-10-27T09:16:09Z","buildId":"40dd4f76-e56a-436e-9829-8a2e303bdfe0","buildName":"projects/661221964382/locations/us-central1/builds/40dd4f76-e56a-436e-9829-8a2e303bdfe0"}}
+[debug] [2025-10-27T09:16:14.623Z] [update-default-us-central1-onReportCreated] Retrying task index 0
+[debug] [2025-10-27T09:16:14.623Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:14.623Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:14.623Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V [none]
+[debug] [2025-10-27T09:16:15.143Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V 200
+[debug] [2025-10-27T09:16:15.143Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V {"name":"operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com"},"status":"ACTIVE","entryPoint":"onReportCreated","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com"},"versionId":"4","updateTime":"2025-10-27T09:16:09Z","buildId":"40dd4f76-e56a-436e-9829-8a2e303bdfe0","buildName":"projects/661221964382/locations/us-central1/builds/40dd4f76-e56a-436e-9829-8a2e303bdfe0"}}
+[debug] [2025-10-27T09:16:19.147Z] [update-default-us-central1-onReportCreated] Retrying task index 0
+[debug] [2025-10-27T09:16:19.148Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:19.148Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:19.148Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V [none]
+[debug] [2025-10-27T09:16:19.639Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V 200
+[debug] [2025-10-27T09:16:19.639Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V {"name":"operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com"},"status":"ACTIVE","entryPoint":"onReportCreated","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com"},"versionId":"4","updateTime":"2025-10-27T09:16:09Z","buildId":"40dd4f76-e56a-436e-9829-8a2e303bdfe0","buildName":"projects/661221964382/locations/us-central1/builds/40dd4f76-e56a-436e-9829-8a2e303bdfe0"}}
+[debug] [2025-10-27T09:16:27.654Z] [update-default-us-central1-onReportCreated] Retrying task index 0
+[debug] [2025-10-27T09:16:27.654Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:27.654Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:27.655Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V [none]
+[debug] [2025-10-27T09:16:28.376Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V 200
+[debug] [2025-10-27T09:16:28.376Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V {"name":"operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com"},"status":"ACTIVE","entryPoint":"onReportCreated","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com"},"versionId":"4","updateTime":"2025-10-27T09:16:09Z","buildId":"40dd4f76-e56a-436e-9829-8a2e303bdfe0","buildName":"projects/661221964382/locations/us-central1/builds/40dd4f76-e56a-436e-9829-8a2e303bdfe0"}}
+[debug] [2025-10-27T09:16:38.380Z] [update-default-us-central1-onReportCreated] Retrying task index 0
+[debug] [2025-10-27T09:16:38.381Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:38.381Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:38.381Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V [none]
+[debug] [2025-10-27T09:16:38.989Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V 200
+[debug] [2025-10-27T09:16:38.989Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V {"name":"operations/dXBzdGFuZGVyLS0tdjQvdXMtY2VudHJhbDEvb25SZXBvcnRDcmVhdGVkL0gyM09rVm43eC1V","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/upstander---v4/locations/us-central1/functions/onReportCreated","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/upstander---v4/databases/(default)/documents/reports/{reportId}","service":"firestore.googleapis.com"},"status":"ACTIVE","entryPoint":"onReportCreated","updateTime":"2025-10-20T10:24:14.870Z","versionId":"3","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"ac286606ffa97058442d4611547a2939ee5f73d1"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-92111065369.us-central1.cloudfunctions.appspot.com/0acdde8b-a0c5-4861-b8af-ffe6a72ecdc4.zip?GoogleAccessId=service-661221964382@gcf-admin-robot.iam.gserviceaccount.com&Expires=1761558367&Signature=hDsHFoRJNDsCWCAXeMpmDDJdJs6OWL4ZEbFHZaMEbb2iXQMOZlTBDVwYaCFIioAe36%2BLQp4ZX%2FcNueHvLvNkBAOvv9eQ6j%2BpupZ%2Fp2gHBhLgu9POrN3TWeaU12bbIiLzZtGvGVm9pUozUjyZYdKNdEgXzj5jHs1BcIzHW7ftLL22PxhskJT66Gj8Zsx2v6oUIR2KvOFaLlID2MC7BbIdo%2FhdVl%2FQqBc7C%2FTRuGn23vGQRsL4eho7370csUkJ2a905p77ICUhYUPfBMLKK0%2BRD5hYTGbX4Y5PdobbNWU%2BOb9TyBIxGEbxOs3zXsKeb9zm9Wrmo%2FM1O6AeocUhPjxDSQ%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}","GCLOUD_PROJECT":"upstander---v4","EVENTARC_CLOUD_EVENT_SOURCE":"projects/upstander---v4/locations/us-central1/functions/onReportCreated"},"runtime":"nodejs18","buildId":"19741ee3-c29b-405a-a923-425d30720c92","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/661221964382/locations/us-central1/builds/19741ee3-c29b-405a-a923-425d30720c92","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/upstander---v4/serviceAccounts/661221964382-compute@developer.gserviceaccount.com"},"versionId":"4","updateTime":"2025-10-27T09:16:33Z","buildId":"40dd4f76-e56a-436e-9829-8a2e303bdfe0","buildName":"projects/661221964382/locations/us-central1/builds/40dd4f76-e56a-436e-9829-8a2e303bdfe0"},"done":true,"error":{"code":3,"message":"Build failed: npm error code ERESOLVE\nnpm error ERESOLVE unable to resolve dependency tree\nnpm error\nnpm error While resolving: functions@1.0.0\nnpm error Found: eslint@9.38.0\nnpm error node_modules/eslint\nnpm error   dev eslint@\"^9.4.0\" from the root project\nnpm error\nnpm error Could not resolve dependency:\nnpm error peer eslint@\"^8.56.0\" from typescript-eslint@7.18.0\nnpm error node_modules/typescript-eslint\nnpm error   dev typescript-eslint@\"^7.13.0\" from the root project\nnpm error\nnpm error Fix the upstream dependency conflict, or retry\nnpm error this command with --force or --legacy-peer-deps\nnpm error to accept an incorrect (and potentially broken) dependency resolution.\nnpm error\nnpm error\nnpm error For a full report see:\nnpm error /www-data-home/.npm/_logs/2025-10-27T09_16_27_659Z-eresolve-report.txt\nnpm error A complete log of this run can be found in: /www-data-home/.npm/_logs/2025-10-27T09_16_27_659Z-debug-0.log; Error ID: b0ba1f57"}}
+[debug] [2025-10-27T09:16:38.989Z] Got source token undefined for region us-central1
+[error] Build failed: npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: functions@1.0.0
+npm error Found: eslint@9.38.0
+npm error node_modules/eslint
+npm error   dev eslint@"^9.4.0" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer eslint@"^8.56.0" from typescript-eslint@7.18.0
+npm error node_modules/typescript-eslint
+npm error   dev typescript-eslint@"^7.13.0" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /www-data-home/.npm/_logs/2025-10-27T09_16_27_659Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /www-data-home/.npm/_logs/2025-10-27T09_16_27_659Z-debug-0.log; Error ID: b0ba1f57
+[debug] [2025-10-27T09:16:38.993Z] Total Function Deployment time: 30222
+[debug] [2025-10-27T09:16:38.993Z] 1 Functions Deployed
+[debug] [2025-10-27T09:16:38.993Z] 1 Functions Errored
+[debug] [2025-10-27T09:16:38.993Z] 0 Function Deployments Aborted
+[debug] [2025-10-27T09:16:38.993Z] Average Function Deployment time: 30221
+[info] 
+[info] Functions deploy had errors with the following functions:
+	onReportCreated(us-central1)
+[debug] [2025-10-27T09:16:39.297Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:39.297Z] Checked if tokens are valid: true, expires at: 1761560143161
+[debug] [2025-10-27T09:16:39.298Z] >>> [apiv2][query] GET https://artifactregistry.googleapis.com/v1/projects/upstander---v4/locations/us-central1/repositories/gcf-artifacts [none]
+[debug] [2025-10-27T09:16:40.973Z] <<< [apiv2][status] GET https://artifactregistry.googleapis.com/v1/projects/upstander---v4/locations/us-central1/repositories/gcf-artifacts 200
+[debug] [2025-10-27T09:16:40.973Z] <<< [apiv2][body] GET https://artifactregistry.googleapis.com/v1/projects/upstander---v4/locations/us-central1/repositories/gcf-artifacts {"name":"projects/upstander---v4/locations/us-central1/repositories/gcf-artifacts","format":"DOCKER","description":"This repository is created and used by Cloud Functions for storing function docker images.","labels":{"goog-managed-by":"cloudfunctions"},"createTime":"2025-10-20T09:53:22.774646Z","updateTime":"2025-10-21T13:31:13.896756Z","mode":"STANDARD_REPOSITORY","cleanupPolicies":{"firebase-functions-cleanup":{"id":"firebase-functions-cleanup","action":"DELETE","condition":{"tagState":"ANY","olderThan":"86400s"}}},"vulnerabilityScanningConfig":{"lastEnableTime":"2025-10-20T09:53:13.463235186Z","enablementState":"SCANNING_DISABLED","enablementStateReason":"API containerscanning.googleapis.com is not enabled."},"satisfiesPzi":true,"registryUri":"us-central1-docker.pkg.dev/upstander---v4/gcf-artifacts"}
+[debug] [2025-10-27T09:16:40.973Z] Functions deploy failed.
+[debug] [2025-10-27T09:16:40.973Z] {
+  "endpoint": {
+    "id": "onReportCreated",
+    "project": "upstander---v4",
+    "region": "us-central1",
+    "entryPoint": "onReportCreated",
+    "platform": "gcfv1",
+    "runtime": "nodejs18",
+    "eventTrigger": {
+      "eventType": "providers/cloud.firestore/eventTypes/document.create",
+      "retry": false,
+      "eventFilters": {
+        "resource": "projects/upstander---v4/databases/(default)/documents/reports/{reportId}"
+      }
+    },
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "serviceAccount": null,
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"upstander---v4\",\"storageBucket\":\"upstander---v4.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "upstander---v4",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/upstander---v4/locations/us-central1/functions/onReportCreated"
+    },
+    "codebase": "default",
+    "securityLevel": "SECURE_ALWAYS",
+    "targetedByOnly": false,
+    "hash": "ac286606ffa97058442d4611547a2939ee5f73d1"
+  },
+  "op": "update",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "exit": 1,
+    "message": "Build failed: npm error code ERESOLVE\nnpm error ERESOLVE unable to resolve dependency tree\nnpm error\nnpm error While resolving: functions@1.0.0\nnpm error Found: eslint@9.38.0\nnpm error node_modules/eslint\nnpm error   dev eslint@\"^9.4.0\" from the root project\nnpm error\nnpm error Could not resolve dependency:\nnpm error peer eslint@\"^8.56.0\" from typescript-eslint@7.18.0\nnpm error node_modules/typescript-eslint\nnpm error   dev typescript-eslint@\"^7.13.0\" from the root project\nnpm error\nnpm error Fix the upstream dependency conflict, or retry\nnpm error this command with --force or --legacy-peer-deps\nnpm error to accept an incorrect (and potentially broken) dependency resolution.\nnpm error\nnpm error\nnpm error For a full report see:\nnpm error /www-data-home/.npm/_logs/2025-10-27T09_16_27_659Z-eresolve-report.txt\nnpm error A complete log of this run can be found in: /www-data-home/.npm/_logs/2025-10-27T09_16_27_659Z-debug-0.log; Error ID: b0ba1f57",
+    "original": {
+      "code": 3,
+      "message": "Build failed: npm error code ERESOLVE\nnpm error ERESOLVE unable to resolve dependency tree\nnpm error\nnpm error While resolving: functions@1.0.0\nnpm error Found: eslint@9.38.0\nnpm error node_modules/eslint\nnpm error   dev eslint@\"^9.4.0\" from the root project\nnpm error\nnpm error Could not resolve dependency:\nnpm error peer eslint@\"^8.56.0\" from typescript-eslint@7.18.0\nnpm error node_modules/typescript-eslint\nnpm error   dev typescript-eslint@\"^7.13.0\" from the root project\nnpm error\nnpm error Fix the upstream dependency conflict, or retry\nnpm error this command with --force or --legacy-peer-deps\nnpm error to accept an incorrect (and potentially broken) dependency resolution.\nnpm error\nnpm error\nnpm error For a full report see:\nnpm error /www-data-home/.npm/_logs/2025-10-27T09_16_27_659Z-eresolve-report.txt\nnpm error A complete log of this run can be found in: /www-data-home/.npm/_logs/2025-10-27T09_16_27_659Z-debug-0.log; Error ID: b0ba1f57"
+    },
+    "status": 3,
+    "code": 3
+  }
+}
+[debug] [2025-10-27T09:16:41.101Z] Error: Failed to update function onReportCreated in region us-central1
+    at C:\Users\james\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\fabricator.js:52:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Fabricator.updateV1Function (C:\Users\james\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\fabricator.js:364:32)
+    at async Fabricator.updateEndpoint (C:\Users\james\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\fabricator.js:157:13)
+    at async handle (C:\Users\james\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\fabricator.js:89:17)
+[error] 
+[error] Error: There was an error deploying functions

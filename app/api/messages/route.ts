@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       if (reportData?.contactEmail) {
         try {
           await resend.emails.send({
-            from: 'Upstander <noreply@upstander.app>',
+            from: 'Upstander <noreply@upstander.help>',
             to: reportData.contactEmail,
             subject: 'You have a new message about your report',
             html: `<p>You have received a new message from a school administrator regarding your report. You can view the message by clicking here: <a href="${process.env.NEXT_PUBLIC_BASE_URL}/follow-up/${reportId}">View Message</a></p>`,
@@ -74,11 +74,15 @@ export async function POST(req: NextRequest) {
         const usersSnapshot = await db.collection("users").where("schoolId", "==", schoolId).get();
 
         if (!usersSnapshot.empty) {
-          usersSnapshot.forEach(async (userDoc) => {
+          const promises = usersSnapshot.docs.map(async (userDoc) => {
             const user = userDoc.data();
             
             if (user.role === "admin") {
-              const settingsRef = db.collection("users").doc(userDoc.id).collection("adminSettings").doc("notifications");
+              const settingsRef = db
+                .collection("users")
+                .doc(userDoc.id)
+                .collection("adminSettings")
+                .doc("notifications");
               const settingsSnap = await settingsRef.get();
               
               let notify = true;
@@ -91,8 +95,9 @@ export async function POST(req: NextRequest) {
 
               if (notify) {
                 try {
+                  console.log(`Sending new message notification to ${user.email}`);
                   await resend.emails.send({
-                    from: 'Upstander <noreply@upstander.app>',
+                    from: 'Upstander <noreply@upstander.help>',
                     to: user.email,
                     subject: 'New Anonymous Message Received',
                     html: `<p>A new anonymous message has been received for report ${reportId}. You can view the message in your admin dashboard.</p>`,
@@ -103,6 +108,7 @@ export async function POST(req: NextRequest) {
               }
             }
           });
+          await Promise.all(promises);
         }
       }
     }

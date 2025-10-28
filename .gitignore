@@ -22,6 +22,9 @@ build/
 .env.test.local
 .env.production.local
 
+# Env files in functions subdir
+functions/.env.*
+
 # Local configs
 .vscode/
 service-account-key.json

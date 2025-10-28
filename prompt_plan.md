@@ -278,6 +278,26 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
 
 **Current Status:** The admin notification feature is fully implemented, deployed, and functional. The codebase and deployment process for both the frontend (Vercel) and backend (Firebase Functions) are now stable. The Vercel build is currently in progress.
 
+## Phase 16: Debugging Admin Email Notifications (2025-10-27)
+
+**Summary:** This session focused on debugging why the recently implemented admin email notifications were not being received. The investigation led to a series of fixes that resolved numerous deployment and runtime errors for the Firebase Cloud Function.
+
+**Work Completed:**
+
+1.  **Code Reliability:**
+    *   Refactored the email-sending logic in both the Cloud Function (`onReportCreated`) and the Next.js API route (`/api/messages`) to correctly handle asynchronous operations using `Promise.all`, preventing the functions from terminating before emails were sent.
+
+2.  **Environment & Configuration:**
+    *   Migrated the Cloud Function away from the deprecated `functions.config()` to use modern `.env` files for managing the `RESEND_API_KEY`, making it consistent with the Vercel setup.
+    *   Added the `dotenv` package and configured the function to explicitly load environment variables at runtime, fixing the root cause of the "Missing API key" error.
+    *   Confirmed the Resend API key was correct and matched the key used in the Vercel environment.
+
+3.  **Dependency Management:**
+    *   Resolved a cascade of "Cannot find module" errors during deployment by adding the required peer dependencies (`react-dom` and `react`) to the `functions/package.json`.
+    *   Worked around a local Node.js version conflict (`v22` vs. `v18`) by using the `--ignore-engines` flag with `yarn`.
+
+**Current Status:** The `onReportCreated` Cloud Function now deploys successfully without any errors, and the codebase is significantly more robust. However, test emails are still not being received. The immediate next step is to analyze the runtime logs to diagnose the issue now that the deployment phase is stable.
+
 ## Development Notes
 
 ### Git Configuration

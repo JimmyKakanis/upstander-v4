@@ -58,6 +58,11 @@ service cloud.firestore {
       allow create, update, delete: if false; 
     }
 
+    // Allow users to read and write to their own user document and any subcollections.
+    match /users/{userId}/{documents=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
     match /conversations/{reportId} {
       // Allow an admin to get the conversation if their schoolId matches the report's schoolId.
       // Also allow read access for the student who has the direct link (reportId).

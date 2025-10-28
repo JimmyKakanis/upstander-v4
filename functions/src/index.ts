@@ -1,15 +1,18 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { Resend } from "resend";
+import * as dotenv from "dotenv";
+
+dotenv.config({ path: `.env.${process.env.GCLOUD_PROJECT}` });
 
 admin.initializeApp();
 
 const db = admin.firestore();
-const resend = new Resend(functions.config().resend.api_key);
 
 export const onReportCreated = functions.firestore
   .document("reports/{reportId}")
   .onCreate(async (snap: functions.firestore.DocumentSnapshot) => {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const report = snap.data();
 
     if (!report) {
@@ -29,13 +32,17 @@ export const onReportCreated = functions.firestore
         return;
       }
 
-      usersSnapshot.forEach(async (userDoc) => {
+      const promises = usersSnapshot.docs.map(async (userDoc) => {
         const user = userDoc.data();
-        
+
         if (user.role === "admin") {
-          const settingsRef = db.collection("users").doc(userDoc.id).collection("adminSettings").doc("notifications");
+          const settingsRef = db
+            .collection("users")
+            .doc(userDoc.id)
+            .collection("adminSettings")
+            .doc("notifications");
           const settingsSnap = await settingsRef.get();
-          
+
           let notify = true;
           if (settingsSnap.exists) {
             const settings = settingsSnap.data();
@@ -45,15 +52,23 @@ export const onReportCreated = functions.firestore
           }
 
           if (notify) {
-            await resend.emails.send({
-              from: "Upstander <noreply@upstander.app>",
+            console.log(`Sending new report notification to ${user.email}`);
+            const { data, error } = await resend.emails.send({
+              from: "Upstander <noreply@upstander.help>",
               to: user.email,
               subject: "New Report Submitted",
               html: "<p>A new report has been submitted for your school. You can view the report in your admin dashboard.</p>",
             });
+
+            if (error) {
+              console.error(`Error response from Resend for ${user.email}:`, error);
+            } else {
+              console.log(`Successfully sent email to ${user.email}, response:`, data);
+            }
           }
         }
       });
+      await Promise.all(promises);
     } catch (error) {
       console.error("Error sending new report notifications:", error);
     }
