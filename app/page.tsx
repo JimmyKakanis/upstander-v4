@@ -1,4 +1,5 @@
 import SchoolSearch from '@/components/search/SchoolSearch';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -12,6 +13,14 @@ export default function Home() {
         </p>
         <div className="mt-10">
           <SchoolSearch />
+        </div>
+        <div className="mt-8 text-sm">
+          <p className="text-gray-600">
+            Already submitted a report?{' '}
+            <Link href="/follow-up" className="font-medium text-blue-600 hover:text-blue-500">
+              Check its status here.
+            </Link>
+          </p>
         </div>
       </div>
     </main>
