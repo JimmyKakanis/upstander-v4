@@ -11,6 +11,14 @@ This is a [Next.js](https://nextjs.org) project for Upstander, an anonymous bull
 - **Anonymous Two-Way Communication:** A secure, real-time messaging feature that allows school staff to communicate with the student reporter without compromising the student's anonymity. Includes email notifications to alert students of new messages.
 - **Interactive Analytics:** The admin dashboard includes an "At a Glance" section with clickable cards to quickly filter reports by status (e.g., New, Under Investigation) and a pie chart breaking down reports by category.
 
+## Project Documentation
+
+For detailed information about the project's architecture, technical setup, and operational procedures, please refer to the documents in the `/docs` directory.
+
+*   **[Architecture Overview](./docs/architecture.md):** A high-level look at the frontend, backend, and services used.
+*   **[Onboarding a New School](./docs/onboarding.md):** A step-by-step guide to adding a new school to the platform.
+*   **[Technical Details](./docs/technical.md):** Information on the email notification service and DNS configuration.
+
 ## Development & Deployment Workflow
 
 **IMPORTANT:** The primary workflow for this project is to commit changes to the `main` branch on GitHub. This automatically triggers a new deployment on Vercel, where all testing and verification is conducted.
