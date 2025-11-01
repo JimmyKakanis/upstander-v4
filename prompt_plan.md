@@ -298,6 +298,119 @@ After exhausting all "correct" methods, we were forced to implement a pragmatic 
 
 **Current Status:** The `onReportCreated` Cloud Function now deploys successfully without any errors, and the codebase is significantly more robust. However, test emails are still not being received. The immediate next step is to analyze the runtime logs to diagnose the issue now that the deployment phase is stable.
 
+## Phase 18: Security Remediation (2025-10-28)
+
+**Summary:** Immediately following the successful deployment of the notifications feature, a GitGuardian security alert was received, indicating that a Resend API key had been accidentally committed to the public GitHub repository. This triggered an immediate and critical security response.
+
+**Work Completed:**
+
+1.  **Immediate Key Revocation:** The first and most critical step was to revoke the leaked API key in the Resend dashboard, instantly neutralizing the threat.
+2.  **History Rewriting:** Identified the file (`functions/functions/.env.production`) that was accidentally committed. A `git filter-branch` command was used to rewrite the entire project history, completely removing this file and the exposed secret from every previous commit.
+3.  **Force Push:** A force push was performed to overwrite the compromised history on GitHub with the new, clean history.
+4.  **New Key Implementation:** A new, secure API key was generated in Resend and correctly placed in the local `.env.upstander---v4` file (which is covered by `.gitignore`), restoring functionality without compromising security.
+5.  **Final Debugging:** Resolved a final "Invalid API key" error caused by the new key being accidentally saved with quotes around it in the `.env` file. A final redeployment of the function fixed the issue.
+
+**Current Status:** The security vulnerability has been fully remediated. The project history is clean, and the notification system is operational with a new, secure API key.
+
+## Phase 19: Next Session Plan
+
+- **Review & Prioritize:** Discuss the next set of features or improvements. Potential areas include:
+  - Adding a "Resources" section for students.
+  - Beginning work on automated testing.
+
+## Phase 12: Reporting Form Hardening & UX (2025-10-16)
+
+**Summary:** This phase focused on enhancing the anonymous reporting form to discourage misuse and improve the user experience. This involved adding more detailed fields, a "Statement of Truth," and several UI/UX refinements. The admin dashboard was also updated to display the new information.
+
+**Work Completed:**
+
+1.  **Reporting Form Enhancements:**
+    *   Added several new fields to the form to encourage more detailed and thoughtful reports: "Who is involved?", "Year level," "What did you see?", "Where did it happen?", and "When did it happen?".
+    *   Implemented a mandatory "Statement of Truth" checkbox to create a psychological barrier against false reporting.
+    *   Added a modal that appears when a user begins to describe the incident, reminding them of the importance of truthfulness.
+    *   Removed the optional email field to simplify the form.
+    *   Improved the form's usability by fixing a bug where the truthfulness modal would repeatedly appear.
+
+2.  **Admin Dashboard Updates:**
+    *   Updated the report details modal in the admin dashboard to correctly display all the new fields from the enhanced form.
+    *   Corrected Firestore security rules to ensure that staff could add notes and update the status of reports, which was previously blocked.
+
+3.  **Branding and UI:**
+    *   Replaced the placeholder site logo with a new, professionally designed SVG logo in the header, on the login page, and as the site's favicon.
+
+**Current Status:** The reporting form is significantly more robust, and the admin dashboard correctly reflects all the new data. The application is stable and ready for the next phase of development.
+
+## Phase 13: Real-time UX & Bug Squashing (2025-10-16)
+
+**Summary:** This phase focused on fine-tuning the user experience of the admin dashboard and student follow-up pages, particularly around the real-time features. A critical Vercel deployment bug was also resolved.
+
+**Work Completed:**
+
+1.  **Real-time Staff Notes:**
+    *   Fixed a state management bug in the admin dashboard where new private notes would not appear in the report modal until it was closed and reopened. The notes now update instantly.
+
+2.  **Instant Chat Experience (Optimistic UI):**
+    *   Resolved an issue where messages in both the admin and student chat windows felt slow to appear.
+    *   Implemented an "optimistic UI" update, which makes messages appear instantly from the user's perspective, dramatically improving the perceived performance.
+
+3.  **Chat Auto-Scrolling:**
+    *   Added an auto-scrolling feature to both the admin and student chat windows. The view now automatically scrolls to the bottom whenever a new message is sent or received, ensuring the latest message is always visible.
+
+4.  **Deployment Bug Fix:**
+    *   Fixed a critical Vercel build error caused by a variable scope issue in the optimistic UI implementation.
+
+**Current Status:** The application's real-time features are now more robust and user-friendly. The codebase is stable and all known bugs from this session have been resolved.
+
+## Phase 14: Next Session Plan
+
+- **Review & Prioritize:** Discuss the next set of features or improvements. Potential areas include:
+  - Adding a "Resources" section for students.
+  - Beginning work on automated testing.
+
+## Phase 15: Admin Notifications & Deployment Marathon (2025-10-20)
+
+**Summary:** This extensive phase implemented a critical new feature: email notifications for administrators. It also involved one of the most challenging and lengthy deployment troubleshooting sessions to date, requiring deep dives into local environment configuration, dependency management, and cloud service setup.
+
+**Work Completed:**
+
+1.  **Admin Email Notifications:**
+    *   **Settings UI:** Created a new, secure settings page (`/admin/settings`) allowing each administrator to individually enable or disable email notifications for new reports and new anonymous messages.
+    *   **New Report Notifications:** Implemented a new Firebase Cloud Function (`onReportCreated`) that triggers when a new report is submitted. The function identifies the relevant school admins and sends them an email, respecting their individual notification preferences.
+    *   **New Message Notifications:** Updated the existing `/api/messages` endpoint to send email notifications to school admins when a student sends a new anonymous message, also respecting their opt-out settings.
+
+2.  **Deployment & Environment Troubleshooting:**
+    *   **Firebase Functions:** Successfully set up a new `functions` directory, configured it with a modern TypeScript and ESLint toolchain, and deployed the `onReportCreated` function.
+    *   **Local Environment:** Debugged a cascade of local machine issues, including:
+        *   An `npm install` hang caused by dependency conflicts and an incorrect Node.js version.
+        *   Switched the package manager from `npm` to `yarn` to resolve the installation stall.
+        *   Diagnosed and provided a workaround for a persistent `nvm` (Node Version Manager) failure on the user's machine.
+    *   **ESLint Configuration:** Overhauled the functions' ESLint configuration from the traditional format to the modern "flat config" system to resolve deep incompatibilities with the project's root-level linter.
+    *   **Cloud Services:** Manually enabled the required **Cloud Build** and **Artifact Registry** APIs in the Google Cloud console, which were blocking the initial function deployment.
+    *   **Hidden Dependencies:** Resolved a final runtime crash on the server by identifying and adding a "hidden" dependency (`react-dom`) required by the `resend` email library.
+    *   **Vercel Build:** Fixed a Vercel deployment stall by creating a `.vercelignore` file to prevent the frontend build process from incorrectly trying to build the backend `functions` directory.
+
+**Current Status:** The admin notification feature is fully implemented, deployed, and functional. The codebase and deployment process for both the frontend (Vercel) and backend (Firebase Functions) are now stable. The Vercel build is currently in progress.
+
+## Phase 16: Debugging Admin Email Notifications (2025-10-27)
+
+**Summary:** This session focused on debugging why the recently implemented admin email notifications were not being received. The investigation led to a series of fixes that resolved numerous deployment and runtime errors for the Firebase Cloud Function.
+
+**Work Completed:**
+
+1.  **Code Reliability:**
+    *   Refactored the email-sending logic in both the Cloud Function (`onReportCreated`) and the Next.js API route (`/api/messages`) to correctly handle asynchronous operations using `Promise.all`, preventing the functions from terminating before emails were sent.
+
+2.  **Environment & Configuration:**
+    *   Migrated the Cloud Function away from the deprecated `functions.config()` to use modern `.env` files for managing the `RESEND_API_KEY`, making it consistent with the Vercel setup.
+    *   Added the `dotenv` package and configured the function to explicitly load environment variables at runtime, fixing the root cause of the "Missing API key" error.
+    *   Confirmed the Resend API key was correct and matched the key used in the Vercel environment.
+
+3.  **Dependency Management:**
+    *   Resolved a cascade of "Cannot find module" errors during deployment by adding the required peer dependencies (`react-dom` and `react`) to the `functions/package.json`.
+    *   Worked around a local Node.js version conflict (`v22` vs. `v18`) by using the `--ignore-engines` flag with `yarn`.
+
+**Current Status:** The `onReportCreated` Cloud Function now deploys successfully without any errors, and the codebase is significantly more robust. However, test emails are still not being received. The immediate next step is to analyze the runtime logs to diagnose the issue now that the deployment phase is stable.
+
 ## Development Notes
 
 ### Git Configuration
