@@ -14,13 +14,10 @@ export default function Home() {
         <div className="mt-10">
           <SchoolSearch />
         </div>
-        <div className="mt-8 text-sm">
-          <p className="text-gray-600">
-            Already submitted a report?{' '}
-            <Link href="/follow-up" className="font-medium text-blue-600 hover:text-blue-500">
-              Check its status here.
-            </Link>
-          </p>
+        <div className="mt-8">
+          <Link href="/follow-up" className="inline-block rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Check on an Existing Report
+          </Link>
         </div>
       </div>
     </main>

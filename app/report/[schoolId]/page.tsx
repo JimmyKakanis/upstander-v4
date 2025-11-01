@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { db } from '@/lib/firebase';
 import { collection, doc, serverTimestamp, runTransaction } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 const generateReferenceCode = (docId: string) => {
   const year = new Date().getFullYear();
@@ -170,12 +171,12 @@ export default function ReportPage() {
                     <p className="text-sm text-slate-600 mb-8">
                       You can use this code to check the status of your report or to add more information later. Keep it safe.
                     </p>
-                    <button
-                    onClick={handleNewReport}
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                    <Link
+                      href="/follow-up"
+                      className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                     >
-                    Submit Another Report
-                    </button>
+                      Check Report Status
+                    </Link>
                 </div>
             </div>
         </div>
