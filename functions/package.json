@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "scripts": {
     "lint": "eslint .",
@@ -14,17 +14,19 @@
   "dependencies": {
     "firebase-admin": "^12.0.0",
     "firebase-functions": "^5.0.0",
-    "resend": "^3.2.0",
-    "dotenv": "^16.4.5",
+    "resend": "^2.0.0",
+    "dotenv": "^16.3.1",
     "react-dom": "^18.3.1",
     "react": "^18.3.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.4.0",
-    "eslint": "^9.4.0",
-    "globals": "^15.4.0",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^8.0.0-alpha.32",
-    "@typescript-eslint/eslint-plugin": "^7.7.1"
-  }
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.57.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.29.1",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.5"
+  },
+  "private": true
 }
