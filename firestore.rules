@@ -35,6 +35,13 @@ service cloud.firestore {
                     && request.resource.data.referenceCode == resource.data.referenceCode;
     }
 
+    match /schools/{schoolId} {
+      // Allow public read access for the school search feature.
+      allow get, list: if true;
+      // Disallow all write operations from the client.
+      allow write: if false;
+    }
+
     // Collection to securely link a public referenceCode to a private reportId
     match /followUpAccess/{referenceCode} {
       // Allow anyone to get a document if they know the exact referenceCode.
