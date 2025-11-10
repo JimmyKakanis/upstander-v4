@@ -21,7 +21,6 @@ export default function SchoolSearch() {
       const schoolsCollection = collection(db, 'schools');
       const schoolSnapshot = await getDocs(schoolsCollection);
       const schoolList = schoolSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as School);
-      console.log("Fetched Schools:", schoolList); // Add this line for debugging
       setSchools(schoolList);
       setFilteredSchools(schoolList);
     };
