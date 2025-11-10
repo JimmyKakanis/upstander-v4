@@ -93,7 +93,10 @@ export default function ReportPage() {
   const handleCloseReminder = () => {
     setIsReminderModalOpen(false);
     setHasSeenReminder(true);
-    textareaRef.current?.focus();
+    // Use a timeout to ensure the state has updated before focusing
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 0);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
