@@ -117,10 +117,14 @@ export async function POST(req: NextRequest) {
       html: `<p>You've been invited to join the Upstander staff dashboard for <strong>${escapeHtml(
         schoolName
       )}</strong>.</p>
+<p><strong>First time using Upstander?</strong> You do not have a password yet. Click the button below, then choose <strong>Create Staff Account</strong> (or &quot;Need an account? Sign up&quot;) and register with <strong>this same email address</strong> (${escapeHtml(
+        invitedEmail
+      )}). After that, you will be connected to your school automatically.</p>
 <p><a href="${joinUrl}">Accept invitation</a></p>
 <p>If the button does not work, copy this link into your browser:</p>
 <p style="word-break:break-all;font-size:12px;color:#444">${escapeHtml(joinUrl)}</p>
-<p>Use this email address when you sign in or create your account. The link is single-use and expires in 14 days.</p>`,
+<p>If you already have an Upstander staff account, click the link and sign in with your existing password.</p>
+<p>This link is single-use and expires in 14 days.</p>`,
     });
 
     if (sendError) {

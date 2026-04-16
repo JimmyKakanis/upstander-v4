@@ -12,7 +12,9 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/admin/dashboard';
-  const initialSignUp = searchParams.get('signup') === 'true';
+  const initialSignUp =
+    searchParams.get('signup') === 'true' || redirect.includes('/join');
+  const isCompletingSchoolInvite = redirect.includes('/join');
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -82,6 +84,13 @@ function LoginForm() {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           {isSignUp ? 'Create Staff Account' : 'Staff Login'}
         </h2>
+        {isCompletingSchoolInvite && (
+          <p className="text-sm text-blue-900 bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+            You are finishing a school invitation. If you have <strong>never</strong> used Upstander before,
+            stay on <strong>Create Staff Account</strong> (or choose &quot;Need an account? Sign up&quot;) and register with the
+            <strong> same email</strong> the invite was sent to, then choose a password. If you already have an account, switch to Log in.
+          </p>
+        )}
         <form onSubmit={handleAuth} className="space-y-6">
           <div>
             <label htmlFor="email" className="text-sm font-medium text-gray-700 block mb-2">

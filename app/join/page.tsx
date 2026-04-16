@@ -24,7 +24,8 @@ function JoinContent() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         const returnTo = `/join?token=${encodeURIComponent(token)}`;
-        router.replace(`/login?redirect=${encodeURIComponent(returnTo)}`);
+        const loginUrl = `/login?signup=true&redirect=${encodeURIComponent(returnTo)}`;
+        router.replace(loginUrl);
         return;
       }
 

@@ -45,10 +45,6 @@ export default function DashboardPage() {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
-  const [teacherInviteLoading, setTeacherInviteLoading] = useState(false);
-  const [teacherInviteError, setTeacherInviteError] = useState<string | null>(null);
-  const [teacherInviteSuccess, setTeacherInviteSuccess] = useState<string | null>(null);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setProfileError(null);
@@ -147,38 +143,6 @@ export default function DashboardPage() {
     setSelectedReport(updatedReport);
   };
 
-  const handleSendTeacherInvite = useCallback(async (email: string) => {
-    if (!user?.schoolId || !auth.currentUser) return;
-    const trimmed = email.trim();
-    if (!trimmed) return;
-    setTeacherInviteLoading(true);
-    setTeacherInviteError(null);
-    setTeacherInviteSuccess(null);
-    try {
-      const idToken = await auth.currentUser.getIdToken();
-      const res = await fetch('/api/schools/invite', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({ schoolId: user.schoolId, email: trimmed }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        throw new Error(typeof data.error === 'string' ? data.error : 'Could not send invitation');
-      }
-      if (data.success !== true) {
-        throw new Error('Invalid response from server');
-      }
-      setTeacherInviteSuccess(`Invitation sent to ${trimmed}. They should check their inbox.`);
-    } catch (e) {
-      setTeacherInviteError(e instanceof Error ? e.message : 'Something went wrong');
-    } finally {
-      setTeacherInviteLoading(false);
-    }
-  }, [user?.schoolId]);
-
   if (sessionUser === undefined || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -238,10 +202,6 @@ export default function DashboardPage() {
       onReportClick={setSelectedReport}
       onCloseReportModal={() => setSelectedReport(null)}
       onUpdateReport={handleReportUpdate}
-      teacherInviteLoading={teacherInviteLoading}
-      teacherInviteError={teacherInviteError}
-      teacherInviteSuccess={teacherInviteSuccess}
-      onSendTeacherInvite={handleSendTeacherInvite}
     />
   );
 }
