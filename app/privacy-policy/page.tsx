@@ -1,9 +1,9 @@
 export default function PrivacyPolicy() {
   return (
-    <div className="bg-white px-6 py-32 lg:px-8">
-      <div className="mx-auto max-w-3xl text-base leading-7 text-slate-700">
-        <p className="text-base font-semibold leading-7 text-blue-600">Upstander</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Privacy Policy</h1>
+    <div className="bg-white px-6 py-16 sm:py-24 lg:px-8">
+      <div className="mx-auto max-w-3xl rounded-xl border border-slate-200/80 bg-white px-6 py-10 shadow-sm ring-1 ring-slate-900/5 sm:px-10 sm:py-12">
+        <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">Upstander</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Privacy policy</h1>
         
         <p className="mt-6 text-xl leading-8">
           Your privacy and the safety of student data are our top priorities. This policy outlines how we collect, use, and protect your information.

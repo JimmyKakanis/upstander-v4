@@ -123,40 +123,46 @@ export default function RegisterPage() {
     }
   };
 
+  const inputClass =
+    'mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/25';
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Link href="/" className="flex justify-center mb-6">
+        <Link href="/" className="mb-6 flex justify-center">
             <Image src="/logo.svg" alt="Upstander Logo" width={200} height={51} />
         </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Register Your School
+        <h2 className="mt-2 text-center text-3xl font-bold tracking-tight text-slate-900">
+          Register your school
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Or <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">sign in to your existing account</Link>
+        <p className="mt-2 text-center text-sm text-slate-600">
+          Or{' '}
+          <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-500">
+            sign in to your existing account
+          </Link>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200">
+        <div className="rounded-xl border border-slate-200/80 bg-white px-4 py-8 shadow-sm ring-1 ring-slate-900/5 sm:px-10">
             
           {/* Progress Steps */}
           <div className="mb-8">
-            <div className="flex items-center justify-between relative">
-                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-10"></div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}>1</div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}>2</div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${step >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}>3</div>
+            <div className="relative flex items-center justify-between">
+                <div className="absolute left-0 top-1/2 z-0 h-1 w-full -translate-y-1/2 bg-slate-200" aria-hidden />
+                <div className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold ${step >= 1 ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500'}`}>1</div>
+                <div className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold ${step >= 2 ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500'}`}>2</div>
+                <div className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold ${step >= 3 ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500'}`}>3</div>
             </div>
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
-                <span>School Info</span>
-                <span>Contact Info</span>
+            <div className="mt-2 flex justify-between text-xs font-medium text-slate-500">
+                <span>School info</span>
+                <span>Contact info</span>
                 <span>Account</span>
             </div>
           </div>
 
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded relative text-sm">
+            <div className="relative mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
                 {error}
             </div>
           )}
@@ -167,31 +173,31 @@ export default function RegisterPage() {
             {step === 1 && (
                 <>
                     <div>
-                        <label htmlFor="schoolName" className="block text-sm font-medium text-gray-700">School Name</label>
-                        <input type="text" name="schoolName" id="schoolName" required value={formData.schoolName} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                        <label htmlFor="schoolName" className="block text-sm font-medium text-slate-700">School name</label>
+                        <input type="text" name="schoolName" id="schoolName" required value={formData.schoolName} onChange={handleChange} className={inputClass} />
                     </div>
                     <div>
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-                        <input type="text" name="address" id="address" required value={formData.address} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                        <label htmlFor="address" className="block text-sm font-medium text-slate-700">Address</label>
+                        <input type="text" name="address" id="address" required value={formData.address} onChange={handleChange} className={inputClass} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
-                            <input type="text" name="city" id="city" required value={formData.city} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                            <label htmlFor="city" className="block text-sm font-medium text-slate-700">City</label>
+                            <input type="text" name="city" id="city" required value={formData.city} onChange={handleChange} className={inputClass} />
                         </div>
                         <div>
-                            <label htmlFor="state" className="block text-sm font-medium text-gray-700">State</label>
-                            <input type="text" name="state" id="state" required value={formData.state} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                            <label htmlFor="state" className="block text-sm font-medium text-slate-700">State</label>
+                            <input type="text" name="state" id="state" required value={formData.state} onChange={handleChange} className={inputClass} />
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label htmlFor="zip" className="block text-sm font-medium text-gray-700">Zip Code</label>
-                            <input type="text" name="zip" id="zip" required value={formData.zip} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                            <label htmlFor="zip" className="block text-sm font-medium text-slate-700">ZIP code</label>
+                            <input type="text" name="zip" id="zip" required value={formData.zip} onChange={handleChange} className={inputClass} />
                         </div>
                         <div>
-                            <label htmlFor="studentCount" className="block text-sm font-medium text-gray-700">Est. Student Count</label>
-                            <input type="number" name="studentCount" id="studentCount" required value={formData.studentCount} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                            <label htmlFor="studentCount" className="block text-sm font-medium text-slate-700">Est. student count</label>
+                            <input type="number" name="studentCount" id="studentCount" required value={formData.studentCount} onChange={handleChange} className={inputClass} />
                         </div>
                     </div>
                 </>
@@ -201,16 +207,16 @@ export default function RegisterPage() {
             {step === 2 && (
                 <>
                      <div>
-                        <label htmlFor="contactName" className="block text-sm font-medium text-gray-700">Administrator Name</label>
-                        <input type="text" name="contactName" id="contactName" required value={formData.contactName} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                        <label htmlFor="contactName" className="block text-sm font-medium text-slate-700">Administrator name</label>
+                        <input type="text" name="contactName" id="contactName" required value={formData.contactName} onChange={handleChange} className={inputClass} />
                     </div>
                     <div>
-                        <label htmlFor="contactEmail" className="block text-sm font-medium text-gray-700">Email Address</label>
-                        <input type="email" name="contactEmail" id="contactEmail" required value={formData.contactEmail} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                        <label htmlFor="contactEmail" className="block text-sm font-medium text-slate-700">Email address</label>
+                        <input type="email" name="contactEmail" id="contactEmail" required value={formData.contactEmail} onChange={handleChange} className={inputClass} />
                     </div>
                     <div>
-                        <label htmlFor="contactPhone" className="block text-sm font-medium text-gray-700">Phone Number</label>
-                        <input type="tel" name="contactPhone" id="contactPhone" required value={formData.contactPhone} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                        <label htmlFor="contactPhone" className="block text-sm font-medium text-slate-700">Phone number</label>
+                        <input type="tel" name="contactPhone" id="contactPhone" required value={formData.contactPhone} onChange={handleChange} className={inputClass} />
                     </div>
                 </>
             )}
@@ -219,28 +225,25 @@ export default function RegisterPage() {
             {step === 3 && (
                 <>
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" name="password" id="password" required minLength={8} value={formData.password} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
-                        <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters.</p>
+                        <label htmlFor="password" className="block text-sm font-medium text-slate-700">Password</label>
+                        <input type="password" name="password" id="password" required minLength={8} value={formData.password} onChange={handleChange} className={inputClass} />
+                        <p className="mt-1 text-xs text-slate-500">Must be at least 8 characters.</p>
                     </div>
                     <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
-                        <input type="password" name="confirmPassword" id="confirmPassword" required minLength={8} value={formData.confirmPassword} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-3 py-2 border" />
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700">Confirm password</label>
+                        <input type="password" name="confirmPassword" id="confirmPassword" required minLength={8} value={formData.confirmPassword} onChange={handleChange} className={inputClass} />
                     </div>
                 </>
             )}
 
-            <div className="flex justify-between pt-4">
+            <div className={`flex gap-3 pt-6 ${step > 1 ? 'justify-between' : 'justify-end'}`}>
                 {step > 1 ? (
-                    <button type="button" onClick={handleBack} className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button type="button" onClick={handleBack} className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">
                         Back
                     </button>
-                ) : (
-                    <div></div> // Spacer
-                )}
-                
-                <button type="submit" disabled={loading} className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">
-                    {loading ? 'Creating Account...' : (step === 3 ? 'Create Account' : 'Next')}
+                ) : null}
+                <button type="submit" disabled={loading} className="inline-flex justify-center rounded-lg border border-transparent bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50">
+                    {loading ? 'Creating account…' : (step === 3 ? 'Create account' : 'Next')}
                 </button>
             </div>
 

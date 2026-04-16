@@ -62,15 +62,17 @@ function JoinContent() {
   }, [token, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="text-center max-w-md space-y-3">
+    <div className="flex min-h-[50vh] items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md rounded-xl border border-slate-200/80 bg-white p-8 text-center shadow-sm ring-1 ring-slate-900/5">
         {phase === "joining" && (
           <p className="text-slate-700">Joining your school…</p>
         )}
         {phase === "init" && !message && (
           <p className="text-slate-600">Loading…</p>
         )}
-        {message && <p className="text-red-700 text-sm">{message}</p>}
+        {message && (
+          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{message}</p>
+        )}
       </div>
     </div>
   );
@@ -80,8 +82,10 @@ export default function JoinPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
-          <p className="text-slate-600">Loading…</p>
+        <div className="flex min-h-[50vh] items-center justify-center px-4">
+          <div className="w-full max-w-sm rounded-xl border border-slate-200/80 bg-white p-6 text-center text-slate-600 shadow-sm ring-1 ring-slate-900/5">
+            Loading…
+          </div>
         </div>
       }
     >

@@ -86,8 +86,8 @@ export default function ReportPage() {
 
   if (!schoolId) {
     return (
-      <div className="max-w-md mx-auto mt-8 sm:mt-16">
-        <div className="bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
+      <div className="max-w-md mx-auto mt-8 sm:mt-16 mb-16 sm:mb-24 px-4">
+        <div className="rounded-xl border border-slate-200/80 bg-white p-8 text-center shadow-sm ring-1 ring-slate-900/5">
           <h1 className="text-2xl font-bold text-red-600 mb-4">Invalid URL</h1>
           <p className="text-slate-600">
             It looks like you&apos;ve reached this page with an incorrect link. Please use the unique URL provided by your school to submit a report.
@@ -182,8 +182,8 @@ export default function ReportPage() {
 
   if (submitted) {
     return (
-        <div className="max-w-md mx-auto mt-8 sm:mt-16">
-            <div className="bg-white p-8 border border-gray-200 rounded-xl shadow-sm text-center">
+        <div className="max-w-md mx-auto mt-8 sm:mt-16 mb-16 sm:mb-24 px-4">
+            <div className="rounded-xl border border-slate-200/80 bg-white p-8 text-center shadow-sm ring-1 ring-slate-900/5">
                 <div>
                     <h2 className="text-2xl font-bold text-slate-800 mb-2">Report Submitted</h2>
                     <p className="text-slate-600 mb-6">Thank you for helping keep our school safe.</p>
@@ -209,8 +209,8 @@ export default function ReportPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-8 sm:mt-16">
-      <div className="bg-white p-8 border border-gray-200 rounded-xl shadow-sm">
+    <div className="max-w-md mx-auto mt-8 sm:mt-16 mb-16 sm:mb-24 px-4">
+      <div className="rounded-xl border border-slate-200/80 bg-white px-8 pt-8 pb-10 shadow-sm ring-1 ring-slate-900/5 sm:pb-12">
         <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-slate-800">
             Anonymous Report
@@ -335,21 +335,21 @@ export default function ReportPage() {
                     type="checkbox"
                     checked={statementOfTruth}
                     onChange={(e) => setStatementOfTruth(e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                   />
                 </div>
                 <div className="ml-3 text-sm">
-                  <label htmlFor="truth-statement" className="font-medium text-gray-700">
+                  <label htmlFor="truth-statement" className="font-medium text-slate-700">
                     Statement of Truth
                   </label>
-                  <p className="text-gray-500">
+                  <p className="text-slate-500">
                   I confirm that this report is a truthful account of what I witnessed or experienced. I understand that submitting a deliberately false or malicious report is a serious breach of school policy and undermines our community's safety.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-4">
                 <button
                 type="submit"
                 disabled={isLoading || (!isTestingMode && (!statementOfTruth || !formData.involvedParties || !formData.yearLevel || !formData.whatHappened || !formData.location || !formData.date))}
@@ -359,21 +359,22 @@ export default function ReportPage() {
                 </button>
             </div>
 
-            {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+            {error && <p className="mt-3 text-sm text-red-600 text-center">{error}</p>}
         </form>
       </div>
       {isReminderModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
-            <h3 className="text-xl font-bold text-slate-800 mb-4">A Reminder on Truthfulness</h3>
-            <p className="text-slate-600 mb-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4">
+          <div className="w-full max-w-sm rounded-xl border border-slate-200/80 bg-white p-8 text-center shadow-2xl ring-1 ring-slate-900/5">
+            <h3 className="mb-3 text-xl font-bold text-slate-900">A reminder on truthfulness</h3>
+            <p className="mb-6 text-sm leading-6 text-slate-600">
               Please remember that this report must be a truthful account of what you witnessed or experienced. Submitting a deliberately false or malicious report is a serious breach of school policy and may have legal consequences.
             </p>
             <button
+              type="button"
               onClick={handleCloseReminder}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
-              I Understand
+              I understand
             </button>
           </div>
         </div>

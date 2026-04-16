@@ -48,6 +48,13 @@ export default function DashboardView({
     setStatusFilter(status);
   };
 
+  const handleStatusCardKeyDown = (e: React.KeyboardEvent, status: ReportStatus) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleStatusCardClick(status);
+    }
+  };
+
   const reportCounts = reports.reduce((acc, report) => {
     const type = report.bullyingType || 'Unknown';
     acc[type] = (acc[type] || 0) + 1;
@@ -83,8 +90,8 @@ export default function DashboardView({
 
   if (loading) {
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <p>Loading...</p>
+        <div className="flex min-h-[50vh] items-center justify-center text-slate-600">
+            <p>Loading…</p>
         </div>
     );
   }
@@ -92,161 +99,209 @@ export default function DashboardView({
   // In demo mode, we might not have a user, so we handle that case.
   // In real mode, the parent container redirects if no user.
   
+  const metricCardClass =
+    'group rounded-xl border border-slate-200/80 bg-white p-6 text-center shadow-sm ring-1 ring-slate-900/5 transition-shadow hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600';
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 font-sans">
       {isDemo && (
-        <div className="bg-blue-600 text-white text-center py-2 px-4 text-sm font-medium">
-          You are viewing a Demo Dashboard. Data shown here is for illustration purposes only.
+        <div className="bg-blue-600 text-center text-sm font-medium text-white py-2.5 px-4">
+          You are viewing a demo dashboard. Data shown here is for illustration only.
         </div>
       )}
-      <nav className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between min-h-16 py-3 gap-4 flex-wrap items-center">
-            <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 min-w-0">
-              <h1 className="text-xl font-bold text-slate-800 shrink-0">Upstander Dashboard</h1>
+      <header className="border-b border-slate-200 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">School dashboard</p>
               {user?.schoolName ? (
-                <div className="min-w-0">
-                  <p className="text-lg font-semibold text-slate-900 truncate" title={user.schoolName}>
+                <>
+                  <h1
+                    className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
+                    title={user.schoolName}
+                  >
                     {user.schoolName}
+                  </h1>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                    Reports and analytics below are for your school only.
                   </p>
-                  <p className="text-xs text-slate-500">Reports shown are for this school only.</p>
-                </div>
+                </>
               ) : user?.schoolId ? (
-                <p className="text-sm text-slate-500 font-mono truncate" title={user.schoolId}>
+                <p className="mt-2 font-mono text-sm text-slate-600" title={user.schoolId}>
                   School ID: {user.schoolId}
+                </p>
+              ) : (
+                <h1 className="mt-2 text-2xl font-bold text-slate-900">Dashboard</h1>
+              )}
+              {user?.email ? (
+                <p className="mt-3 text-sm text-slate-500">
+                  Signed in as <span className="font-medium text-slate-700">{user.email}</span>
                 </p>
               ) : null}
             </div>
-            <div className="flex items-center">
-                {user && <p className="mr-4 text-sm text-slate-600">Welcome, {user.email}</p>}
-                {!isDemo && (
-                  <button 
-                    onClick={onSignOut}
-                    className="px-3 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-200 transition-colors"
-                  >
-                    Logout
-                  </button>
-                )}
-                {isDemo && (
-                   <a 
-                   href="/"
-                   className="px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
-                 >
-                   Back to Home
-                 </a>
-                )}
-            </div>
+            {isDemo ? (
+              <a
+                href="/"
+                className="inline-flex shrink-0 items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              >
+                Back to home
+              </a>
+            ) : null}
           </div>
         </div>
-      </nav>
-      <main className="py-10">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      </header>
+      <main className="py-8 sm:py-10">
+        <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 sm:pb-20 lg:px-8 lg:pb-24">
             {/* Analytics Section */}
-            <div className="mb-8">
-                <h2 className="text-2xl font-bold text-slate-800 mb-4 px-4 sm:px-0">At a Glance</h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <section className="mb-10" aria-labelledby="at-a-glance-heading">
+                <div className="mb-5 flex flex-col gap-1 sm:mb-6">
+                  <h2 id="at-a-glance-heading" className="text-lg font-semibold text-slate-900 sm:text-xl">
+                    At a glance
+                  </h2>
+                  <p className="text-sm text-slate-600">Select a card to filter the report list.</p>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
                     {/* Total Reports Card */}
-                    <div className="bg-white border border-slate-200 p-5 rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleStatusCardClick('all')}>
-                        <h3 className="text-sm font-medium text-slate-500">Total Reports</h3>
-                        <p className="mt-2 text-3xl font-bold text-slate-900">{reports.length}</p>
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className={metricCardClass}
+                      onClick={() => handleStatusCardClick('all')}
+                      onKeyDown={(e) => handleStatusCardKeyDown(e, 'all')}
+                    >
+                        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Total reports</h3>
+                        <p className="mt-3 text-3xl font-bold tabular-nums text-slate-900 sm:text-4xl">{reports.length}</p>
                     </div>
                     {/* New Reports Card */}
-                    <div className="bg-white border border-slate-200 p-5 rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleStatusCardClick('new')}>
-                        <h3 className="text-sm font-medium text-yellow-600">New Reports</h3>
-                        <p className="mt-2 text-3xl font-bold text-yellow-800">{newReportsCount}</p>
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className={metricCardClass}
+                      onClick={() => handleStatusCardClick('new')}
+                      onKeyDown={(e) => handleStatusCardKeyDown(e, 'new')}
+                    >
+                        <h3 className="text-xs font-semibold uppercase tracking-wide text-amber-700">New reports</h3>
+                        <p className="mt-3 text-3xl font-bold tabular-nums text-amber-900 sm:text-4xl">{newReportsCount}</p>
                     </div>
                     {/* Under Investigation Card */}
-                    <div className="bg-white border border-slate-200 p-5 rounded-lg text-center cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleStatusCardClick('Under Investigation')}>
-                        <h3 className="text-sm font-medium text-blue-600">Under Investigation</h3>
-                        <p className="mt-2 text-3xl font-bold text-blue-800">{investigatingCount}</p>
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      className={metricCardClass}
+                      onClick={() => handleStatusCardClick('Under Investigation')}
+                      onKeyDown={(e) => handleStatusCardKeyDown(e, 'Under Investigation')}
+                    >
+                        <h3 className="text-xs font-semibold uppercase tracking-wide text-blue-700">Under investigation</h3>
+                        <p className="mt-3 text-3xl font-bold tabular-nums text-blue-900 sm:text-4xl">{investigatingCount}</p>
                     </div>
                     {/* Pie Chart Card */}
-                    <div className="md:col-span-1 bg-white border border-slate-200 p-4 rounded-lg flex justify-center items-center" style={{ maxHeight: '150px' }}>
+                    <div className="flex min-h-[160px] flex-col justify-center rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm ring-1 ring-slate-900/5 sm:min-h-[180px] lg:min-h-0">
                         {reports.length > 0 ? (
-                            <Pie data={chartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+                            <div className="h-[140px] w-full max-w-[200px] mx-auto">
+                              <Pie
+                                data={chartData}
+                                options={{
+                                  maintainAspectRatio: false,
+                                  plugins: { legend: { display: false } },
+                                }}
+                              />
+                            </div>
                         ) : (
-                            <p className="text-sm text-slate-500">No data for chart</p>
+                            <p className="text-center text-sm text-slate-500">No reports yet to chart.</p>
                         )}
                     </div>
                 </div>
-            </div>
+            </section>
 
             {/* Reports Table Section */}
-            <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-slate-200">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-bold text-slate-800">Submitted Reports</h2>
-                        <div className="flex space-x-4">
-                            <div>
-                                <label htmlFor="statusFilter" className="sr-only">Filter by status</label>
+            <section
+              className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm ring-1 ring-slate-900/5"
+              aria-labelledby="reports-heading"
+            >
+                <div className="border-b border-slate-100 px-4 py-5 sm:px-6 sm:py-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <h2 id="reports-heading" className="text-lg font-semibold text-slate-900 sm:text-xl">
+                          Submitted reports
+                        </h2>
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
+                            <div className="w-full sm:w-auto sm:min-w-[11rem]">
+                                <label htmlFor="statusFilter" className="mb-1 block text-xs font-medium text-slate-600 sm:sr-only">
+                                  Status
+                                </label>
                                 <select 
                                     id="statusFilter"
                                     value={statusFilter}
                                     onChange={(e) => setStatusFilter(e.target.value as ReportStatus)}
-                                    className="block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                                    className="block w-full rounded-lg border-slate-200 py-2 pl-3 pr-10 text-sm text-slate-800 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
                                 >
-                                    <option value="all">All Statuses</option>
+                                    <option value="all">All statuses</option>
                                     <option value="new">New</option>
-                                    <option value="Under Investigation">Under Investigation</option>
+                                    <option value="Under Investigation">Under investigation</option>
                                     <option value="Resolved">Resolved</option>
                                 </select>
                             </div>
-                            <div>
-                                <label htmlFor="sortOrder" className="sr-only">Sort by date</label>
+                            <div className="w-full sm:w-auto sm:min-w-[11rem]">
+                                <label htmlFor="sortOrder" className="mb-1 block text-xs font-medium text-slate-600 sm:sr-only">
+                                  Sort
+                                </label>
                                 <select 
                                     id="sortOrder"
                                     value={sortOrder}
                                     onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-                                    className="block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                                    className="block w-full rounded-lg border-slate-200 py-2 pl-3 pr-10 text-sm text-slate-800 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
                                 >
-                                    <option value="desc">Newest First</option>
-                                    <option value="asc">Oldest First</option>
+                                    <option value="desc">Newest first</option>
+                                    <option value="asc">Oldest first</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white">
-                        <thead className="bg-slate-50">
+                    <table className="min-w-full divide-y divide-slate-200 bg-white">
+                        <thead className="bg-slate-50/80">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Type of Bullying</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Reference Code</th>
+                                <th scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">Date</th>
+                                <th scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">Type</th>
+                                <th scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">Status</th>
+                                <th scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">Reference</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-200">
+                        <tbody className="divide-y divide-slate-100">
                             {reportsLoading ? (
                                 <tr>
-                                    <td colSpan={4} className="text-center py-10 text-slate-500">Loading reports...</td>
+                                    <td colSpan={4} className="px-6 py-12 text-center text-sm text-slate-500">Loading reports…</td>
                                 </tr>
                             ) : reports.length === 0 ? (
                                 <tr>
-                                    <td colSpan={4} className="text-center py-10 text-slate-500">No reports found for the selected filter.</td>
+                                    <td colSpan={4} className="px-6 py-12 text-center text-sm text-slate-500">No reports match this filter.</td>
                                 </tr>
                             ) : (
                                 reports.map((report) => (
-                                <tr key={report.id} onClick={() => onReportClick(report)} className="cursor-pointer hover:bg-slate-50">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{report.createdAt.toDate().toLocaleDateString()}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{report.bullyingType}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                            report.status === 'new' ? 'bg-yellow-100 text-yellow-800' :
-                                            report.status === 'Under Investigation' ? 'bg-blue-100 text-blue-800' :
-                                            'bg-green-100 text-green-800'
+                                <tr
+                                  key={report.id}
+                                  onClick={() => onReportClick(report)}
+                                  className="cursor-pointer transition-colors hover:bg-slate-50/80"
+                                >
+                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-slate-700 sm:px-6">{report.createdAt.toDate().toLocaleDateString()}</td>
+                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-slate-800 sm:px-6">{report.bullyingType}</td>
+                                    <td className="whitespace-nowrap px-4 py-4 sm:px-6">
+                                        <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${
+                                            report.status === 'new' ? 'bg-amber-100 text-amber-900' :
+                                            report.status === 'Under Investigation' ? 'bg-blue-100 text-blue-900' :
+                                            'bg-emerald-100 text-emerald-900'
                                         }`}>
                                             {report.status}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-700">{report.referenceCode}</td>
+                                    <td className="whitespace-nowrap px-4 py-4 font-mono text-sm text-slate-700 sm:px-6">{report.referenceCode}</td>
                                 </tr>
                                 ))
                             )}
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </section>
           {selectedReport && (
             <ReportModal 
               report={selectedReport} 

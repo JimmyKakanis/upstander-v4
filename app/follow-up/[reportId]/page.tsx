@@ -102,75 +102,106 @@ export default function FollowUpConversationPage() {
     };
 
     if (loading) {
-        return <div className="text-center p-8"><p>Loading report...</p></div>;
+        return (
+          <div className="mx-auto max-w-2xl px-4 py-16 text-center text-slate-600">
+            Loading report…
+          </div>
+        );
     }
 
     if (error) {
-        return <div className="text-center p-8 text-red-600"><p>{error}</p></div>;
+        return (
+          <div className="mx-auto max-w-md px-4 py-16">
+            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-800">
+              {error}
+            </div>
+          </div>
+        );
     }
 
     if (!report) {
-        return <div className="text-center p-8"><p>No report data to display.</p></div>;
+        return (
+          <div className="mx-auto max-w-md px-4 py-16 text-center text-slate-600">
+            No report data to display.
+          </div>
+        );
     }
 
+    const statusClass =
+      report.status === 'new'
+        ? 'bg-amber-100 text-amber-900'
+        : report.status === 'Under Investigation'
+          ? 'bg-blue-100 text-blue-900'
+          : 'bg-emerald-100 text-emerald-900';
+
     return (
-        <div className="w-full bg-white p-8 border border-gray-200 rounded-lg shadow-sm">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Report Status</h2>
-                <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
-                    report.status === 'new' ? 'bg-yellow-100 text-yellow-800' :
-                    report.status === 'Under Investigation' ? 'bg-blue-100 text-blue-800' :
-                    'bg-green-100 text-green-800'
-                }`}>
+        <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
+        <div className="rounded-xl border border-slate-200/80 bg-white p-6 shadow-sm ring-1 ring-slate-900/5 sm:p-8">
+            <div className="flex flex-col gap-3 border-b border-slate-100 pb-6 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">Your report</p>
+                  <h2 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">Report status</h2>
+                </div>
+                <span className={`inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusClass}`}>
                     {report.status}
                 </span>
             </div>
 
-            <div className="mb-6">
-                <p><strong>Reference Code:</strong> {report.referenceCode}</p>
-                <p><strong>Submitted On:</strong> {report.createdAt.toDate().toLocaleDateString()}</p>
-            </div>
+            <dl className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="font-medium text-slate-500">Reference code</dt>
+                <dd className="mt-1 font-mono text-slate-900">{report.referenceCode}</dd>
+              </div>
+              <div>
+                <dt className="font-medium text-slate-500">Submitted</dt>
+                <dd className="mt-1 text-slate-900">{report.createdAt.toDate().toLocaleDateString()}</dd>
+              </div>
+            </dl>
             
-            <div className="border-t pt-6">
-                <h3 className="text-xl font-bold mb-4">Follow-up Conversation</h3>
-                <div ref={messagesContainerRef} className="bg-gray-50 p-4 rounded-lg border h-80 overflow-y-auto flex flex-col space-y-4">
+            <div className="mt-8 border-t border-slate-100 pt-8">
+                <h3 className="text-base font-semibold text-slate-900">Follow-up conversation</h3>
+                <p className="mt-1 text-xs text-slate-500">Messages here stay anonymous on your side.</p>
+                <div ref={messagesContainerRef} className="mt-4 flex h-80 flex-col gap-3 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50/80 p-3">
                     {messagesLoading ? (
-                        <p className="text-gray-500 text-center self-center">Loading conversation...</p>
+                        <p className="self-center py-8 text-center text-sm text-slate-500">Loading conversation…</p>
                     ) : messages.length > 0 ? (
                         messages.map((msg, index) => (
                             <div key={index} className={`flex ${msg.sender === 'reporter' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`p-3 rounded-lg max-w-xs lg:max-w-md ${
-                                    msg.sender === 'reporter' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-800'
+                                <div className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm shadow-sm ${
+                                    msg.sender === 'reporter' ? 'bg-blue-600 text-white' : 'border border-slate-200 bg-white text-slate-800'
                                 }`}>
-                                    <p>{msg.text}</p>
+                                    <p className="whitespace-pre-wrap">{msg.text}</p>
                                     {msg.timestamp && (
-                                        <p className="text-xs opacity-75 mt-1 text-right">{msg.timestamp.toDate().toLocaleTimeString()}</p>
+                                        <p className={`mt-1 text-right text-xs ${msg.sender === 'reporter' ? 'text-blue-100' : 'text-slate-400'}`}>
+                                          {msg.timestamp.toDate().toLocaleTimeString()}
+                                        </p>
                                     )}
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <p className="text-gray-500 text-center self-center">
-                            This is where you can securely and anonymously communicate with a staff member. Send a message to start the conversation.
+                        <p className="self-center px-4 py-8 text-center text-sm text-slate-500">
+                            You can chat anonymously with a staff member here. Send a message to start.
                         </p>
                     )}
                 </div>
-                <form onSubmit={handleSendMessage} className="mt-4 flex">
+                <form onSubmit={handleSendMessage} className="mt-3 flex gap-2">
                     <input 
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Type your message..."
-                        className="flex-grow p-2 border rounded-l-md focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Type your message…"
+                        className="min-w-0 flex-1 rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/25"
                     />
                     <button 
                         type="submit"
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700"
+                        className="shrink-0 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                     >
                         Send
                     </button>
                 </form>
             </div>
+        </div>
         </div>
     );
 }

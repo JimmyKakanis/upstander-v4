@@ -142,68 +142,72 @@ export default function SubscribePage() {
 
   if (loading || authLoading) {
       return (
-          <div className="min-h-screen flex items-center justify-center bg-gray-50">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div className="flex min-h-[50vh] items-center justify-center">
+              <div className="h-9 w-9 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600" aria-hidden />
+              <span className="sr-only">Loading</span>
           </div>
       );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+    <div className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div className="mx-auto max-w-7xl">
             <div className="text-center">
-                <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                    Choose a Plan
+                <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">Subscription</p>
+                <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                    Choose a plan
                 </h2>
-                <p className="mt-4 text-xl text-gray-500">
-                    Start your journey with Upstander today.
+                <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600">
+                    Start using Upstander with your school.
                 </p>
             </div>
 
             {error && (
-                <div className="mt-8 max-w-md mx-auto bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded relative" role="alert">
-                    <span className="block sm:inline">{error}</span>
+                <div className="relative mx-auto mt-8 max-w-md rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-800" role="alert">
+                    <span className="block text-sm sm:inline">{error}</span>
                     {isCustomerMissing && (
-                        <div className="mt-2">
-                             <p className="text-sm mb-2">This usually happens if your account was created before the payment system was set up.</p>
+                        <div className="mt-3 border-t border-red-200/80 pt-3">
+                             <p className="mb-3 text-sm">This usually happens if your account was created before the payment system was set up.</p>
                              <button 
+                                type="button"
                                 onClick={handleResetAccount}
-                                className="bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700"
+                                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700"
                              >
-                                Reset Account (Requires Signup)
+                                Reset account (requires signup)
                              </button>
                         </div>
                     )}
                 </div>
             )}
 
-            <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-3">
+            <div className="mx-auto mt-12 grid max-w-4xl gap-6 sm:mt-16 sm:grid-cols-2 lg:max-w-none xl:grid-cols-3">
                 {products.length === 0 ? (
-                    <div className="col-span-full text-center">
-                         <p className="text-gray-500">No active plans found. Please contact support or check back later.</p>
+                    <div className="col-span-full text-center text-slate-500">
+                         No active plans found. Please contact support or check back later.
                     </div>
                 ) : (
                     products.map((product) => (
-                        <div key={product.id} className="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200 bg-white flex flex-col">
-                            <div className="p-6 flex-grow">
-                                <h2 className="text-lg leading-6 font-medium text-gray-900">{product.name}</h2>
-                                <p className="mt-4 text-sm text-gray-500">{product.description}</p>
+                        <div key={product.id} className="flex flex-col divide-y divide-slate-100 rounded-xl border border-slate-200/80 bg-white shadow-sm ring-1 ring-slate-900/5">
+                            <div className="flex-grow p-6 sm:p-8">
+                                <h2 className="text-lg font-semibold text-slate-900">{product.name}</h2>
+                                <p className="mt-3 text-sm leading-6 text-slate-600">{product.description}</p>
                                 {product.prices?.map((price: any) => (
                                     <div key={price.id} className="mt-8">
-                                        <span className="text-4xl font-extrabold text-gray-900">${(price.unit_amount / 100).toFixed(2)}</span>
-                                        <span className="text-base font-medium text-gray-500">/{price.interval}</span>
+                                        <span className="text-4xl font-bold tabular-nums text-slate-900">${(price.unit_amount / 100).toFixed(2)}</span>
+                                        <span className="text-base font-medium text-slate-500">/{price.interval}</span>
                                         <button
+                                            type="button"
                                             onClick={() => handleCheckout(price.id)}
                                             disabled={checkoutLoading !== null}
-                                            className={`mt-8 block w-full border border-transparent rounded-md py-2 text-sm font-semibold text-white text-center transition-colors ${
+                                            className={`mt-8 block w-full rounded-lg border border-transparent py-2.5 text-center text-sm font-semibold text-white transition-colors ${
                                                 checkoutLoading === price.id 
-                                                ? 'bg-blue-400 cursor-not-allowed' 
+                                                ? 'cursor-not-allowed bg-blue-400' 
                                                 : checkoutLoading !== null 
-                                                    ? 'bg-gray-400 cursor-not-allowed'
+                                                    ? 'cursor-not-allowed bg-slate-400'
                                                     : 'bg-blue-600 hover:bg-blue-700'
                                             }`}
                                         >
-                                            {checkoutLoading === price.id ? 'Preparing Checkout...' : 'Subscribe'}
+                                            {checkoutLoading === price.id ? 'Preparing checkout…' : 'Subscribe'}
                                         </button>
                                     </div>
                                 ))}

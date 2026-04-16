@@ -79,13 +79,17 @@ export default function OnboardingPage() {
     }
   };
 
-  if (initializing) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (initializing) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-slate-600">Loading…</div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
-        <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-sm border border-gray-200">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Welcome to Upstander</h1>
-            <p className="text-gray-600 mb-8 text-center">To get started, please create your school workspace.</p>
+    <div className="flex flex-col items-center justify-center px-4 py-16">
+        <div className="w-full max-w-md rounded-xl border border-slate-200/80 bg-white p-8 shadow-sm ring-1 ring-slate-900/5">
+            <h1 className="mb-2 text-center text-2xl font-bold tracking-tight text-slate-900">Welcome to Upstander</h1>
+            <p className="mb-8 text-center text-sm leading-6 text-slate-600 sm:text-base">Create your school workspace to get started.</p>
             
             <form onSubmit={handleSubmit} className="space-y-6">
                 {submitError && (
@@ -94,23 +98,23 @@ export default function OnboardingPage() {
                   </div>
                 )}
                 <div>
-                    <label htmlFor="schoolName" className="block text-sm font-medium text-gray-700">School Name</label>
+                    <label htmlFor="schoolName" className="block text-sm font-medium text-slate-700">School name</label>
                     <input 
                         type="text" 
                         id="schoolName"
                         value={schoolName}
                         onChange={(e) => setSchoolName(e.target.value)}
                         required
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        className="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/25"
                         placeholder="e.g. Springfield High School"
                     />
                 </div>
                 <button 
                     type="submit" 
                     disabled={loading}
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                    className="flex w-full justify-center rounded-lg border border-transparent bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
                 >
-                    {loading ? 'Creating...' : 'Create School'}
+                    {loading ? 'Creating…' : 'Create school'}
                 </button>
             </form>
         </div>

@@ -76,16 +76,16 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
-      <div className="max-w-md w-full bg-white p-8 border border-gray-200 rounded-lg shadow-sm">
-        <div className="text-center mb-8">
+    <div className="flex min-h-[calc(100vh-8rem)] flex-col justify-center px-4 py-12 sm:px-6">
+      <div className="mx-auto w-full max-w-md rounded-xl border border-slate-200/80 bg-white p-8 shadow-sm ring-1 ring-slate-900/5">
+        <div className="mb-8 text-center">
           <Image src="/logo.svg" alt="Upstander Logo" width={200} height={51} className="mx-auto" />
         </div>
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          {isSignUp ? 'Create Staff Account' : 'Staff Login'}
+        <h2 className="mb-6 text-center text-2xl font-bold tracking-tight text-slate-900">
+          {isSignUp ? 'Create staff account' : 'Staff login'}
         </h2>
         {isCompletingSchoolInvite && (
-          <p className="text-sm text-blue-900 bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+          <p className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
             You are finishing a school invitation. If you have <strong>never</strong> used Upstander before,
             stay on <strong>Create Staff Account</strong> (or choose &quot;Need an account? Sign up&quot;) and register with the
             <strong> same email</strong> the invite was sent to, then choose a password. If you already have an account, switch to Log in.
@@ -93,8 +93,8 @@ function LoginForm() {
         )}
         <form onSubmit={handleAuth} className="space-y-6">
           <div>
-            <label htmlFor="email" className="text-sm font-medium text-gray-700 block mb-2">
-              Email Address
+            <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700">
+              Email address
             </label>
             <input
               type="email"
@@ -102,13 +102,13 @@ function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/25"
               placeholder="you@example.com"
             />
           </div>
           <div>
-            <div className="flex justify-between items-center mb-2">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700 block">
+            <div className="mb-2 flex items-center justify-between">
+              <label htmlFor="password" className="text-sm font-medium text-slate-700">
                 Password
               </label>
               {!isSignUp && (
@@ -116,7 +116,7 @@ function LoginForm() {
                   type="button"
                   onClick={handleForgotPassword}
                   disabled={resetLoading}
-                  className="text-sm text-blue-600 hover:text-blue-500 disabled:text-blue-300"
+                  className="text-sm font-medium text-blue-600 hover:text-blue-500 disabled:text-slate-400"
                 >
                   {resetLoading ? "Sending…" : "Forgot password?"}
                 </button>
@@ -128,23 +128,25 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+              className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/25"
               placeholder="••••••••"
             />
           </div>
           {info && (
-            <p className="text-sm text-green-800 bg-green-50 border border-green-200 p-3 rounded-lg">
+            <p className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900">
               {info}
             </p>
           )}
-          {error && <p className="text-sm text-red-600 bg-red-100 p-3 rounded-lg">{error}</p>}
+          {error && (
+            <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</p>
+          )}
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300"
+              className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-blue-400"
             >
-              {loading ? (isSignUp ? 'Creating Account...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
+              {loading ? (isSignUp ? 'Creating account…' : 'Signing in…') : (isSignUp ? 'Sign up' : 'Sign in')}
             </button>
           </div>
         </form>
@@ -157,7 +159,7 @@ function LoginForm() {
                   setError(null);
                   setInfo(null);
                 }}
-                className="text-sm text-blue-600 hover:text-blue-500 focus:outline-none"
+                className="text-sm font-medium text-blue-600 hover:text-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             >
                 {isSignUp ? 'Already have an account? Log in' : 'Need an account? Sign up'}
             </button>
@@ -169,7 +171,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<div className="flex min-h-[40vh] items-center justify-center text-slate-600">Loading…</div>}>
       <LoginForm />
     </Suspense>
   );

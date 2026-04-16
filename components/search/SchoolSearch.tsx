@@ -42,30 +42,46 @@ export default function SchoolSearch() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="mx-auto w-full max-w-md text-left">
+      <label htmlFor="school-search" className="sr-only">
+        Search for your school
+      </label>
       <input
+        id="school-search"
         type="text"
-        placeholder="Search for your school..."
-        className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Search for your school…"
+        className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/25"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        autoComplete="off"
       />
-      {searchTerm && (
-        <ul className="mt-2 border border-gray-200 rounded-md bg-white shadow-lg">
+      {searchTerm ? (
+        <ul
+          className="mt-2 max-h-60 overflow-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg ring-1 ring-slate-900/5"
+          role="listbox"
+        >
           {filteredSchools.map(school => (
             <li
               key={school.id}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              role="option"
+              className="cursor-pointer px-4 py-2.5 text-sm text-slate-800 transition-colors hover:bg-slate-50"
               onClick={() => handleSchoolSelect(school.id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleSchoolSelect(school.id);
+                }
+              }}
+              tabIndex={0}
             >
               {school.name}
             </li>
           ))}
           {filteredSchools.length === 0 && (
-            <li className="px-4 py-2 text-gray-500">No schools found</li>
+            <li className="px-4 py-3 text-center text-sm text-slate-500">No schools found.</li>
           )}
         </ul>
-      )}
+      ) : null}
     </div>
   );
 }

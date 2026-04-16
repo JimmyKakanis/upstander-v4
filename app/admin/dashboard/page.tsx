@@ -145,8 +145,8 @@ export default function DashboardPage() {
 
   if (sessionUser === undefined || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+      <div className="flex min-h-[50vh] items-center justify-center text-slate-600">
+        <p>Loading…</p>
       </div>
     );
   }
@@ -158,20 +158,20 @@ export default function DashboardPage() {
 
   if (navigatingAway) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Redirecting...</p>
+      <div className="flex min-h-[50vh] items-center justify-center text-slate-600">
+        <p>Redirecting…</p>
       </div>
     );
   }
 
   if (profileError) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-4">
-        <p className="text-center text-red-700">{profileError}</p>
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 px-4">
+        <p className="max-w-md text-center text-sm text-red-800">{profileError}</p>
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+          className="rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
         >
           Retry
         </button>
@@ -181,8 +181,8 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
+      <div className="flex min-h-[50vh] items-center justify-center text-slate-600">
+        <p>Loading…</p>
       </div>
     );
   }

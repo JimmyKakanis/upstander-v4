@@ -22,36 +22,22 @@ export default function Header() {
               <Image src="/logo.svg" alt="Upstander Logo" width={140} height={36} />
             </Link>
           </div>
-          <nav className="flex items-center space-x-4">
-            <Link href="/find-school" className="text-sm font-medium text-slate-700 hover:text-slate-900">
-                Find School
-            </Link>
-            {user ? (
-              <>
-                <Link href="/admin/dashboard" className="text-sm font-medium text-slate-700 hover:text-slate-900">
-                  Dashboard
-                </Link>
-                <Link href="/admin/settings" className="text-sm font-medium text-slate-700 hover:text-slate-900">
-                  Settings
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 hover:border-slate-400 transition-colors"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                  <Link href="/login" className="text-sm font-medium text-slate-700 hover:text-slate-900">
-                    Login
-                  </Link>
-                  <Link href="/register" className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                    Sign Up
-                  </Link>
-              </>
-            )}
-          </nav>
+          {user ? (
+            <nav className="flex items-center space-x-4">
+              <Link href="/admin/dashboard" className="text-sm font-medium text-slate-700 hover:text-slate-900">
+                Dashboard
+              </Link>
+              <Link href="/admin/settings" className="text-sm font-medium text-slate-700 hover:text-slate-900">
+                Settings
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 border border-slate-300 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-200 hover:border-slate-400 transition-colors"
+              >
+                Logout
+              </button>
+            </nav>
+          ) : null}
         </div>
       </div>
     </header>

@@ -9,7 +9,8 @@ import { Timestamp } from 'firebase/firestore';
 const mockUser: AdminUser = {
     uid: 'demo-user',
     email: 'demo@upstander.help',
-    schoolId: 'demo-school'
+    schoolId: 'demo-school',
+    schoolName: 'Demo High School',
 };
 
 const mockReports: Report[] = [
