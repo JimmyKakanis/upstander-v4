@@ -42,6 +42,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Staff invite tokens — server-only (Firebase Admin SDK).
+    match /schoolInvites/{inviteId} {
+      allow read, write: if false;
+    }
+
     // Collection to securely link a public referenceCode to a private reportId
     match /followUpAccess/{referenceCode} {
       // Allow anyone to get a document if they know the exact referenceCode.

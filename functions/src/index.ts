@@ -10,6 +10,11 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
+function shouldNotifySchoolStaff(user: { role?: unknown }): boolean {
+  if (user.role === "viewer") return false;
+  return true;
+}
+
 export const onReportCreated = onDocumentCreated("reports/{reportId}", async (event) => {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const snap = event.data;
@@ -33,7 +38,7 @@ export const onReportCreated = onDocumentCreated("reports/{reportId}", async (ev
     const promises = usersSnapshot.docs.map(async (userDoc) => {
       const user = userDoc.data();
 
-      if (user.role === "admin") {
+      if (shouldNotifySchoolStaff(user)) {
         const settingsRef = db
           .collection("users")
           .doc(userDoc.id)

@@ -40,16 +40,17 @@ export default function SubscribePage() {
       setUser(currentUser);
       if (currentUser) {
           try {
-            // Check for existing active subscription
-            const subsQuery = query(
-                collection(db, 'users', currentUser.uid, 'subscriptions'), 
-                where('status', 'in', ['active', 'trialing'])
-            );
-            const subsSnap = await getDocs(subsQuery);
-            if (!subsSnap.empty) {
+            const idToken = await currentUser.getIdToken();
+            const res = await fetch('/api/me/dashboard-bootstrap', {
+              headers: { Authorization: `Bearer ${idToken}` },
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.hasSubscriptionAccess === true) {
                 router.push('/admin/dashboard');
+              }
             }
-          } catch (err: any) {
+          } catch (err: unknown) {
             console.error("Error checking subscription:", err);
           }
       }

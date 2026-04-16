@@ -91,6 +91,7 @@ export async function POST(req: NextRequest) {
           nameNormalized,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
           createdBy: userId,
+          billingOwnerUid: userId,
           address: address || '',
           city: city || '',
           state: state || '',
@@ -102,6 +103,7 @@ export async function POST(req: NextRequest) {
           userRef,
           {
             schoolId: schoolRef.id,
+            role: 'admin',
             displayName: contactName || '',
             phoneNumber: contactPhone || '',
             email: decodedToken.email,
@@ -114,6 +116,7 @@ export async function POST(req: NextRequest) {
           adminRef,
           {
             schoolId: schoolRef.id,
+            role: 'admin',
             email: decodedToken.email,
             displayName: contactName || '',
             phoneNumber: contactPhone || '',
@@ -137,6 +140,12 @@ export async function POST(req: NextRequest) {
         );
       }
       throw e;
+    }
+
+    try {
+      await auth.setCustomUserClaims(userId, { schoolId: newSchoolId });
+    } catch (claimsError) {
+      console.error('setCustomUserClaims after school create:', claimsError);
     }
 
     return NextResponse.json({ success: true, schoolId: newSchoolId }, { status: 200 });

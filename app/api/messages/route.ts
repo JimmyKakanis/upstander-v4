@@ -4,6 +4,12 @@ import { Resend } from 'resend';
 
 let resendClient: Resend | null | undefined;
 
+/** Notify primary admins, invited staff, and legacy users with no role set. Skip explicit viewers only. */
+function shouldNotifySchoolStaff(user: { role?: unknown }): boolean {
+  if (user.role === 'viewer') return false;
+  return true;
+}
+
 function getResend(): Resend | null {
   if (resendClient !== undefined) return resendClient;
   const key = process.env.RESEND_API_KEY;
@@ -73,7 +79,7 @@ export async function POST(req: NextRequest) {
           const promises = usersSnapshot.docs.map(async (userDoc) => {
             const user = userDoc.data();
             
-            if (user.role === "admin") {
+            if (shouldNotifySchoolStaff(user)) {
               const settingsRef = db
                 .collection("users")
                 .doc(userDoc.id)

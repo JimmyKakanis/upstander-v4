@@ -67,6 +67,7 @@ export default function OnboardingPage() {
             throw new Error(data.error || 'Failed to create school');
         }
 
+        await auth.currentUser?.getIdToken(true);
         router.push('/admin/dashboard');
     } catch (error) {
         console.error("Error creating school:", error);

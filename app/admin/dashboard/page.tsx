@@ -4,28 +4,31 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
-import { collection, query, getDocs, doc, getDoc } from 'firebase/firestore';
-import { Report, AdminUser, ReportStatus, SortOrder } from '@/types';
+import { collection, query, getDocs } from 'firebase/firestore';
+import { Report, AdminUser, ReportStatus, SortOrder, StaffRole } from '@/types';
 import DashboardView from '@/components/admin/DashboardView';
 
-/** Read subscription docs without `where('status','in',...)` so we never need a composite index. */
-async function hasActiveStripeSubscription(uid: string): Promise<boolean> {
-  const paths = [
-    collection(db, 'users', uid, 'subscriptions'),
-    collection(db, 'customers', uid, 'subscriptions'),
-  ];
+type BootstrapPayload = {
+  schoolId: string | null;
+  schoolName: string | null;
+  hasSubscriptionAccess: boolean;
+  role: string | null;
+};
 
-  for (const colRef of paths) {
-    const snap = await getDocs(colRef);
-    for (const d of snap.docs) {
-      const raw = d.data()?.status;
-      const status = typeof raw === 'string' ? raw.toLowerCase() : '';
-      if (status === 'active' || status === 'trialing') {
-        return true;
-      }
-    }
+async function fetchDashboardBootstrap(idToken: string): Promise<BootstrapPayload> {
+  const res = await fetch('/api/me/dashboard-bootstrap', {
+    headers: { Authorization: `Bearer ${idToken}` },
+  });
+  const data = (await res.json().catch(() => ({}))) as BootstrapPayload & { error?: string };
+  if (!res.ok) {
+    throw new Error(typeof data.error === 'string' ? data.error : 'Could not verify account access');
   }
-  return false;
+  return {
+    schoolId: data.schoolId ?? null,
+    schoolName: data.schoolName ?? null,
+    hasSubscriptionAccess: Boolean(data.hasSubscriptionAccess),
+    role: data.role ?? null,
+  };
 }
 
 export default function DashboardPage() {
@@ -41,6 +44,10 @@ export default function DashboardPage() {
   const [statusFilter, setStatusFilter] = useState<ReportStatus>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+
+  const [teacherInviteLoading, setTeacherInviteLoading] = useState(false);
+  const [teacherInviteError, setTeacherInviteError] = useState<string | null>(null);
+  const [teacherInviteSuccess, setTeacherInviteSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -58,55 +65,36 @@ export default function DashboardPage() {
       setLoading(true);
 
       try {
-        // 1. Fetch User Data (Stripe & School Info)
-        let userData: Record<string, unknown> | null = null;
-        const userRef = doc(db, 'users', firebaseUser.uid);
-        const userSnap = await getDoc(userRef);
+        const idToken = await firebaseUser.getIdToken();
+        const bootstrap = await fetchDashboardBootstrap(idToken);
 
-        if (userSnap.exists()) {
-          userData = userSnap.data() as Record<string, unknown>;
-        }
-
-        let legacyData: Record<string, unknown> | null = null;
-        const adminRef = doc(db, 'admins', firebaseUser.uid);
-        const adminSnap = await getDoc(adminRef);
-        if (adminSnap.exists()) {
-          legacyData = adminSnap.data() as Record<string, unknown>;
-        }
-
-        const schoolId =
-          (typeof userData?.schoolId === 'string' && userData.schoolId) ||
-          (typeof legacyData?.schoolId === 'string' && legacyData.schoolId) ||
-          null;
-
-        // 2. Subscription (Stripe extension → users/.../subscriptions or customers/.../subscriptions)
-        const hasActiveSubscription = await hasActiveStripeSubscription(firebaseUser.uid);
-
-        if (!hasActiveSubscription) {
-          console.log('No active subscription found. Redirecting to subscribe.');
-          setNavigatingAway(true);
-          router.push('/admin/subscribe');
-          return;
-        }
-
-        // 3. School / onboarding
-        if (!schoolId) {
-          console.log('No school ID found. Redirecting to onboarding.');
+        if (!bootstrap.schoolId) {
           setNavigatingAway(true);
           router.push('/admin/onboarding');
           return;
         }
 
+        if (!bootstrap.hasSubscriptionAccess) {
+          setNavigatingAway(true);
+          router.push('/admin/subscribe');
+          return;
+        }
+
+        const roleParsed: StaffRole | undefined =
+          bootstrap.role === 'admin' || bootstrap.role === 'staff' ? bootstrap.role : undefined;
+
         setUser({
           uid: firebaseUser.uid,
           email: firebaseUser.email!,
-          schoolId,
+          schoolId: bootstrap.schoolId,
+          schoolName: bootstrap.schoolName,
+          role: roleParsed,
           status: 'active',
         });
       } catch (error) {
         console.error('Error fetching admin profile:', error);
         setProfileError(
-          'Could not load your account. Check your connection and try again.'
+          error instanceof Error ? error.message : 'Could not load your account. Check your connection and try again.'
         );
       } finally {
         setLoading(false);
@@ -119,7 +107,6 @@ export default function DashboardPage() {
   const fetchReports = useCallback(async (schoolId: string) => {
     setReportsLoading(true);
     try {
-        // Broad query to fetch all reports the user has access to based on rules
         const reportsQuery = query(collection(db, "reports"));
         
         const querySnapshot = await getDocs(reportsQuery);
@@ -128,15 +115,12 @@ export default function DashboardPage() {
             ...doc.data()
         })) as Report[];
 
-        // Securely filter reports on the client-side, handling cases where schoolId might be missing
         reportsData = reportsData.filter(report => report.schoolId && report.schoolId === schoolId);
 
-        // Apply status filtering on the client-side
         if (statusFilter !== 'all') {
             reportsData = reportsData.filter(report => report.status === statusFilter);
         }
 
-        // Apply sorting on the client-side
         reportsData.sort((a, b) => {
             const dateA = a.createdAt.toDate().getTime();
             const dateB = b.createdAt.toDate().getTime();
@@ -146,7 +130,7 @@ export default function DashboardPage() {
         setReports(reportsData);
     } catch (error) {
         console.error("Error fetching reports: ", error);
-        setReports([]); // Clear reports on error to prevent displaying stale data
+        setReports([]);
     } finally {
         setReportsLoading(false);
     }
@@ -162,6 +146,38 @@ export default function DashboardPage() {
     setReports(reports.map(report => report.id === updatedReport.id ? updatedReport : report));
     setSelectedReport(updatedReport);
   };
+
+  const handleSendTeacherInvite = useCallback(async (email: string) => {
+    if (!user?.schoolId || !auth.currentUser) return;
+    const trimmed = email.trim();
+    if (!trimmed) return;
+    setTeacherInviteLoading(true);
+    setTeacherInviteError(null);
+    setTeacherInviteSuccess(null);
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const res = await fetch('/api/schools/invite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ schoolId: user.schoolId, email: trimmed }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(typeof data.error === 'string' ? data.error : 'Could not send invitation');
+      }
+      if (data.success !== true) {
+        throw new Error('Invalid response from server');
+      }
+      setTeacherInviteSuccess(`Invitation sent to ${trimmed}. They should check their inbox.`);
+    } catch (e) {
+      setTeacherInviteError(e instanceof Error ? e.message : 'Something went wrong');
+    } finally {
+      setTeacherInviteLoading(false);
+    }
+  }, [user?.schoolId]);
 
   if (sessionUser === undefined || loading) {
     return (
@@ -222,6 +238,10 @@ export default function DashboardPage() {
       onReportClick={setSelectedReport}
       onCloseReportModal={() => setSelectedReport(null)}
       onUpdateReport={handleReportUpdate}
+      teacherInviteLoading={teacherInviteLoading}
+      teacherInviteError={teacherInviteError}
+      teacherInviteSuccess={teacherInviteSuccess}
+      onSendTeacherInvite={handleSendTeacherInvite}
     />
   );
 }

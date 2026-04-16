@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from 'react';
 import { Report, AdminUser, ReportStatus, SortOrder } from '@/types';
 import ReportModal from '@/components/admin/ReportModal';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -22,6 +23,10 @@ interface DashboardViewProps {
   onCloseReportModal: () => void;
   onUpdateReport: (report: Report) => void;
   isDemo?: boolean; // Optional prop to hide/show certain elements or show "Demo Mode" banner
+  teacherInviteLoading?: boolean;
+  teacherInviteError?: string | null;
+  teacherInviteSuccess?: string | null;
+  onSendTeacherInvite?: (email: string) => void | Promise<void>;
 }
 
 export default function DashboardView({
@@ -38,8 +43,13 @@ export default function DashboardView({
   onReportClick,
   onCloseReportModal,
   onUpdateReport,
-  isDemo = false
+  isDemo = false,
+  teacherInviteLoading = false,
+  teacherInviteError = null,
+  teacherInviteSuccess = null,
+  onSendTeacherInvite,
 }: DashboardViewProps) {
+  const [teacherEmailInput, setTeacherEmailInput] = useState('');
 
   const newReportsCount = reports.filter(report => report.status === 'new').length;
   const investigatingCount = reports.filter(report => report.status === 'Under Investigation').length;
@@ -101,9 +111,21 @@ export default function DashboardView({
       )}
       <nav className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-slate-800">Upstander Dashboard</h1>
+          <div className="flex justify-between min-h-16 py-3 gap-4 flex-wrap items-center">
+            <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 min-w-0">
+              <h1 className="text-xl font-bold text-slate-800 shrink-0">Upstander Dashboard</h1>
+              {user?.schoolName ? (
+                <div className="min-w-0">
+                  <p className="text-lg font-semibold text-slate-900 truncate" title={user.schoolName}>
+                    {user.schoolName}
+                  </p>
+                  <p className="text-xs text-slate-500">Reports shown are for this school only.</p>
+                </div>
+              ) : user?.schoolId ? (
+                <p className="text-sm text-slate-500 font-mono truncate" title={user.schoolId}>
+                  School ID: {user.schoolId}
+                </p>
+              ) : null}
             </div>
             <div className="flex items-center">
                 {user && <p className="mr-4 text-sm text-slate-600">Welcome, {user.email}</p>}
@@ -129,6 +151,52 @@ export default function DashboardView({
       </nav>
       <main className="py-10">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {!isDemo && onSendTeacherInvite && user?.schoolId && (
+              <div className="mb-8 px-4 sm:px-0">
+                <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                  <h2 className="text-lg font-semibold text-slate-800">Add a teacher</h2>
+                  <p className="mt-1 text-sm text-slate-600">
+                    Enter their work email. We&apos;ll send a single-use link to join this school&apos;s dashboard using your school&apos;s subscription. They must sign in or sign up with that same email.
+                  </p>
+                  <form
+                    className="mt-4 flex flex-col sm:flex-row gap-3 sm:items-end max-w-xl"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (!teacherInviteLoading) void onSendTeacherInvite(teacherEmailInput);
+                    }}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <label htmlFor="teacher-invite-email" className="sr-only">
+                        Teacher email
+                      </label>
+                      <input
+                        id="teacher-invite-email"
+                        type="email"
+                        autoComplete="email"
+                        value={teacherEmailInput}
+                        onChange={(e) => setTeacherEmailInput(e.target.value)}
+                        placeholder="colleague@school.edu"
+                        disabled={teacherInviteLoading}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-50"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={teacherInviteLoading || !teacherEmailInput.trim()}
+                      className="px-4 py-2 text-sm font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300 shrink-0"
+                    >
+                      {teacherInviteLoading ? 'Sending…' : 'Send invite email'}
+                    </button>
+                  </form>
+                  {teacherInviteSuccess && (
+                    <p className="mt-3 text-sm text-green-800">{teacherInviteSuccess}</p>
+                  )}
+                  {teacherInviteError && (
+                    <p className="mt-3 text-sm text-red-600">{teacherInviteError}</p>
+                  )}
+                </div>
+              </div>
+            )}
             {/* Analytics Section */}
             <div className="mb-8">
                 <h2 className="text-2xl font-bold text-slate-800 mb-4 px-4 sm:px-0">At a Glance</h2>

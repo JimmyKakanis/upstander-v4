@@ -110,6 +110,8 @@ export default function RegisterPage() {
         throw new Error(data.error || 'Failed to register school');
       }
 
+      await user.getIdToken(true);
+
       // 4. Redirect to Subscription
       router.push('/admin/subscribe');
 
