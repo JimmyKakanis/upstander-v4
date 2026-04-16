@@ -1,60 +1,72 @@
-# Onboarding a New School
+# Onboarding schools and staff
 
-This guide outlines the steps required to add a new school to the Upstander application.
+This guide describes how schools and administrators get onto Upstander **today**, including how to add **additional teachers** when there is no in-app “invite staff” feature yet.
 
-## 1. Gather School Information
+## How the first administrator gets set up (self-serve)
 
-You will need the following information from the new school:
-*   **Full School Name:** (e.g., "Northwood High School")
-*   **School ID:** A unique, URL-friendly identifier. This is typically the school's name in lowercase with hyphens instead of spaces (e.g., `northwood-high-school`).
-*   **Administrator Emails:** A list of email addresses for the staff who will need access to the admin dashboard.
+Most schools start without manual Firebase data entry:
 
-## 2. Create Administrator Accounts
+1. **Full registration** — Staff use **`/register`**. The app creates a Firebase Auth user, calls **`/api/schools/create`** to create a document in the **`schools`** collection, and writes **`schoolId`** on the user’s **`users/{uid}`** and **`admins/{uid}`** documents.
+2. **Minimal path** — Staff use **`/login`** then **`/admin/onboarding`** (school name only). The same **`/api/schools/create`** endpoint creates the school and links the account.
 
-For each administrator email, you need to create a user account in Firebase.
+Important details:
 
-*   **Action:** In the Firebase Console, go to **Authentication** and add a new user with their email address and a temporary password.
-*   **Copy the UID:** After creating the user, copy their unique User UID.
+- **`schoolId` is the Firestore document ID** of the school (auto-generated). It is **not** a hand-chosen slug. The student reporting URL is **`/report/{schoolId}`** using that id.
+- **Duplicate school names are blocked** at the API layer (normalized name + transaction). A second full **`/register`** for the *same* school display name will not create another school document.
 
-## 3. Set Custom Admin Claim
+After checkout / subscription steps, staff use **`/admin/dashboard`** as usual.
 
-Each administrator must have a custom claim set on their account to link them to their school.
+## Adding more teachers to the same school (no in-app invite yet)
 
-*   **Script:** `scripts/set-admin-claim.js`
-*   **Command:** Run the following command from the project's root directory:
-    ```bash
-    node scripts/set-admin-claim.js <admin-uid> <school-id>
-    ```
+The product **does not** currently include a dashboard action to invite or provision colleague accounts. Additional staff must be attached to the **existing** school using Firebase and Firestore.
 
-## 4. Create Firestore User Documents
+### 1. Get the school id
 
-To ensure administrators receive email notifications, they must have a corresponding document in the `users` collection in Firestore.
+In **Firebase Console → Firestore → `schools`**, find the school document. Its **document id** is the canonical **`schoolId`** every staff member for that school must share (same value already stored on the first admin’s **`users/{uid}`** document).
 
-*   **Action:** Go to the **Firestore Database** in the Firebase Console and navigate to the `users` collection.
-*   **Details:** Create a new document with the administrator's UID as the document ID. Add the following fields:
-    *   `email`: The administrator's email address.
-    *   `schoolId`: The school's unique ID.
-    *   `role`: "admin"
+### 2. Create each additional teacher in Firebase Authentication
 
-## 5. Create Firestore Admin Documents
+**Authentication → Users → Add user** (email + password or passwordless flow, per your policy). Copy the new user’s **UID**.
 
-For the dashboard to recognize the user as an administrator, they must also have a document in the `admins` collection.
+### 3. Set the `schoolId` custom claim (required for some Firestore rules)
 
-*   **Action:** Navigate to the `admins` collection in the Firestore Database.
-*   **Details:** Create a new document, again using the administrator's UID as the document ID. Add the same fields as in the `users` collection.
+Several rules (for example **report read/update** and **conversations**) compare **`request.auth.token.schoolId`** to the report’s **`schoolId`**. Staff must have a **custom user claim** whose `schoolId` field matches the school document id from step 1.
 
-## 6. Add School to Public Directory
+Set claims using the **Firebase Admin SDK** (small Node script, Cloud Function, or your ops tooling). Pseudocode:
 
-To make the school appear in the homepage search bar, add it to the `schools` collection.
+```js
+await admin.auth().setCustomUserClaims(uid, { schoolId: "<same-school-document-id>" });
+```
 
-*   **Script:** `scripts/add-school.js`
-*   **Command:** Run the following command from the project's root directory:
-    ```bash
-    node scripts/add-school.js <school-id> "<Full School Name>"
-    ```
+The user must **sign out and sign in again** (or refresh their ID token) so the new claim appears on the token.
 
-## 7. Provide Information to the School
+> **Note:** Older internal docs referenced `scripts/set-admin-claim.js`. That script is not part of this repository’s tracked files; use Admin SDK in your environment instead.
 
-Once the setup is complete, provide the school with:
-*   Their unique reporting URL: `https://upstander.help/report/<school-id>`
-*   The login credentials for their administrators.
+### 4. Create Firestore profile documents
+
+For each new UID, create or update:
+
+| Collection | Document id | Fields (minimum) |
+|------------|-------------|------------------|
+| **`users`** | `{uid}` | `email`, **`schoolId`** (same as step 1), `role`: `"admin"` (and any other fields you use, e.g. `displayName`) |
+| **`admins`** | `{uid}` | Same **`schoolId`** and identity fields for compatibility with legacy dashboard checks |
+
+This aligns with how the first administrator is stored and ensures **notifications** (e.g. Cloud Functions querying `users` by `schoolId`) can reach the new teacher.
+
+### 5. Hand off access
+
+Send the teacher:
+
+- The **staff login** URL (your deployed domain + **`/login`**).
+- Their **credentials** or password-reset flow, per your security policy.
+- The **anonymous reporting link** for students: **`/report/{schoolId}`** (full URL on production).
+
+## Operator checklist (quick reference)
+
+- [ ] First school created via **`/register`** or onboarding (school doc exists under **`schools`**).
+- [ ] For each extra teacher: Auth user created → **`schoolId` custom claim** set → **`users`** + **`admins`** docs with same **`schoolId`** → user re-authenticates.
+- [ ] Reporting link shared using the real **`schoolId`** from Firestore.
+
+## Future product direction
+
+A self-serve **“Invite staff”** flow (email link or join code, server-side provisioning) would remove most of the manual steps above. Until that ships, this document is the source of truth for multi-teacher schools.

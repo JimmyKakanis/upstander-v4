@@ -9,9 +9,10 @@ interface ReportModalProps {
   report: Report;
   onClose: () => void;
   onUpdate: (updatedReport: Report) => void;
+  isDemo?: boolean;
 }
 
-export default function ReportModal({ report, onClose, onUpdate }: ReportModalProps) {
+export default function ReportModal({ report, onClose, onUpdate, isDemo = false }: ReportModalProps) {
   const [newNote, setNewNote] = useState('');
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
@@ -20,6 +21,24 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
 
   useEffect(() => {
     if (!report.id) return;
+
+    if (isDemo) {
+        // Mock conversation for demo
+        setMessagesLoading(false);
+        setMessages([
+            {
+                sender: 'reporter',
+                text: 'I am worried about going to school tomorrow.',
+                timestamp: Timestamp.now()
+            },
+            {
+                sender: 'admin',
+                text: 'We are here to help. Can you tell us more?',
+                timestamp: Timestamp.now()
+            }
+        ]);
+        return;
+    }
 
     setMessagesLoading(true);
     const conversationRef = doc(db, 'conversations', report.id);
@@ -39,7 +58,7 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
     });
 
     return () => unsubscribe();
-  }, [report.id]);
+  }, [report.id, isDemo]);
 
   useEffect(() => {
     if (messagesContainerRef.current) {
@@ -48,6 +67,12 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
   }, [messages]);
 
   const handleStatusChange = async (newStatus: 'Under Investigation' | 'Resolved') => {
+    if (isDemo) {
+        onUpdate({ ...report, status: newStatus });
+        onClose();
+        return;
+    }
+
     try {
       const reportRef = doc(db, 'reports', report.id);
       await updateDoc(reportRef, { status: newStatus });
@@ -65,6 +90,14 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
         note: newNote,
         createdAt: Timestamp.now()
     };
+
+    if (isDemo) {
+        const updatedNotes = [...(report.notes || []), noteToAdd];
+        const updatedReport = { ...report, notes: updatedNotes };
+        onUpdate(updatedReport);
+        setNewNote('');
+        return;
+    }
 
     try {
         const reportRef = doc(db, 'reports', report.id);
@@ -85,12 +118,6 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
     e.preventDefault();
     if (newMessage.trim() === '' || !report.id) return;
 
-    const authToken = await auth.currentUser?.getIdToken();
-    if (!authToken) {
-      console.error("Not authenticated");
-      return;
-    }
-
     const messageText = newMessage;
     const optimisticMessage: ConversationMessage = {
       text: messageText,
@@ -100,6 +127,17 @@ export default function ReportModal({ report, onClose, onUpdate }: ReportModalPr
 
     setMessages(prevMessages => [...prevMessages, optimisticMessage]);
     setNewMessage('');
+
+    if (isDemo) {
+        // Simulate response in demo? Maybe not necessary.
+        return;
+    }
+
+    const authToken = await auth.currentUser?.getIdToken();
+    if (!authToken) {
+      console.error("Not authenticated");
+      return;
+    }
 
     try {
       await fetch('/api/messages', {

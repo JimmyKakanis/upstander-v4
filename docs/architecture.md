@@ -18,6 +18,10 @@ The frontend is a modern server-side rendering (SSR) application built with Next
     *   **Firebase Authentication:** Provides secure email and password login for school administrators.
     *   **Firebase Cloud Functions:** A serverless environment used for backend logic, most notably for sending email notifications when new reports are created.
 
+### Staff accounts and multiple teachers per school
+
+The **first** administrator is created through the app (**`/register`** or **`/admin/onboarding`** plus **`/api/schools/create`**). There is **no in-app “invite colleague”** UI yet; additional teachers must be provisioned in **Firebase Auth**, given the same **`schoolId`** in **`users`** / **`admins`**, and must have a matching **`schoolId` custom claim** on their ID token so Firestore security rules allow report access and updates. See **[Onboarding schools and staff](./onboarding.md)** for the full checklist.
+
 ## Email Notifications
 
 *   **Provider:** [Resend](https://resend.com/)

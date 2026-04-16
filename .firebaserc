@@ -1,5 +1,13 @@
 {
   "projects": {
     "default": "upstander---v4"
+  },
+  "targets": {},
+  "etags": {
+    "upstander---v4": {
+      "extensionInstances": {
+        "firestore-stripe-payments": "06f70d0df74dc2bc013152d399dc0a1acc004199a83b41cc861693981e032a98"
+      }
+    }
   }
 }

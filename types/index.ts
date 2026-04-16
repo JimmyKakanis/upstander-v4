@@ -3,7 +3,10 @@ import { Timestamp } from 'firebase/firestore';
 export interface AdminUser {
   uid: string;
   email: string | null;
-  schoolId: string;
+  schoolId?: string; // Made optional as it might not be set yet during onboarding
+  stripeId?: string;
+  stripeLink?: string;
+  status?: string; // Subscription status: 'active', 'trialing', 'past_due', 'canceled', etc.
 }
 
 export interface ConversationMessage {
@@ -30,3 +33,6 @@ export interface Report {
     createdAt: Timestamp;
   }>;
 }
+
+export type ReportStatus = 'new' | 'Under Investigation' | 'Resolved' | 'all';
+export type SortOrder = 'desc' | 'asc';

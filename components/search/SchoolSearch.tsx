@@ -21,6 +21,7 @@ export default function SchoolSearch() {
       const schoolsCollection = collection(db, 'schools');
       const schoolSnapshot = await getDocs(schoolsCollection);
       const schoolList = schoolSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as School);
+
       setSchools(schoolList);
       setFilteredSchools(schoolList);
     };
@@ -32,6 +33,7 @@ export default function SchoolSearch() {
     const results = schools.filter(school =>
       school.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    
     setFilteredSchools(results);
   }, [searchTerm, schools]);
 

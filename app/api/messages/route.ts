@@ -1,24 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import * as admin from 'firebase-admin';
+import { admin, db } from '@/lib/firebase-admin';
 import { Resend } from 'resend';
 
-// Initialize Firebase Admin SDK
-if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      }),
-    });
-  } catch (error) {
-    console.error('Firebase admin initialization error', error);
-  }
-}
+let resendClient: Resend | null | undefined;
 
-const db = admin.firestore();
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend(): Resend | null {
+  if (resendClient !== undefined) return resendClient;
+  const key = process.env.RESEND_API_KEY;
+  if (!key) {
+    resendClient = null;
+    return null;
+  }
+  resendClient = new Resend(key);
+  return resendClient;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -52,7 +47,8 @@ export async function POST(req: NextRequest) {
       const reportDoc = await reportRef.get();
       const reportData = reportDoc.data();
 
-      if (reportData?.contactEmail) {
+      const resend = getResend();
+      if (resend && reportData?.contactEmail) {
         try {
           await resend.emails.send({
             from: 'Upstander <noreply@upstander.help>',
@@ -94,6 +90,8 @@ export async function POST(req: NextRequest) {
               }
 
               if (notify) {
+                const resend = getResend();
+                if (!resend) return;
                 try {
                   console.log(`Sending new message notification to ${user.email}`);
                   await resend.emails.send({

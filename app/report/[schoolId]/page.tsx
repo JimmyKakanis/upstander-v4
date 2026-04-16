@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, doc, serverTimestamp, runTransaction } from 'firebase/firestore';
+import { collection, doc, serverTimestamp, runTransaction, getDoc } from 'firebase/firestore';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -42,6 +42,28 @@ const isTestingMode = true;
 export default function ReportPage() {
   const params = useParams();
   const schoolId = params.schoolId as string;
+  const [schoolName, setSchoolName] = useState<string>("");
+
+  useEffect(() => {
+    if (schoolId) {
+      const fetchSchool = async () => {
+        try {
+          const docRef = doc(db, "schools", schoolId);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setSchoolName(data.name || schoolId);
+          } else {
+            // Handle case where school doesn't exist if needed
+          }
+        } catch (error) {
+           console.error("Error fetching school:", error);
+        }
+      };
+      fetchSchool();
+    }
+  }, [schoolId]);
 
   const [formData, setFormData] = useState<ReportFormState>({
     involvedParties: "",
@@ -193,7 +215,7 @@ export default function ReportPage() {
             <h1 className="text-3xl font-bold text-slate-800">
             Anonymous Report
             </h1>
-            <p className="text-slate-600 mt-2">for {schoolId}</p>
+            <p className="text-slate-600 mt-2">for {schoolName || schoolId}</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
             <div>

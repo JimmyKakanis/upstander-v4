@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Upstander: Anonymous Bullying Reporting",
@@ -20,12 +21,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${GeistSans.variable} ${GeistMono.variable} antialiased bg-slate-50 text-slate-800`}
+        className={`${GeistSans.variable} ${GeistMono.variable} antialiased bg-slate-50 text-slate-800 flex flex-col min-h-screen`}
       >
         <Header />
-        <main>
+        <main className="flex-grow">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );

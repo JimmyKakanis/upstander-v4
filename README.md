@@ -10,14 +10,16 @@ This is a [Next.js](https://nextjs.org) project for Upstander, an anonymous bull
 - **Unique Reference Codes:** Each report is assigned a unique, non-identifiable code that students can use for follow-up conversations.
 - **Anonymous Two-Way Communication:** A secure, real-time messaging feature that allows school staff to communicate with the student reporter without compromising the student's anonymity. Includes email notifications to alert students of new messages.
 - **Interactive Analytics:** The admin dashboard includes an "At a Glance" section with clickable cards to quickly filter reports by status (e.g., New, Under Investigation) and a pie chart breaking down reports by category.
+- **Public-Facing Pages:** Dedicated pages for educators (`/for-educators`), parents (`/for-parents`), and school registration (`/register-school`), along with a comprehensive privacy policy (`/privacy-policy`).
+- **School Registration:** Streamlined registration flow (`/register`) that collects school and contact information, creates authenticated accounts, and guides new schools through subscription setup.
 
 ## Project Documentation
 
 For detailed information about the project's architecture, technical setup, and operational procedures, please refer to the documents in the `/docs` directory.
 
 *   **[Architecture Overview](./docs/architecture.md):** A high-level look at the frontend, backend, and services used.
-*   **[Onboarding a New School](./docs/onboarding.md):** A step-by-step guide to adding a new school to the platform.
-*   **[Technical Details](./docs/technical.md):** Information on the email notification service and DNS configuration.
+*   **[Onboarding schools and staff](./docs/onboarding.md):** First-admin self-serve flow, student report URLs, and **how to add more teachers** (manual Firebase / Firestore steps until an invite feature exists).
+*   **[Technical Details](./docs/technical.md):** Information on the email notification service, DNS configuration, registration API, and **local Next.js cache issues** (e.g. missing `./682.js`, unstyled pages).
 
 ## Development & Deployment Workflow
 
@@ -31,8 +33,11 @@ This project connects to a Firebase backend and requires environment variables t
 
 #### Local Development
 
-For local development, create a file named `.env.local` in the root of the project. Copy the contents of `.env.example` (you may need to create this file if it doesn't exist) and fill in your Firebase project credentials. This file is ignored by Git and should not be committed to the repository.
+For local development, copy **`.env.example`** to **`.env.local`** in the project root and fill in values. This file is ignored by Git and must not be committed.
 
+You need **both** the public Firebase Web config (`NEXT_PUBLIC_*`) **and** the **Firebase Admin** service account fields (`FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`). Without Admin credentials, **school onboarding** (`/api/schools/create`) and similar API routes return an error locally. Get a JSON key from **Firebase Console → Project settings → Service accounts → Generate new private key** and map the three fields into `.env.local` (see comments in `.env.example`).
+
+**Client-Side Firebase Config:**
 ```
 NEXT_PUBLIC_FIREBASE_API_KEY="YOUR_API_KEY"
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="YOUR_AUTH_DOMAIN"
@@ -40,6 +45,13 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID="YOUR_PROJECT_ID"
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET="YOUR_STORAGE_BUCKET"
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="YOUR_MESSAGING_SENDER_ID"
 NEXT_PUBLIC_FIREBASE_APP_ID="YOUR_APP_ID"
+```
+
+**Server-Side Firebase Admin SDK (Required for Registration API):**
+```
+FIREBASE_PROJECT_ID="YOUR_PROJECT_ID"
+FIREBASE_CLIENT_EMAIL="your-service-account@your-project.iam.gserviceaccount.com"
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 ```
 
 #### Vercel Deployment
@@ -60,6 +72,16 @@ For the live deployment on Vercel, you **must** set the environment variables in
 3.  Copy the contents of the `firestore.rules` file from this repository.
 4.  Paste the contents into the editor in the Firebase Console and click **Publish**.
 
+
+### Next.js dev server (unstyled pages, missing `682.js`)
+
+**Default:** **`npm run dev`** always **deletes `.next` first**, then starts Next.js. That prevents stale webpack chunks (plain HTML / no Tailwind, `/_next/static/...` 404s, `Cannot find module './682.js'`). The first compile after starting may take a bit longer.
+
+**Faster (optional):** **`npm run dev:fast`** runs `next dev` without clearing `.next` — use only when you are sure the cache is healthy.
+
+Always open the **exact URL** printed in the terminal (if port **3000** is busy, Next uses **3001** — mismatched port + old tab = broken assets).
+
+Details: [Local Next.js development and cache issues](./docs/technical.md#local-nextjs-development-and-cache-issues).
 
 ### Important Notes for Developers
 
