@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { admin, auth, db } from '@/lib/firebase-admin';
+import { isSchoolAdminRole } from '@/lib/staff-role';
 import { hasDashboardAccessForUser } from '@/lib/server/subscription';
 
 export const dynamic = 'force-dynamic';
@@ -64,12 +65,22 @@ export async function GET(req: NextRequest) {
       const r = userSnap.data()?.role;
       role = typeof r === 'string' ? r : null;
     }
+    if (!role) {
+      const adminSnap = await db.collection('admins').doc(uid).get();
+      if (adminSnap.exists) {
+        const r = adminSnap.data()?.role;
+        if (typeof r === 'string' && r) role = r;
+      }
+    }
+
+    const isSchoolAdmin = isSchoolAdminRole(role);
 
     return NextResponse.json({
       schoolId,
       schoolName,
       hasSubscriptionAccess,
       role,
+      isSchoolAdmin,
     });
   } catch (error) {
     console.error('dashboard-bootstrap error:', error);

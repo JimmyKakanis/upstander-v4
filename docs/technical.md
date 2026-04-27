@@ -118,3 +118,36 @@ node bin/clean-next.cjs
 ### Production / Vercel
 
 This class of problem is **development-cache** related. Production builds on Vercel run a fresh install and build; if production ever looked broken in the same way, trigger a **redeploy** without build cache (Vercel dashboard) rather than relying on a local `.next` folder.
+
+---
+
+## Public UI and admin experience
+
+This section summarizes the **April 2026** UI alignment pass so future changes stay consistent with existing patterns.
+
+### Global shell
+
+*   **`app/layout.tsx`:** Applies **`font-sans`** (Geist) on `<body>`, wraps all pages with **`Header`**, **`main`** (`flex-grow` plus bottom padding **`pb-16 sm:pb-20`** so content clears the footer), and **`Footer`**.
+*   **Header** (`components/layout/Header.tsx`): When **signed out**, only the logo (home link) is shown—no staff **Login** or **Sign Up** in the bar. When **signed in**, **Dashboard**, **Settings**, and **Logout** appear.
+*   **Footer** (`components/layout/Footer.tsx`): Centered slate palette; links for educators, parents, teacher login, privacy, and school registration; subdued social placeholders until real URLs are configured.
+
+### Student-facing surfaces
+
+*   **Home** (`app/page.tsx`): Student hero (eyebrow, headline, **Find your school** → `/find-school`, **Check on an existing report** → `/follow-up`), then a **For schools and teachers** card (register, demo, staff login, link to `/for-educators`), then **Why choose Upstander** feature cards.
+*   **Find school** (`app/find-school/page.tsx`): Search UI (`components/search/SchoolSearch.tsx`). Page uses **`min-h-[calc(100dvh-4rem)]`** so content fills the viewport below the **`h-16`** header and the **footer sits below the initial fold** (user scrolls to see it).
+*   **Report form** (`app/report/[schoolId]/page.tsx`): Generous bottom margin on the outer wrapper so the form does not sit flush against the footer.
+*   **Follow-up** (`app/follow-up/page.tsx`, `app/follow-up/[reportId]/page.tsx`): Card layout and status styling aligned with the admin report modal (slate borders, rounded panels, amber / blue / emerald status chips where applicable).
+
+### Staff and onboarding
+
+*   **Login / register / join / onboarding** (`app/login`, `app/register`, `app/join`, `app/admin/onboarding`): Shared card pattern—white panel, **`rounded-xl`**, **`border-slate-200/80`**, **`ring-1 ring-slate-900/5`**, consistent inputs (`rounded-lg`, slate borders, blue focus ring).
+*   **Dashboard** (`components/admin/DashboardView.tsx`, loaded by `app/admin/dashboard/page.tsx`): School context header (no duplicate **Logout** in the page chrome; logout remains in the global header). **At a glance** metric cards filter the table; **Submitted reports** table and filters match the same visual language.
+*   **Report details** (`components/admin/ReportModal.tsx`): Dialog with scrollable body, sticky-style header/footer actions, backdrop click and **Escape** to close, keyboard-friendly metric-style cards on the dashboard list.
+*   **Settings** (`app/admin/settings/page.tsx`): Notification toggles and teacher invite form use the same card and input styles; toggle markup relies on **`peer`** on the **checkbox**, not on the track `div`.
+*   **Subscribe** (`app/admin/subscribe/page.tsx`): Plan cards and loading state use the same slate / blue system.
+
+### Design tokens (convention)
+
+Prefer **slate** neutrals over **gray** for text, borders, and backgrounds. Primary actions use **blue-600** / **blue-700** with **`focus-visible:outline`** where interactive. Cards often combine **`rounded-xl`**, **`border-slate-200/80`**, **`shadow-sm`**, and **`ring-1 ring-slate-900/5`**. Section labels may use a small **uppercase** blue eyebrow (**`text-blue-600`**, wide tracking) above a bold **slate-900** heading.
+
+When adding a new public or admin page, **reuse these patterns** before introducing new color or spacing systems.

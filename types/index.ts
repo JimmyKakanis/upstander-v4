@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-export type StaffRole = 'admin' | 'staff';
+export type StaffRole = 'admin' | 'teacher';
 
 export interface AdminUser {
   uid: string;
@@ -8,6 +8,8 @@ export interface AdminUser {
   schoolId?: string; // Made optional as it might not be set yet during onboarding
   schoolName?: string | null;
   role?: StaffRole;
+  /** From account bootstrap; used for permissions such as deleting reports. */
+  isSchoolAdmin?: boolean;
   stripeId?: string;
   stripeLink?: string;
   status?: string; // Subscription status: 'active', 'trialing', 'past_due', 'canceled', etc.

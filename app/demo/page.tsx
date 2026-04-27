@@ -11,6 +11,7 @@ const mockUser: AdminUser = {
     email: 'demo@upstander.help',
     schoolId: 'demo-school',
     schoolName: 'Demo High School',
+    role: 'admin',
 };
 
 const mockReports: Report[] = [

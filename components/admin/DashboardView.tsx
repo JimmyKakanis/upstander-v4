@@ -1,5 +1,6 @@
 "use client";
 
+import { staffRoleLabel } from '@/lib/staff-role';
 import { Report, AdminUser, ReportStatus, SortOrder } from '@/types';
 import ReportModal from '@/components/admin/ReportModal';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -21,6 +22,8 @@ interface DashboardViewProps {
   onReportClick: (report: Report) => void;
   onCloseReportModal: () => void;
   onUpdateReport: (report: Report) => void;
+  /** When set (e.g. school admin only), table shows delete and uses this handler. */
+  onDeleteReport?: (report: Report) => void | Promise<void>;
   isDemo?: boolean; // Optional prop to hide/show certain elements or show "Demo Mode" banner
 }
 
@@ -38,8 +41,10 @@ export default function DashboardView({
   onReportClick,
   onCloseReportModal,
   onUpdateReport,
+  onDeleteReport,
   isDemo = false,
 }: DashboardViewProps) {
+  const canDelete = Boolean(onDeleteReport) && !isDemo;
 
   const newReportsCount = reports.filter(report => report.status === 'new').length;
   const investigatingCount = reports.filter(report => report.status === 'Under Investigation').length;
@@ -136,6 +141,11 @@ export default function DashboardView({
               {user?.email ? (
                 <p className="mt-3 text-sm text-slate-500">
                   Signed in as <span className="font-medium text-slate-700">{user.email}</span>
+                  {user.role ? (
+                    <span className="ml-2 inline-flex items-center rounded-full border border-slate-200/80 bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-800">
+                      {staffRoleLabel(user.role)}
+                    </span>
+                  ) : null}
                 </p>
               ) : null}
             </div>
@@ -265,16 +275,21 @@ export default function DashboardView({
                                 <th scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">Type</th>
                                 <th scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">Status</th>
                                 <th scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">Reference</th>
+                                {canDelete ? (
+                                  <th scope="col" className="w-1 px-4 py-3.5 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 sm:px-6">
+                                    <span className="sr-only">Delete</span>
+                                  </th>
+                                ) : null}
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {reportsLoading ? (
                                 <tr>
-                                    <td colSpan={4} className="px-6 py-12 text-center text-sm text-slate-500">Loading reports…</td>
+                                    <td colSpan={canDelete ? 5 : 4} className="px-6 py-12 text-center text-sm text-slate-500">Loading reports…</td>
                                 </tr>
                             ) : reports.length === 0 ? (
                                 <tr>
-                                    <td colSpan={4} className="px-6 py-12 text-center text-sm text-slate-500">No reports match this filter.</td>
+                                    <td colSpan={canDelete ? 5 : 4} className="px-6 py-12 text-center text-sm text-slate-500">No reports match this filter.</td>
                                 </tr>
                             ) : (
                                 reports.map((report) => (
@@ -295,6 +310,20 @@ export default function DashboardView({
                                         </span>
                                     </td>
                                     <td className="whitespace-nowrap px-4 py-4 font-mono text-sm text-slate-700 sm:px-6">{report.referenceCode}</td>
+                                    {canDelete && onDeleteReport ? (
+                                      <td className="whitespace-nowrap px-4 py-4 text-right sm:px-6">
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            void onDeleteReport(report);
+                                          }}
+                                          className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-2.5 py-1.5 text-xs font-medium text-red-800 shadow-sm transition hover:bg-red-50"
+                                        >
+                                          Delete
+                                        </button>
+                                      </td>
+                                    ) : null}
                                 </tr>
                                 ))
                             )}

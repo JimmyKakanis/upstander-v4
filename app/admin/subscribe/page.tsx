@@ -10,6 +10,8 @@ export default function SubscribePage() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [authLoading, setAuthLoading] = useState(true);
+  const [subGateLoading, setSubGateLoading] = useState(false);
+  const [isSchoolAdmin, setIsSchoolAdmin] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -39,20 +41,33 @@ export default function SubscribePage() {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-          try {
-            const idToken = await currentUser.getIdToken();
-            const res = await fetch('/api/me/dashboard-bootstrap', {
-              headers: { Authorization: `Bearer ${idToken}` },
-            });
-            if (res.ok) {
-              const data = await res.json();
-              if (data.hasSubscriptionAccess === true) {
-                router.push('/admin/dashboard');
-              }
+        setSubGateLoading(true);
+        try {
+          const idToken = await currentUser.getIdToken();
+          const res = await fetch('/api/me/dashboard-bootstrap', {
+            headers: { Authorization: `Bearer ${idToken}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.hasSubscriptionAccess === true) {
+              router.push('/admin/dashboard');
+            } else {
+              setIsSchoolAdmin(
+                typeof data.isSchoolAdmin === 'boolean' ? data.isSchoolAdmin : true
+              );
             }
-          } catch (err: unknown) {
-            console.error("Error checking subscription:", err);
+          } else {
+            setIsSchoolAdmin(true);
           }
+        } catch (err: unknown) {
+          console.error('Error checking subscription:', err);
+          setIsSchoolAdmin(true);
+        } finally {
+          setSubGateLoading(false);
+        }
+      } else {
+        setIsSchoolAdmin(true);
+        setSubGateLoading(false);
       }
       setAuthLoading(false);
     });
@@ -140,13 +155,36 @@ export default function SubscribePage() {
     }
   };
 
-  if (loading || authLoading) {
+  if (loading || authLoading || (user && subGateLoading)) {
       return (
           <div className="flex min-h-[50vh] items-center justify-center">
               <div className="h-9 w-9 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600" aria-hidden />
               <span className="sr-only">Loading</span>
           </div>
       );
+  }
+
+  if (user && !subGateLoading && isSchoolAdmin === false) {
+    return (
+      <div className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div className="mx-auto max-w-lg text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">Subscription</p>
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            Waiting on your school
+          </h2>
+          <p className="mt-4 text-slate-600">
+            This page is for the person who manages billing for your school. Your school admin needs to sign in
+            and choose a plan before the whole staff can use the dashboard.
+          </p>
+          <a
+            href="/admin/dashboard"
+            className="mt-6 inline-flex rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+          >
+            Back to dashboard
+          </a>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -10,7 +10,7 @@ This is a [Next.js](https://nextjs.org) project for Upstander, an anonymous bull
 - **Unique Reference Codes:** Each report is assigned a unique, non-identifiable code that students can use for follow-up conversations.
 - **Anonymous Two-Way Communication:** A secure, real-time messaging feature that allows school staff to communicate with the student reporter without compromising the student's anonymity. Includes email notifications to alert students of new messages.
 - **Interactive Analytics:** The admin dashboard includes an "At a Glance" section with clickable cards to quickly filter reports by status (e.g., New, Under Investigation) and a pie chart breaking down reports by category.
-- **Public-Facing Pages:** Dedicated pages for educators (`/for-educators`), parents (`/for-parents`), and school registration (`/register-school`), along with a comprehensive privacy policy (`/privacy-policy`).
+- **Public-Facing Pages:** The home page is **student-first** (find school to report; link to **check an existing report** via reference code). Dedicated pages for educators (`/for-educators`), parents (`/for-parents`), and school registration (`/register-school`), plus a privacy policy (`/privacy-policy`). Staff sign-in and school signup are available on the home page and in the footer, not in the top bar when logged out.
 - **School Registration:** Streamlined registration flow (`/register`) that collects school and contact information, creates authenticated accounts, and guides new schools through subscription setup.
 
 ## Project Documentation

@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/aut
 import { doc, setDoc } from 'firebase/firestore';
 import Image from 'next/image';
 import { getAuthErrorMessage } from '@/lib/auth-errors';
+import { normalizeInviteEmail } from '@/lib/email-normalize';
 
 function LoginForm() {
   const router = useRouter();
@@ -15,8 +16,9 @@ function LoginForm() {
   const initialSignUp =
     searchParams.get('signup') === 'true' || redirect.includes('/join');
   const isCompletingSchoolInvite = redirect.includes('/join');
-  
-  const [email, setEmail] = useState('');
+  const inviteEmailPrefill = (searchParams.get('inviteEmail') || '').trim();
+
+  const [email, setEmail] = useState(() => inviteEmailPrefill);
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
@@ -29,21 +31,31 @@ function LoginForm() {
     setLoading(true);
     setError(null);
     setInfo(null);
+    const normalizedEmail = normalizeInviteEmail(email);
+    if (!normalizedEmail) {
+      setError('Enter a valid email address.');
+      setLoading(false);
+      return;
+    }
     try {
       if (isSignUp) {
         const { createUserWithEmailAndPassword } = await import("firebase/auth");
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          normalizedEmail,
+          password
+        );
         
         // Create user document in Firestore
         await setDoc(doc(db, 'users', userCredential.user.uid), {
-            email: email,
+            email: normalizedEmail,
             uid: userCredential.user.uid,
             createdAt: new Date(),
         });
 
         console.log('Signed up successfully!');
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, normalizedEmail, password);
         console.log('Logged in successfully!');
       }
       router.push(redirect);
@@ -58,7 +70,7 @@ function LoginForm() {
   const handleForgotPassword = async () => {
     setError(null);
     setInfo(null);
-    const trimmed = email.trim();
+    const trimmed = normalizeInviteEmail(email);
     if (!trimmed) {
       setError("Enter your email address above, then click “Forgot password?” again.");
       return;

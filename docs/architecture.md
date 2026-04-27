@@ -10,6 +10,8 @@ This document provides a high-level overview of the Upstander application's arch
 
 The frontend is a modern server-side rendering (SSR) application built with Next.js. It is responsible for all user-facing pages, including the anonymous reporting form, the follow-up page, and the secure administrator dashboard.
 
+**Layout and roles:** The marketing home page (`/`) is student-first (primary CTA to find a school and submit a report; secondary link to check an existing report). Staff sign-in and school registration are not shown in the global header when logged out; they appear on the home page, on dedicated routes (`/login`, `/register`), and in the site footer. See **[Technical details — Public UI and admin experience](./technical.md#public-ui-and-admin-experience)** for navigation, shared styling patterns, and where key components live.
+
 ## Backend & Database
 
 *   **Provider:** [Firebase (Google Cloud)](https://firebase.google.com/)

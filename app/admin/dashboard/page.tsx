@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
 import { collection, query, getDocs } from 'firebase/firestore';
+import { normalizeStaffRole } from '@/lib/staff-role';
 import { Report, AdminUser, ReportStatus, SortOrder, StaffRole } from '@/types';
 import DashboardView from '@/components/admin/DashboardView';
 
@@ -13,6 +14,7 @@ type BootstrapPayload = {
   schoolName: string | null;
   hasSubscriptionAccess: boolean;
   role: string | null;
+  isSchoolAdmin: boolean;
 };
 
 async function fetchDashboardBootstrap(idToken: string): Promise<BootstrapPayload> {
@@ -28,6 +30,7 @@ async function fetchDashboardBootstrap(idToken: string): Promise<BootstrapPayloa
     schoolName: data.schoolName ?? null,
     hasSubscriptionAccess: Boolean(data.hasSubscriptionAccess),
     role: data.role ?? null,
+    isSchoolAdmin: data.isSchoolAdmin !== false,
   };
 }
 
@@ -76,16 +79,18 @@ export default function DashboardPage() {
           return;
         }
 
-        const roleParsed: StaffRole | undefined =
-          bootstrap.role === 'admin' || bootstrap.role === 'staff' ? bootstrap.role : undefined;
+        const roleParsed = normalizeStaffRole(bootstrap.role ?? undefined);
+        const roleForUi: StaffRole | undefined =
+          roleParsed ?? (bootstrap.isSchoolAdmin ? 'admin' : 'teacher');
 
         setUser({
           uid: firebaseUser.uid,
           email: firebaseUser.email!,
           schoolId: bootstrap.schoolId,
           schoolName: bootstrap.schoolName,
-          role: roleParsed,
+          role: roleForUi,
           status: 'active',
+          isSchoolAdmin: bootstrap.isSchoolAdmin,
         });
       } catch (error) {
         console.error('Error fetching admin profile:', error);
@@ -142,6 +147,39 @@ export default function DashboardPage() {
     setReports(reports.map(report => report.id === updatedReport.id ? updatedReport : report));
     setSelectedReport(updatedReport);
   };
+
+  const handleDeleteReport = useCallback(
+    async (report: Report) => {
+      if (!user?.isSchoolAdmin) return;
+      if (
+        !confirm(
+          `Permanently delete this report (${report.referenceCode})? Students will no longer be able to use the follow-up link for that reference. This cannot be undone.`
+        )
+      ) {
+        return;
+      }
+      const tokenUser = auth.currentUser;
+      if (!tokenUser) {
+        return;
+      }
+      try {
+        const idToken = await tokenUser.getIdToken();
+        const res = await fetch(`/api/reports/${encodeURIComponent(report.id)}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${idToken}` },
+        });
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        if (!res.ok) {
+          throw new Error(typeof data.error === 'string' ? data.error : 'Could not delete report');
+        }
+        setReports((prev) => prev.filter((r) => r.id !== report.id));
+        setSelectedReport((cur) => (cur?.id === report.id ? null : cur));
+      } catch (e) {
+        window.alert(e instanceof Error ? e.message : 'Could not delete report');
+      }
+    },
+    [user?.isSchoolAdmin]
+  );
 
   if (sessionUser === undefined || loading) {
     return (
@@ -202,6 +240,7 @@ export default function DashboardPage() {
       onReportClick={setSelectedReport}
       onCloseReportModal={() => setSelectedReport(null)}
       onUpdateReport={handleReportUpdate}
+      onDeleteReport={user.isSchoolAdmin ? handleDeleteReport : undefined}
     />
   );
 }

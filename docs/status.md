@@ -1,11 +1,18 @@
 # Stripe Paywall Implementation Status
 
-**Last Updated:** February 17, 2026
+**Last Updated:** April 16, 2026
 
 ## ✅ Completed
+*   **Public UI and admin experience (April 2026):**
+    *   Student-first home page: dominant student hero, staff/educator block lower on the page, **Check on an existing report** (`/follow-up`) next to **Find your school**.
+    *   Signed-out header shows logo only (no staff Login/Sign Up in the bar); staff entry via home, `/login`, `/register`, and footer links.
+    *   Consistent Tailwind patterns site-wide (slate neutrals, rounded-xl cards, shared inputs and buttons); find-school page min-height so footer sits below the fold; report and follow-up spacing and cards aligned with admin tools.
+    *   Dashboard redesign: school context header without duplicate logout; polished **At a glance** cards and reports table; **Report details** modal (layout, a11y, Escape/backdrop close).
+    *   Footer and marketing pages (`/for-educators`, `/for-parents`, `/register-school`, `/privacy-policy`) refreshed for palette and typography alignment.
+    *   Documentation: **`docs/technical.md`** section *Public UI and admin experience*; **`docs/architecture.md`** frontend note; this status entry.
 *   **Navigation Overhaul (Feb 17, 2026):**
-    *   Redesigned Landing Page (`/`) with split hero section for Students and Schools/Teachers.
-    *   Updated Header component with modern navigation, Find School link, and conditional auth-based menu.
+    *   Redesigned Landing Page (`/`) with split hero section for Students and Schools/Teachers. *(Superseded by April 2026 student-first layout; historical note.)*
+    *   Updated Header component with modern navigation, Find School link, and conditional auth-based menu. *(April 2026: Find School removed from header when simplifying signed-out chrome.)*
     *   Created Footer component with navigation links to public pages and social media icons.
     *   Improved overall site navigation and user experience.
 *   **Public Pages (Feb 17, 2026):**

@@ -1,7 +1,7 @@
 import type { Timestamp } from 'firebase-admin/firestore';
 import { NextRequest, NextResponse } from 'next/server';
 import { admin, auth, db } from '@/lib/firebase-admin';
-import { normalizeInviteEmail } from '@/lib/server/email-normalize';
+import { normalizeInviteEmail } from '@/lib/email-normalize';
 
 export const dynamic = 'force-dynamic';
 
@@ -73,7 +73,11 @@ export async function POST(req: NextRequest) {
     const callerEmail = normalizeInviteEmail(decoded.email || '');
     if (!callerEmail || callerEmail !== expectedEmail) {
       return NextResponse.json(
-        { error: 'Sign in with the email address this invitation was sent to.' },
+        {
+          error:
+            'This invitation is tied to a specific email. Sign in or create an account with that exact address.',
+          expectedEmail: expectedEmail,
+        },
         { status: 403 }
       );
     }
@@ -141,7 +145,7 @@ export async function POST(req: NextRequest) {
         userRef,
         {
           schoolId,
-          role: 'staff',
+          role: 'teacher',
           email,
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         },
@@ -152,7 +156,7 @@ export async function POST(req: NextRequest) {
         adminRef,
         {
           schoolId,
-          role: 'staff',
+          role: 'teacher',
           email,
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         },

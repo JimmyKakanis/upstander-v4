@@ -2,11 +2,13 @@ import { randomBytes } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { admin, auth, db } from '@/lib/firebase-admin';
-import { isValidInviteEmail, normalizeInviteEmail } from '@/lib/server/email-normalize';
+import { isValidInviteEmail, normalizeInviteEmail } from '@/lib/email-normalize';
+import { getPublicOriginFromRequest } from '@/lib/server/public-site-url';
+import { isSchoolAdminRole } from '@/lib/staff-role';
 
 export const dynamic = 'force-dynamic';
 
-/** Any signed-in user whose `users.schoolId` matches the body may invite by email. */
+/** School admins (`users`/`admins` `role: admin` or legacy unset) whose `schoolId` matches. */
 const INVITE_TTL_MS = 14 * 24 * 60 * 60 * 1000;
 
 let resendClient: Resend | null | undefined;
@@ -80,6 +82,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    let inviterRole: string | null = null;
+    if (userSnap.exists) {
+      const r = userSnap.data()?.role;
+      inviterRole = typeof r === 'string' ? r : null;
+    }
+    if (!inviterRole) {
+      const adminSnap = await db.collection('admins').doc(uid).get();
+      if (adminSnap.exists) {
+        const r = adminSnap.data()?.role;
+        if (typeof r === 'string' && r) inviterRole = r;
+      }
+    }
+    if (!isSchoolAdminRole(inviterRole)) {
+      return NextResponse.json(
+        { error: 'Only a school admin can send invitations' },
+        { status: 403 }
+      );
+    }
+
     const schoolSnap = await db.collection('schools').doc(schoolId).get();
     if (!schoolSnap.exists) {
       return NextResponse.json({ error: 'School not found' }, { status: 404 });
@@ -105,10 +126,9 @@ export async function POST(req: NextRequest) {
       usedAt: null,
     });
 
-    const origin = req.headers.get('origin');
-    const base = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '') || origin || '';
-    const joinPath = `/join?token=${encodeURIComponent(token)}`;
-    const joinUrl = base ? `${base}${joinPath}` : joinPath;
+    const publicOrigin = getPublicOriginFromRequest(req);
+    const joinPath = `/join?token=${encodeURIComponent(token)}&e=${encodeURIComponent(invitedEmailNormalized)}`;
+    const joinUrl = publicOrigin ? `${publicOrigin}${joinPath}` : joinPath;
 
     const { error: sendError } = await resend.emails.send({
       from: 'Upstander <noreply@upstander.help>',
