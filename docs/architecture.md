@@ -22,7 +22,11 @@ The frontend is a modern server-side rendering (SSR) application built with Next
 
 ### Staff accounts and multiple teachers per school
 
-The **first** administrator is created through the app (**`/register`** or **`/admin/onboarding`** plus **`/api/schools/create`**). There is **no in-app “invite colleague”** UI yet; additional teachers must be provisioned in **Firebase Auth**, given the same **`schoolId`** in **`users`** / **`admins`**, and must have a matching **`schoolId` custom claim** on their ID token so Firestore security rules allow report access and updates. See **[Onboarding schools and staff](./onboarding.md)** for the full checklist.
+The **first** administrator is created through the app (**`/register`** or **`/admin/onboarding`** plus **`/api/schools/create`**). They are stored with **`role: admin`** on **`users`** and **`admins`**, and receive a **`schoolId` custom claim** on their ID token.
+
+**Additional teachers (in-app):** School admins send an **email invite** from **Settings**; the server creates **`schoolInvites/{token}`** and emails a **`/join`** link. After the teacher signs in with the invited address, **`/api/schools/join`** sets **`role: teacher`** and the same **`schoolId`** claim. Listing and management use **Next.js API routes** with the Firebase Admin SDK (not client Firestore reads for tokens).
+
+**Manual / legacy provisioning** (no email) is still documented in **[Onboarding schools and staff](./onboarding.md)** for operators who must attach accounts in Firebase Console.
 
 ## Email Notifications
 

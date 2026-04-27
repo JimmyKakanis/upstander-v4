@@ -6,7 +6,8 @@ This is a [Next.js](https://nextjs.org) project for Upstander, an anonymous bull
 
 - **Anonymous Reporting:** Students can submit reports without revealing their identity.
 - **Secure Admin Dashboard:** School staff can log in to view and manage reports for their specific school.
-- **Report Management:** Admins can view report details, update the status of an investigation, and add private notes.
+- **Report Management:** School staff can view report details, update investigation status, and add private notes. **School admins** can remove test or obsolete reports from the dashboard.
+- **School staff:** The account that registers the school is a **school admin**; additional **teachers** join by **email invite** (`/join` link). Admins manage the team in **Settings** (and can copy a join link if email delivery fails).
 - **Unique Reference Codes:** Each report is assigned a unique, non-identifiable code that students can use for follow-up conversations.
 - **Anonymous Two-Way Communication:** A secure, real-time messaging feature that allows school staff to communicate with the student reporter without compromising the student's anonymity. Includes email notifications to alert students of new messages.
 - **Interactive Analytics:** The admin dashboard includes an "At a Glance" section with clickable cards to quickly filter reports by status (e.g., New, Under Investigation) and a pie chart breaking down reports by category.
@@ -18,14 +19,18 @@ This is a [Next.js](https://nextjs.org) project for Upstander, an anonymous bull
 For detailed information about the project's architecture, technical setup, and operational procedures, please refer to the documents in the `/docs` directory.
 
 *   **[Architecture Overview](./docs/architecture.md):** A high-level look at the frontend, backend, and services used.
-*   **[Onboarding schools and staff](./docs/onboarding.md):** First-admin self-serve flow, student report URLs, and **how to add more teachers** (manual Firebase / Firestore steps until an invite feature exists).
+*   **[Onboarding schools and staff](./docs/onboarding.md):** First-admin self-serve flow, student report URLs, **email invites and join**, and **manual** Firebase steps for edge cases.
 *   **[Technical Details](./docs/technical.md):** Information on the email notification service, DNS configuration, registration API, and **local Next.js cache issues** (e.g. missing `./682.js`, unstyled pages).
 
 ## Development & Deployment Workflow
 
-**IMPORTANT:** The primary workflow for this project is to commit changes to the `main` branch on GitHub. This automatically triggers a new deployment on Vercel, where all testing and verification is conducted.
+**IMPORTANT:** The primary workflow is to commit to the `main` branch on GitHub. If **Vercel** is **connected** to the repository, each push can trigger a new deployment.
 
-The application is live and continuously deployed. There is no local development environment (`localhost:3000`) used as part of the standard workflow.
+**Git connection on Vercel:** In the Vercel project, open **Settings → Git**. The repository must be connected and show no errors. If you see **“Project Link not found,”** use **Reconnect** and authorize the GitHub integration again; otherwise new commits will not deploy. Pushing a new commit (or an empty commit) after reconnecting will trigger a build.
+
+**Public URL for links:** Set **`NEXT_PUBLIC_BASE_URL`** in Vercel (e.g. `https://upstander.help` with no trailing slash) so invite emails, **Settings → Copy link** for staff invites, and other server-built URLs use the correct production domain. See **`.env.example`**.
+
+The application is set up for continuous deployment when Git is healthy. For local work, use **`.env.local`** and **`npm run dev`** (see below).
 
 ### Environment Variables
 
@@ -60,8 +65,9 @@ For the live deployment on Vercel, you **must** set the environment variables in
 
 1.  Go to your project dashboard on Vercel.
 2.  Navigate to **Settings** > **Environment Variables**.
-3.  Add each of the `NEXT_PUBLIC_` variables listed above with their corresponding values from your Firebase project.
-4.  After adding or updating variables, you must **redeploy** your project for the changes to take effect.
+3.  Add each of the `NEXT_PUBLIC_` variables listed above with their corresponding values from your Firebase project, plus **`NEXT_PUBLIC_BASE_URL`** set to your public site origin (e.g. `https://upstander.help`) so email and API-generated links are absolute.
+4.  **Settings → Git:** Confirm the **GitHub repository** is connected; fix **Reconnect** if deployment stops after a domain or account change.
+5.  After adding or updating variables, you must **redeploy** your project for the changes to take effect.
 
 ### Firestore Security Rules
 
@@ -90,6 +96,6 @@ Details: [Local Next.js development and cache issues](./docs/technical.md#local-
 
 ## Deploy on Vercel
 
-The application is automatically deployed from the `main` branch using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+The app is designed to deploy from the **`main`** branch via the [Vercel Platform](https://vercel.com). Automatic deploys require a healthy **Settings → Git** link to the GitHub repo. See **Development & Deployment Workflow** above if a push does not show a new deployment.
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

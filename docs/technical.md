@@ -63,12 +63,23 @@ The application includes a comprehensive registration flow for new schools:
    - Updates both `users` and `admins` collections for compatibility
 
 3. **Data Model**:
-   - **School Document**: `name`, `nameNormalized` (for duplicate-name prevention), `address`, `city`, `state`, `zip`, `studentCount`, `createdAt`, `createdBy`
-   - **User Document**: `email`, `uid`, `displayName`, `phoneNumber`, `schoolId`, `createdAt`
+   - **School Document**: `name`, `nameNormalized` (for duplicate-name prevention), `address`, `city`, `state`, `zip`, `studentCount`, `createdAt`, `createdBy`, `billingOwnerUid` (set at creation for subscription sharing)
+   - **User Document**: `email`, `uid`, `displayName`, `phoneNumber`, `schoolId`, `role` (`admin` or `teacher`), `createdAt` (and parallel fields on **`admins/{uid}`** for legacy compatibility)
 
-### Additional teachers at the same school
+### School staff roles, invites, and management
 
-There is **no in-app staff invite** yet. A second full **`/register`** with the **same school display name** is rejected by the API (duplicate school). To attach more staff to an existing school, follow **[Onboarding schools and staff](./onboarding.md)** (Firebase Auth, **`schoolId` custom claim**, and matching **`users`** / **`admins`** documents).
+*   **Roles:** The account that creates the school is **`admin`** (school admin). Colleagues who accept an **email invite** are **`teacher`**. School admins can manage billing, send invites, and edit the staff list; teachers have dashboard access for reports and notifications but cannot invite or remove others. Legacy accounts without a `role` field are still treated as school admins for access control.
+*   **Email invites:** School admins use **Settings** → “Add a teacher.” **`POST /api/schools/invite`** (Resend) stores a document in Firestore **`schoolInvites/{token}`** (server-only; clients cannot read it) and emails a link: **`/join?token=…&e=…`**. The invitee must sign in or sign up with the **invited email**, then **`POST /api/schools/join`** links them to the school with `role: teacher`. Open invites and staff membership are listed via **`GET /api/schools/members`**. Pending rows include a **`joinUrl`** for school admins so they can **copy the full link** if the email did not arrive.
+*   **Absolute links:** Set **`NEXT_PUBLIC_BASE_URL`** (e.g. `https://upstander.help`, no trailing slash) in Vercel and in **`.env.local`**. The API also derives an origin from the incoming request so invite and copy-link URLs are full `https://…/join?…` addresses when possible.
+*   **Editing staff (admins only):** **`PATCH/DELETE /api/schools/members/[uid]`** updates display name or role, or removes a person from the school (not the Firebase Auth user). The **billing owner** school account cannot be removed or demoted to teacher.
+
+### Report deletion (school admins)
+
+School admins can **delete a report** from the dashboard (removes the **`reports/{id}`** document, the **`followUpAccess/{referenceCode}`** doc, and **`conversations/{id}`** if present) via **`DELETE /api/reports/[reportId]`**. Teachers do not see delete. There is no client-side Firestore **delete** rule for reports; deletion is server-only.
+
+### Additional teachers without the invite flow (legacy / ops)
+
+A second full **`/register`** with the **same school display name** is still rejected (duplicate school). If you must attach staff **without** the email flow, use **[Onboarding schools and staff](./onboarding.md)** (Firebase Auth, **`schoolId` custom claim**, and matching **`users`** / **`admins`** documents).
 
 ### Firebase Admin SDK Configuration
 
@@ -141,10 +152,10 @@ This section summarizes the **April 2026** UI alignment pass so future changes s
 ### Staff and onboarding
 
 *   **Login / register / join / onboarding** (`app/login`, `app/register`, `app/join`, `app/admin/onboarding`): Shared card pattern—white panel, **`rounded-xl`**, **`border-slate-200/80`**, **`ring-1 ring-slate-900/5`**, consistent inputs (`rounded-lg`, slate borders, blue focus ring).
-*   **Dashboard** (`components/admin/DashboardView.tsx`, loaded by `app/admin/dashboard/page.tsx`): School context header (no duplicate **Logout** in the page chrome; logout remains in the global header). **At a glance** metric cards filter the table; **Submitted reports** table and filters match the same visual language.
+*   **Dashboard** (`components/admin/DashboardView.tsx`, loaded by `app/admin/dashboard/page.tsx`): School context header and role label (no duplicate **Logout** in the page chrome). **At a glance** metric cards filter the table; **Submitted reports** table includes **Delete** (school admins only) and filters; **Report details** modal opens from a row.
 *   **Report details** (`components/admin/ReportModal.tsx`): Dialog with scrollable body, sticky-style header/footer actions, backdrop click and **Escape** to close, keyboard-friendly metric-style cards on the dashboard list.
-*   **Settings** (`app/admin/settings/page.tsx`): Notification toggles and teacher invite form use the same card and input styles; toggle markup relies on **`peer`** on the **checkbox**, not on the track `div`.
-*   **Subscribe** (`app/admin/subscribe/page.tsx`): Plan cards and loading state use the same slate / blue system.
+*   **Settings** (`app/admin/settings/page.tsx`): Notification toggles; **School staff** (active members, **pending invitations** with **Copy link** for school admins) and **Add a teacher** (school admins only); same card and input styles. Toggle markup relies on **`peer`** on the **checkbox**, not on the track `div`.
+*   **Subscribe** (`app/admin/subscribe/page.tsx`): Plan cards and loading state. **Teachers** without an active school subscription see a message to contact the school admin; **school admins** see checkout as before.
 
 ### Design tokens (convention)
 

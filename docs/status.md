@@ -3,6 +3,14 @@
 **Last Updated:** April 16, 2026
 
 ## ✅ Completed
+*   **School staff, roles, and operations (April 2026):**
+    *   **Roles:** School **admin** (registers the school) vs **teacher** (email invite / join). Helpers in `lib/staff-role.ts`; bootstrap exposes `isSchoolAdmin` where needed.
+    *   **Invites:** `POST /api/schools/invite` (Resend), `POST /api/schools/join`, `GET /api/schools/members` (merged `users`/`admins`, pending invites, `billingOwnerUid`). School admins can **copy full join URLs** for pending invites; `NEXT_PUBLIC_BASE_URL` plus `lib/server/public-site-url.ts` for absolute links.
+    *   **Staff management (admins):** `PATCH` / `DELETE` on `/api/schools/members/[uid]` for name, role, or remove from school (billing owner protected).
+    *   **Reports:** School admins can **delete** reports via `DELETE /api/reports/[reportId]` (cleans `followUpAccess` and `conversations`); dashboard **Delete** column.
+    *   **Subscribe:** Non-admins without subscription see a “contact your school admin” state instead of checkout.
+    *   **Docs:** Updated `docs/technical.md`, `docs/architecture.md`, `docs/onboarding.md`; `.env.example` notes for `NEXT_PUBLIC_BASE_URL`.
+*   **Vercel / Git:** If **Settings → Git** shows **“Project Link not found,”** use **Reconnect** so pushes to `main` trigger deployments again. Changing a custom domain alone does not fix a broken Git link.
 *   **Public UI and admin experience (April 2026):**
     *   Student-first home page: dominant student hero, staff/educator block lower on the page, **Check on an existing report** (`/follow-up`) next to **Find your school**.
     *   Signed-out header shows logo only (no staff Login/Sign Up in the bar); staff entry via home, `/login`, `/register`, and footer links.
