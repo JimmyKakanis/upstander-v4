@@ -22,7 +22,7 @@ export default function LandingPage() {
                 href="/find-school"
                 className="rounded-lg bg-blue-600 px-8 py-4 text-center text-base font-bold text-white shadow-sm transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:text-lg"
               >
-                Find your school
+                Report Incident Anonymously
               </Link>
               <Link
                 href="/follow-up"
